@@ -1,8 +1,5 @@
 package io.github.theangrydev.opper;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -10,6 +7,7 @@ public class Parser {
 
 	private final Grammar grammar;
 	private final Corpus corpus;
+	private final RulePrediction rulePrediction;
 	private final EarlyItemFactory earlyItemFactory;
 	private final TransitionTables transitionTables;
 	private final EarlySetsTable earlySetsTable;
@@ -17,6 +15,7 @@ public class Parser {
 	public Parser(Grammar grammar, Corpus corpus) {
 		this.grammar = grammar;
 		this.corpus = corpus;
+		this.rulePrediction = new ComputedRulePrediction(grammar);
 		this.earlyItemFactory = new EarlyItemFactory();
 		this.earlySetsTable = new EarlySetsTable();
 		this.transitionTables = new TransitionTables(grammar.symbols());
@@ -139,50 +138,9 @@ public class Parser {
 			return;
 		}
 		System.out.println("Making predictions based on the postdot symbol: " + confirmed.postDot());
-
-		// prediction
-		// aim is to find rules with LHS that is the prefix of any string that can be derived from the postdot symbol
-		List<Symbol> derivationPrefixes = determineDerivationPrefixes(confirmed.postDot());
-		System.out.println("Derivation prefixes are: " + derivationPrefixes);
-		List<Rule> applicableRules = determineApplicableRules(derivationPrefixes);
-		System.out.println("Applicable rules are: " + applicableRules);
-		for (Rule rule : applicableRules) {
+		for (Rule rule : rulePrediction.predict(confirmed.postDot())) {
 			earlySet.add(earlySetIndex, earlyItemFactory.createEarlyItem(new DottedRule(rule, 0), earlySetIndex));
 		}
-	}
-
-	private List<Rule> determineApplicableRules(List<Symbol> derivationPrefixes) {
-		List<Rule> applicableRules = new ObjectArrayList<>();
-		for (Symbol derivationPrefix : derivationPrefixes) {
-			for (Rule rule : grammar.rules()) {
-				if (rule.left().equals(derivationPrefix)) {
-					applicableRules.add(rule);
-				}
-			}
-		}
-		return applicableRules;
-	}
-
-	// this could be precomputed per symbol
-	private List<Symbol> determineDerivationPrefixes(Symbol symbol) {
-		List<Symbol> derivations = new ObjectArrayList<>();
-		derivations.add(symbol);
-		boolean changed;
-		int i = 0;
-		do {
-			int size = derivations.size();
-			changed = false;
-			for (; i < size; i++) {
-				for (Rule rule : grammar.rules()) {
-					if (rule.left().equals(derivations.get(i))) {
-						Symbol prefix = rule.symbolAt(0);
-						derivations.add(prefix);
-						changed = true;
-					}
-				}
-			}
-		} while (changed);
-		return derivations;
 	}
 
 	private boolean postdotTransitionIsUniqueByRightRecursiveRule(DottedRule postdot) {

@@ -2,20 +2,18 @@ package io.github.theangrydev.opper;
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
-import java.lang.*;
-import java.lang.String;
 import java.util.Iterator;
-import java.util.SortedSet;
+import java.util.List;
 
 public class EarlySet implements Iterable<EarlyItem> {
 
-	private final SortedSet<EarlyItem> earlyItems;
+	private final List<EarlyItem> earlyItems;
 	private final Object2IntMap<DottedRule> oldRules;
 
 	public EarlySet() {
-		this.earlyItems = new ObjectLinkedOpenHashSet<>();
+		this.earlyItems = new ObjectArrayList<>();
 		this.oldRules = new Object2IntArrayMap<>();
 	}
 
@@ -30,7 +28,19 @@ public class EarlySet implements Iterable<EarlyItem> {
 
 	@Override
 	public Iterator<EarlyItem> iterator() {
-		return earlyItems.iterator();
+		return new Iterator<EarlyItem>() {
+			private int i = 0;
+
+			@Override
+			public boolean hasNext() {
+				return i < earlyItems.size();
+			}
+
+			@Override
+			public EarlyItem next() {
+				return earlyItems.get(i++);
+			}
+		};
 	}
 
 	public boolean isNew(int earlySetIndex, EarlyItem earlyItem) {

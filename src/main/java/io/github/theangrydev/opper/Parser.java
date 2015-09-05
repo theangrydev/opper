@@ -83,6 +83,7 @@ public class Parser {
 	private void reduce(int i) {
 		System.out.println("Reduce #" + i);
 		for (EarlyItem earlyItem : earlySet(i)) {
+			System.out.println("Processing: " + earlyItem);
 			int origin = earlyItem.origin();
 			Optional<Symbol> left = earlyItem.leftOfCompletedRules();
 			System.out.println("Left of completed rule: " + left);
@@ -139,7 +140,7 @@ public class Parser {
 		}
 		System.out.println("Making predictions based on the postdot symbol: " + confirmed.postDot());
 		for (Rule rule : rulePrediction.predict(confirmed.postDot())) {
-			earlySet.add(earlySetIndex, earlyItemFactory.createEarlyItem(new DottedRule(rule, 0), origin));
+			earlySet.add(earlySetIndex, earlyItemFactory.createEarlyItem(new DottedRule(rule, 0), earlySetIndex));
 		}
 	}
 

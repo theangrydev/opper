@@ -74,6 +74,7 @@ public class DottedRule {
 		string.append(". ");
 		for (int i = dotPosition; i < rule.length(); i++) {
 			string.append(rule.symbolAt(i));
+			string.append(" ");
 		}
 		return string.toString();
 	}

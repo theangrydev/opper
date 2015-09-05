@@ -139,7 +139,7 @@ public class Parser {
 		}
 		System.out.println("Making predictions based on the postdot symbol: " + confirmed.postDot());
 		for (Rule rule : rulePrediction.predict(confirmed.postDot())) {
-			earlySet.add(earlySetIndex, earlyItemFactory.createEarlyItem(new DottedRule(rule, 0), earlySetIndex));
+			earlySet.add(earlySetIndex, earlyItemFactory.createEarlyItem(new DottedRule(rule, 0), origin));
 		}
 	}
 

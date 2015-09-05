@@ -20,8 +20,8 @@ public class EarlyItem implements EarlyOrLeoItem, Comparable<EarlyItem> {
 		this.id = ID_SEQUENCE++;
 	}
 
-	public boolean canAccept(Symbol symbol) {
-		return origin == 0 && dottedRule.canAccept(symbol);
+	public boolean canAccept(Symbol acceptanceSymbol) {
+		return origin == 0 && dottedRule.canAccept(acceptanceSymbol);
 	}
 
 	@Override

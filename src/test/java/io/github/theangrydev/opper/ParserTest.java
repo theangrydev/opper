@@ -21,7 +21,7 @@ public class ParserTest {
 
 	private class ExampleCorpus implements Corpus {
 
-		private final Iterator<Symbol> symbols = Arrays.asList(example.second, example.dummy).iterator();
+		private final Iterator<Symbol> symbols = Arrays.asList(example.middle, example.second, example.dummy).iterator();
 
 		@Override
 		public Symbol nextSymbol() {
@@ -44,14 +44,15 @@ public class ParserTest {
 		private final Symbol first = symbolFactory.createSymbol("FIRST");
 		private final Symbol second = symbolFactory.createSymbol("SECOND");
 		private final Symbol dummy = symbolFactory.createSymbol("DUMMY");
+		private final Symbol middle = symbolFactory.createSymbol("MIDDLE");
 
 		private final Rule acceptRule = ruleFactory.createRule(accept, start);
-		private final Rule firstToAccept = ruleFactory.createRule(start, first);
+		private final Rule firstToAccept = ruleFactory.createRule(start, middle, first);
 		private final Rule startToFirst = ruleFactory.createRule(first, second, dummy);
 
 		@Override
 		public List<Symbol> symbols() {
-			return Arrays.asList(start, accept, first, second, dummy);
+			return Arrays.asList(start, accept, first, second, dummy, middle);
 		}
 
 		@Override

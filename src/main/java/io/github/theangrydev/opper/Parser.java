@@ -112,15 +112,20 @@ public class Parser {
 	}
 
 	// Algorithm 6
-	private void reduceOneLeft(int location, int origin, Symbol left) {
+	private void reduceOneLeft(int i, int origin, Symbol left) {
 		System.out.println("Reduce one");
 		Set<EarlyOrLeoItem> transitionEarlySet = transitionEarlySet(origin, left);
 		System.out.println("Origin transitions[" + origin + "," + left + "]: " + transitionEarlySet);
 		for (EarlyOrLeoItem item : transitionEarlySet) {
-			// Algorithm 7 and 8 are handled using polymorphism
-			DottedRule next = item.transition(left);
-			addEarlyItem(location, next, origin);
+			performEarlyReduction(i, left, item);
 		}
+	}
+
+	private void performEarlyReduction(int i, Symbol left, EarlyOrLeoItem item) {
+		// Algorithm 7 and 8 are handled using polymorphism
+		DottedRule next = item.transition(left);
+		int origin = item.origin();
+		addEarlyItem(i, next, origin);
 	}
 
 	// Algorithm 9
@@ -152,11 +157,11 @@ public class Parser {
 		return earlySetIndex == 0 || earlySet(earlySetIndex - 1).isNew(earlySetIndex, earlyItem);
 	}
 
-	private EarlySet earlySet(int location) {
-		return earlySetsTable.earlySet(location);
+	private EarlySet earlySet(int i) {
+		return earlySetsTable.earlySet(i);
 	}
 
-	private Set<EarlyOrLeoItem> transitionEarlySet(int location, Symbol symbol) {
-		return transitionTables.transitions(symbol, location);
+	private Set<EarlyOrLeoItem> transitionEarlySet(int i, Symbol symbol) {
+		return transitionTables.transitions(symbol, i);
 	}
 }

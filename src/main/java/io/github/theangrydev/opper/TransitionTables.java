@@ -31,6 +31,7 @@ public class TransitionTables {
 	@Override
 	public String toString() {
 		StringBuilder string = new StringBuilder();
+		string.append('\n');
 		for (Symbol symbol : symbols) {
 			string.append(symbol);
 			string.append(':');

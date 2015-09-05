@@ -12,15 +12,16 @@ public class EarlyOrLeoSetsTable {
 
 	private final List<Set<EarlyOrLeoItem>> earlySets;
 
-	public EarlyOrLeoSetsTable(int size) {
-		this.earlySets = new ObjectArrayList<>(size);
-		for (int i = 0; i < size; i++) {
-			earlySets.add(new ObjectArraySet<>());
-		}
+	public EarlyOrLeoSetsTable() {
+		this.earlySets = new ObjectArrayList<>();
 	}
 
 	public Set<EarlyOrLeoItem> earlySet(int location) {
 		return earlySets.get(location);
+	}
+
+	public void expand() {
+		earlySets.add(new ObjectArraySet<>());
 	}
 
 	@Override

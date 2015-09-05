@@ -3,6 +3,7 @@ package io.github.theangrydev.opper;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.assertj.core.api.StrictAssertions.assertThat;
@@ -20,16 +21,16 @@ public class ParserTest {
 
 	private class ExampleCorpus implements Corpus {
 
-		private final List<Symbol> symbols = Arrays.asList(example.second, example.dummy);
+		private final Iterator<Symbol> symbols = Arrays.asList(example.second, example.dummy).iterator();
 
 		@Override
-		public int size() {
-			return symbols.size();
+		public Symbol nextSymbol() {
+			return symbols.next();
 		}
 
 		@Override
-		public Symbol symbol(int index) {
-			return symbols.get(index);
+		public boolean hasNextSymbol() {
+			return symbols.hasNext();
 		}
 	}
 

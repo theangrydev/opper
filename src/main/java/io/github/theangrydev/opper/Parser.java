@@ -18,8 +18,8 @@ public class Parser {
 		this.grammar = grammar;
 		this.corpus = corpus;
 		this.earlyItemFactory = new EarlyItemFactory();
-		this.earlySetsTable = new EarlySetsTable(corpus.size());
-		this.transitionTables = new TransitionTables(grammar.symbols(), corpus.size());
+		this.earlySetsTable = new EarlySetsTable();
+		this.transitionTables = new TransitionTables(grammar.symbols());
 	}
 
 	private void debug(int i) {
@@ -28,15 +28,13 @@ public class Parser {
 		System.out.println("Early set [" + i + "]: " + earlySet(i));
 		System.out.println("Transition tables: " + transitionTables);
 		System.out.println("");
-
 	}
 
 	// Algorithm 1
 	public boolean parse() {
 		initialize();
-		reduce(0);
-		debug(0);
-		for (int i = 1; i <= corpus.size(); i++) {
+		for (int i = 1; corpus.hasNextSymbol(); i++) {
+			expand();
 			scan(i);
 			if (earlySet(i).isEmpty()) {
 				System.out.println("The early set was empty after scanning, failing the parse.");
@@ -45,7 +43,7 @@ public class Parser {
 			reduce(i);
 			debug(i);
 		}
-		for (EarlyItem earlyItem : earlySet(corpus.size())) {
+		for (EarlyItem earlyItem : earlySetsTable.lastEntry()) {
 			if (earlyItem.canAccept(grammar.acceptanceSymbol())) {
 				return true;
 			}
@@ -53,15 +51,23 @@ public class Parser {
 		return false;
 	}
 
+	private void expand() {
+		transitionTables.expand();
+		earlySetsTable.expand();
+	}
+
 	// Algorithm 2
 	private void initialize() {
+		expand();
 		addEarlyItem(0, new DottedRule(grammar.startRule(), 0), 0);
+		reduce(0);
+		debug(0);
 	}
 
 	// Algorithm 3
 	private void scan(int i) {
 		System.out.println("Scan #" + i);
-		Symbol symbol = corpus.symbol(i - 1);
+		Symbol symbol = corpus.nextSymbol();
 		System.out.println("Processing symbol: " + symbol);
 		Set<EarlyOrLeoItem> predecessors = transitionEarlySet(i - 1, symbol);
 		System.out.println("Predecessors in transition early set #" + (i - 1) + ": " + predecessors);

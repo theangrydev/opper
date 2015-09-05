@@ -12,17 +12,20 @@ public class TransitionTables {
 	private final List<Symbol> symbols;
 	private final ObjectList<EarlyOrLeoSetsTable> earlyOrLeoSetsTables;
 
-	public TransitionTables(List<Symbol> symbols, int corpusSize) {
+	public TransitionTables(List<Symbol> symbols) {
 		this.symbols = symbols;
-		int size = corpusSize + 1;
 		this.earlyOrLeoSetsTables = new ObjectArrayList<>(symbols.size());
 		for (int i = 0; i < symbols.size(); i++) {
-			earlyOrLeoSetsTables.add(new EarlyOrLeoSetsTable(size));
+			earlyOrLeoSetsTables.add(new EarlyOrLeoSetsTable());
 		}
 	}
 
 	public Set<EarlyOrLeoItem> transitions(Symbol symbol, int location) {
 		return earlyOrLeoSetsTables.get(symbol.index()).earlySet(location);
+	}
+
+	public void expand() {
+		earlyOrLeoSetsTables.forEach(EarlyOrLeoSetsTable::expand);
 	}
 
 	@Override

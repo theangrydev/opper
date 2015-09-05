@@ -21,22 +21,4 @@ public class Symbol {
 	public String toString() {
 		return name;
 	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		Symbol symbol = (Symbol) o;
-		return index == symbol.index;
-
-	}
-
-	@Override
-	public int hashCode() {
-		return index;
-	}
 }

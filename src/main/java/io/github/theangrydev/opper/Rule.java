@@ -2,12 +2,10 @@ package io.github.theangrydev.opper;
 
 public class Rule {
 
-	private final int index;
 	private final Symbol left;
 	private final SymbolSequence right;
 
-	public Rule(int index, Symbol left, SymbolSequence right) {
-		this.index = index;
+	public Rule(Symbol left, SymbolSequence right) {
 		this.left = left;
 		this.right = right;
 	}
@@ -25,26 +23,7 @@ public class Rule {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
-		Rule rule = (Rule) o;
-		return index == rule.index && !(left != null ? !left.equals(rule.left) : rule.left != null) && !(right != null ? !right.equals(rule.right) : rule.right != null);
-	}
-
-	@Override
-	public int hashCode() {
-		return index;
-	}
-
-	@Override
 	public java.lang.String toString() {
 		return left + " -> " + right;
 	}
-
 }

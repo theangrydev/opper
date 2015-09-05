@@ -6,14 +6,12 @@ import java.lang.*;
 import java.lang.String;
 import java.util.Optional;
 
-public class EarlyItem implements EarlyOrLeoItem, Comparable<EarlyItem> {
+public class EarlyItem implements EarlyOrLeoItem {
 
 	private final DottedRule dottedRule;
 	private final int origin;
-	private final int id;
 
-	public EarlyItem(int id, DottedRule dottedRule, int origin) {
-		this.id = id;
+	public EarlyItem(DottedRule dottedRule, int origin) {
 		this.dottedRule = dottedRule;
 		this.origin = origin;
 	}
@@ -48,10 +46,5 @@ public class EarlyItem implements EarlyOrLeoItem, Comparable<EarlyItem> {
 	@Override
 	public String toString() {
 		return dottedRule + " @ " + origin;
-	}
-
-	@Override
-	public int compareTo(EarlyItem earlyItem) {
-		return Integer.compare(id, earlyItem.id);
 	}
 }

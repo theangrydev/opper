@@ -33,6 +33,6 @@ public class EarlySetTest {
 	}
 
 	private EarlyItem createEarlyItem(String symbolName) {
-		return earlyItemFactory.createEarlyItem(new DottedRule(ruleFactory.createRule(symbolFactory.createSymbol(symbolName)), 0), 0);
+		return earlyItemFactory.createEarlyItem(ruleFactory.createRule(symbolFactory.createSymbol(symbolName)), 0);
 	}
 }

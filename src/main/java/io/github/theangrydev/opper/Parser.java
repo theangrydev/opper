@@ -58,7 +58,7 @@ public class Parser {
 	// Algorithm 2
 	private void initialize() {
 		expand();
-		addEarlyItem(0, new DottedRule(grammar.startRule(), 0), 0);
+		addEarlyItem(0, DottedRule.begin(grammar.startRule()), 0);
 		reduce(0);
 		debug(0);
 	}
@@ -145,7 +145,7 @@ public class Parser {
 		}
 		System.out.println("Making predictions based on the postdot symbol: " + confirmed.postDot());
 		for (Rule rule : rulePrediction.predict(confirmed.postDot())) {
-			earlySet.add(earlySetIndex, earlyItemFactory.createEarlyItem(new DottedRule(rule, 0), earlySetIndex));
+			earlySet.add(earlySetIndex, earlyItemFactory.createEarlyItem(rule, earlySetIndex));
 		}
 	}
 

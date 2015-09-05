@@ -10,9 +10,13 @@ public class DottedRule {
 	private final Rule rule;
 	private final int dotPosition;
 
-	public DottedRule(Rule rule, int dotPosition) {
+	private DottedRule(Rule rule, int dotPosition) {
 		this.rule = rule;
 		this.dotPosition = dotPosition;
+	}
+
+	public static DottedRule begin(Rule rule) {
+		return new DottedRule(rule, 0);
 	}
 
 	public Symbol postDot() {
@@ -39,27 +43,6 @@ public class DottedRule {
 
 	public boolean isComplete() {
 		return dotPosition == rule.length();
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-
-		DottedRule that = (DottedRule) o;
-		return dotPosition == that.dotPosition && !(rule != null ? !rule.equals(that.rule) : that.rule != null);
-
-	}
-
-	@Override
-	public int hashCode() {
-		int result = rule != null ? rule.hashCode() : 0;
-		result = 31 * result + dotPosition;
-		return result;
 	}
 
 	@Override

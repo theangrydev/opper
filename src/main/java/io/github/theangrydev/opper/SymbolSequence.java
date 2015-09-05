@@ -22,7 +22,7 @@ public class SymbolSequence {
 	}
 
 	@Override
-	public java.lang.String toString() {
+	public String toString() {
 		return symbols.stream().map(Symbol::toString).collect(joining(" "));
 	}
 }

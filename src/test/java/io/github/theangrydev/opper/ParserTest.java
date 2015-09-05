@@ -3,35 +3,21 @@ package io.github.theangrydev.opper;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
 public class ParserTest {
 
-	private final ExampleGrammar example = new ExampleGrammar();
+	private final ExampleGrammar grammar = new ExampleGrammar();
 
 	@Test
 	public void shouldParseASimpleGrammar() {
-		Parser parser = new Parser(example, new ExampleCorpus());
+		Corpus corpus = new FixedCorpus(grammar.middle, grammar.second, grammar.dummy);
+
+		Parser parser = new Parser(grammar, corpus);
 
 		assertThat(parser.parse()).isTrue();
-	}
-
-	private class ExampleCorpus implements Corpus {
-
-		private final Iterator<Symbol> symbols = Arrays.asList(example.middle, example.second, example.dummy).iterator();
-
-		@Override
-		public Symbol nextSymbol() {
-			return symbols.next();
-		}
-
-		@Override
-		public boolean hasNextSymbol() {
-			return symbols.hasNext();
-		}
 	}
 
 	private static class ExampleGrammar implements Grammar {

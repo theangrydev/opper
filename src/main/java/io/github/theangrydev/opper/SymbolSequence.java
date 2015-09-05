@@ -5,11 +5,11 @@ import java.util.List;
 
 import static java.util.stream.Collectors.joining;
 
-public class String {
+public class SymbolSequence {
 
 	private final List<Symbol> symbols;
 
-	public String(Symbol... symbols) {
+	public SymbolSequence(Symbol... symbols) {
 		this.symbols = Arrays.asList(symbols);
 	}
 

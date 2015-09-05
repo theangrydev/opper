@@ -4,9 +4,9 @@ public class Rule {
 
 	private final int index;
 	private final Symbol left;
-	private final String right;
+	private final SymbolSequence right;
 
-	public Rule(int index, Symbol left, String right) {
+	public Rule(int index, Symbol left, SymbolSequence right) {
 		this.index = index;
 		this.left = left;
 		this.right = right;

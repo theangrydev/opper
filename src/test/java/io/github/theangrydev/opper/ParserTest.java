@@ -9,18 +9,18 @@ import static org.assertj.core.api.StrictAssertions.assertThat;
 
 public class ParserTest {
 
-	private final Grammar example = new ExampleGrammar();
+	private final ExampleGrammar example = new ExampleGrammar();
 
 	@Test
 	public void shouldParseASimpleGrammar() {
-		Parser parser = new Parser(example, new DummyCorpus());
+		Parser parser = new Parser(example, new ExampleCorpus());
 
 		assertThat(parser.parse()).isTrue();
 	}
 
-	private class DummyCorpus implements Corpus {
+	private class ExampleCorpus implements Corpus {
 
-		private final List<Symbol> symbols = Arrays.asList(ExampleGrammar.SECOND, ExampleGrammar.DUMMY);
+		private final List<Symbol> symbols = Arrays.asList(example.second, example.dummy);
 
 		@Override
 		public int size() {
@@ -34,34 +34,38 @@ public class ParserTest {
 	}
 
 	private static class ExampleGrammar implements Grammar {
-		private static final Symbol DUMMY = new Symbol(4, "DUMMY");
-		private static final Symbol SECOND = new Symbol(3, "SECOND");
-		private static final Symbol ACCEPT = new Symbol(1, "ACCEPT");
-		private static final Symbol FIRST = new Symbol(2, "FIRST");
-		private static final Symbol START = new Symbol(0, "START");
 
-		private static final Rule ACCEPT_RULE = new Rule(0, ACCEPT, new String(SECOND, DUMMY));
-		private static final Rule FIRST_TO_ACCEPT = new Rule(2, FIRST, new String(ACCEPT));
-		private static final Rule START_TO_FIRST = new Rule(1, START, new String(FIRST));
+		private final SymbolFactory symbolFactory = new SymbolFactory();
+		private final RuleFactory ruleFactory = new RuleFactory();
+
+		private final Symbol start = symbolFactory.createSymbol("START");
+		private final Symbol accept = symbolFactory.createSymbol("ACCEPT");
+		private final Symbol first = symbolFactory.createSymbol("FIRST");
+		private final Symbol second = symbolFactory.createSymbol("SECOND");
+		private final Symbol dummy = symbolFactory.createSymbol("DUMMY");
+
+		private final Rule acceptRule = ruleFactory.createRule(accept, second, dummy);
+		private final Rule firstToAccept = ruleFactory.createRule(first, accept);
+		private final Rule startToFirst = ruleFactory.createRule(start, first);
 
 		@Override
 		public List<Symbol> symbols() {
-			return Arrays.asList(START, ACCEPT, FIRST, SECOND, DUMMY);
+			return Arrays.asList(start, accept, first, second, dummy);
 		}
 
 		@Override
 		public List<Rule> rules() {
-			return Arrays.asList(ACCEPT_RULE, FIRST_TO_ACCEPT);
+			return Arrays.asList(acceptRule, firstToAccept);
 		}
 
 		@Override
 		public Symbol acceptanceSymbol() {
-			return ACCEPT;
+			return accept;
 		}
 
 		@Override
 		public Rule startRule() {
-			return START_TO_FIRST;
+			return startToFirst;
 		}
 	}
 }

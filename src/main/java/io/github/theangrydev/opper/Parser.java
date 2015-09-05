@@ -15,10 +15,10 @@ public class Parser {
 	public Parser(Grammar grammar, Corpus corpus) {
 		this.grammar = grammar;
 		this.corpus = corpus;
-		this.rulePrediction = new ComputedRulePrediction(grammar);
+		this.rulePrediction = new CachedRulePrediction(grammar, new ComputedRulePrediction(grammar));
 		this.earlyItemFactory = new EarlyItemFactory();
 		this.earlySetsTable = new EarlySetsTable();
-		this.transitionTables = new TransitionTables(grammar.symbols());
+		this.transitionTables = new TransitionTables(grammar);
 	}
 
 	private void debug(int i) {

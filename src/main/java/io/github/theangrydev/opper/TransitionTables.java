@@ -12,8 +12,8 @@ public class TransitionTables {
 	private final List<Symbol> symbols;
 	private final ObjectList<EarlyOrLeoSetsTable> earlyOrLeoSetsTables;
 
-	public TransitionTables(List<Symbol> symbols) {
-		this.symbols = symbols;
+	public TransitionTables(Grammar grammar) {
+		this.symbols = grammar.symbols();
 		this.earlyOrLeoSetsTables = new ObjectArrayList<>(symbols.size());
 		for (int i = 0; i < symbols.size(); i++) {
 			earlyOrLeoSetsTables.add(new EarlyOrLeoSetsTable());

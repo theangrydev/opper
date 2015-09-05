@@ -1,11 +1,12 @@
 package io.github.theangrydev.opper;
 
+import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EarlySetTest {
+public class EarlySetTest implements WithAssertions {
 
 	private final EarlyItemFactory earlyItemFactory = new EarlyItemFactory();
 	private final RuleFactory ruleFactory = new RuleFactory();
@@ -20,16 +21,16 @@ public class EarlySetTest {
 		earlySet.add(0, oldItem);
 
 		List<EarlyItem> itemsSeen = new ArrayList<>();
-		boolean done = false;
+		boolean addedNewItem = false;
 		for (EarlyItem earlyItem : earlySet) {
-			if (!done) {
+			if (!addedNewItem) {
 				earlySet.add(0, newItem);
-				done = true;
+				addedNewItem = true;
 			}
 			itemsSeen.add(earlyItem);
 		}
 
-		org.assertj.core.api.Assertions.assertThat(itemsSeen).hasSize(2);
+		assertThat(itemsSeen).containsExactly(oldItem, newItem);
 	}
 
 	private EarlyItem createEarlyItem(String symbolName) {

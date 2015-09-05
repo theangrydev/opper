@@ -85,7 +85,7 @@ public class Parser {
 		for (EarlyItem earlyItem : earlySet(i)) {
 			System.out.println("Processing: " + earlyItem);
 			int origin = earlyItem.origin();
-			Optional<Symbol> left = earlyItem.leftOfCompletedRules();
+			Optional<Symbol> left = earlyItem.leftOfCompletedRule();
 			System.out.println("Left of completed rule: " + left);
 			if (left.isPresent()) {
 				reduceOneLeft(i, origin, left.get());

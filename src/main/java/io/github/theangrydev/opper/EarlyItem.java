@@ -31,7 +31,7 @@ public class EarlyItem implements EarlyOrLeoItem {
 		return origin;
 	}
 
-	public Optional<Symbol> leftOfCompletedRules() {
+	public Optional<Symbol> leftOfCompletedRule() {
 		if (dottedRule.isComplete()) {
 			return Optional.of(dottedRule.left());
 		} else {

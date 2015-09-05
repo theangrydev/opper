@@ -8,16 +8,14 @@ import java.util.Optional;
 
 public class EarlyItem implements EarlyOrLeoItem, Comparable<EarlyItem> {
 
-	private static int ID_SEQUENCE = 0;
-
 	private final DottedRule dottedRule;
 	private final int origin;
 	private final int id;
 
-	public EarlyItem(DottedRule dottedRule, int origin) {
+	public EarlyItem(int id, DottedRule dottedRule, int origin) {
+		this.id = id;
 		this.dottedRule = dottedRule;
 		this.origin = origin;
-		this.id = ID_SEQUENCE++;
 	}
 
 	public boolean canAccept(Symbol acceptanceSymbol) {

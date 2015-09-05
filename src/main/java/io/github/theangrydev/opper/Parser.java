@@ -10,12 +10,14 @@ public class Parser {
 
 	private final Grammar grammar;
 	private final Corpus corpus;
+	private final EarlyItemFactory earlyItemFactory;
 	private final TransitionTables transitionTables;
 	private final EarlySetsTable earlySetsTable;
 
 	public Parser(Grammar grammar, Corpus corpus) {
 		this.grammar = grammar;
 		this.corpus = corpus;
+		this.earlyItemFactory = new EarlyItemFactory();
 		this.earlySetsTable = new EarlySetsTable(corpus.size());
 		this.transitionTables = new TransitionTables(grammar.symbols(), corpus.size());
 	}
@@ -118,7 +120,7 @@ public class Parser {
 	// Algorithm 9
 	private void addEarlyItem(int earlySetIndex, DottedRule confirmed, int origin) {
 		System.out.println("Adding early item to set #" + earlySetIndex + " with rule " + confirmed + " and origin " + origin);
-		EarlyItem confirmedEarlyItem = new EarlyItem(confirmed, origin);
+		EarlyItem confirmedEarlyItem = earlyItemFactory.createEarlyItem(confirmed, origin);
 		EarlySet earlySet = earlySet(earlySetIndex);
 		if (isNew(earlySetIndex, confirmedEarlyItem)) {
 			System.out.println("Early item is new, adding it...");
@@ -139,7 +141,7 @@ public class Parser {
 		List<Rule> applicableRules = determineApplicableRules(derivationPrefixes);
 		System.out.println("Applicable rules are: " + applicableRules);
 		for (Rule rule : applicableRules) {
-			earlySet.add(earlySetIndex, new EarlyItem(new DottedRule(rule, 0), earlySetIndex));
+			earlySet.add(earlySetIndex, earlyItemFactory.createEarlyItem(new DottedRule(rule, 0), earlySetIndex));
 		}
 	}
 

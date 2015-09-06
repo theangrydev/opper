@@ -2,6 +2,9 @@ package io.github.theangrydev.opper;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
+
+import static io.github.theangrydev.opper.Streams.stream;
 
 public class Parser {
 
@@ -42,12 +45,15 @@ public class Parser {
 			reduce(i);
 			debug(i);
 		}
-		for (EarlyItem earlyItem : earlySetsTable.lastEntry()) {
-			if (earlyItem.canAccept(grammar.acceptanceSymbol())) {
-				return true;
-			}
-		}
-		return false;
+		return lastEarlySetHasCompletedAcceptanceRule();
+	}
+
+	private boolean lastEarlySetHasCompletedAcceptanceRule() {
+		return stream(earlySetsTable.lastEntry()).filter(hasCompletedAcceptanceRule()).findFirst().isPresent();
+	}
+
+	private Predicate<EarlyItem> hasCompletedAcceptanceRule() {
+		return earlyItem -> earlyItem.hasCompletedAcceptanceRule(grammar.acceptanceSymbol());
 	}
 
 	private void expand() {

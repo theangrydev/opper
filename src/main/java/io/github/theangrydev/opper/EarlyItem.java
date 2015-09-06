@@ -16,8 +16,8 @@ public class EarlyItem implements EarlyOrLeoItem {
 		this.origin = origin;
 	}
 
-	public boolean canAccept(Symbol acceptanceSymbol) {
-		return origin == 0 && dottedRule.canAccept(acceptanceSymbol);
+	public boolean hasCompletedAcceptanceRule(Symbol acceptanceSymbol) {
+		return origin == 0 && dottedRule.isCompletedAcceptanceRule(acceptanceSymbol);
 	}
 
 	@Override

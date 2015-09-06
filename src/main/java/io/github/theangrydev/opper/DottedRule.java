@@ -37,7 +37,7 @@ public class DottedRule {
 		checkState(dotPosition < rule.length(), "The dot position is past the end of the rule (dot at %s, rule length is %s)", dotPosition, rule.length());
 	}
 
-	public boolean canAccept(Symbol acceptanceSymbol) {
+	public boolean isCompletedAcceptanceRule(Symbol acceptanceSymbol) {
 		return rule.left().equals(acceptanceSymbol) && isComplete();
 	}
 

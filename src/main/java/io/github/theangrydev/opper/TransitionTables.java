@@ -3,7 +3,6 @@ package io.github.theangrydev.opper;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 
-import java.lang.String;
 import java.util.List;
 import java.util.Set;
 

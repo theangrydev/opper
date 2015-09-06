@@ -22,7 +22,7 @@ public class ArithmeticParserTest {
 
 	@Test
 	public void shouldParseALeftRecursiveGrammar() {
-		Corpus corpus = new FixedCorpus(grammar.two, grammar.plus, grammar.three, grammar.times, grammar.four);
+		Corpus corpus = new FixedCorpus(grammar.two, grammar.plus, grammar.three, grammar.plus, grammar.two, grammar.plus, grammar.three, grammar.times, grammar.four);
 
 		Parser parser = new Parser(grammar, corpus);
 

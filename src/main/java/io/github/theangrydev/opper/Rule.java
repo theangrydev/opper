@@ -18,6 +18,10 @@ public class Rule {
 		return right.symbolAt(dotPosition);
 	}
 
+	public Symbol rightPrefix() {
+		return symbolAt(0);
+	}
+
 	public Symbol left() {
 		return left;
 	}

@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -34,18 +35,21 @@ public class ComputedRulePrediction implements RulePrediction {
 		return rule -> derivationPrefixes.contains(rule.left());
 	}
 
+	private Predicate<Rule> leftIsEqualTo(Symbol symbol) {
+		return rule -> symbol.equals(rule.left());
+	}
+
 	// this could be precomputed per symbol
 	private List<Symbol> determineDerivationPrefixes(Symbol symbol) {
 		List<Symbol> derivations = new ObjectArrayList<>();
 		derivations.add(symbol);
 		for (int i = 0; i < derivations.size(); i++) {
-			for (Rule rule : grammar.rules()) {
-				if (rule.left().equals(derivations.get(i))) {
-					Symbol prefix = rule.symbolAt(0);
-					derivations.add(prefix);
-				}
-			}
+			derivationPrefixes(derivations.get(i)).forEach(derivations::add);
 		}
 		return derivations;
+	}
+
+	private Stream<Symbol> derivationPrefixes(Symbol symbol) {
+		return grammar.rules().stream().filter(leftIsEqualTo(symbol)).map(Rule::rightPrefix);
 	}
 }

@@ -28,19 +28,7 @@ public class EarlySet implements Iterable<EarlyItem> {
 
 	@Override
 	public Iterator<EarlyItem> iterator() {
-		return new Iterator<EarlyItem>() {
-			private int i = 0;
-
-			@Override
-			public boolean hasNext() {
-				return i < earlyItems.size();
-			}
-
-			@Override
-			public EarlyItem next() {
-				return earlyItems.get(i++);
-			}
-		};
+		return earlyItems.iterator();
 	}
 
 	public boolean isNew(int earlySetIndex, EarlyItem earlyItem) {

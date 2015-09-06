@@ -1,8 +1,10 @@
 package io.github.theangrydev.opper;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -41,12 +43,19 @@ public class ComputedRulePrediction implements RulePrediction {
 
 	// this could be precomputed per symbol
 	private List<Symbol> determineDerivationPrefixes(Symbol symbol) {
-		List<Symbol> derivations = new ObjectArrayList<>();
-		derivations.add(symbol);
-		for (int i = 0; i < derivations.size(); i++) {
-			derivationPrefixes(derivations.get(i)).forEach(derivations::add);
+		List<Symbol> derivationsPrefixes = new ObjectArrayList<>();
+		Set<Symbol> uniqueDerivations = new ObjectArraySet<>();
+		derivationsPrefixes.add(symbol);
+		uniqueDerivations.add(symbol);
+		for (Symbol derivationPrefix : derivationsPrefixes) {
+			derivationPrefixes(derivationPrefix).forEach(prefix -> {
+				boolean wasNew = uniqueDerivations.add(prefix);
+				if (wasNew) {
+					derivationsPrefixes.add(prefix);
+				}
+			});
 		}
-		return derivations;
+		return derivationsPrefixes;
 	}
 
 	private Stream<Symbol> derivationPrefixes(Symbol symbol) {

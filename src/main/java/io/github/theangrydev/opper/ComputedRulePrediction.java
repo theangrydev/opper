@@ -40,21 +40,14 @@ public class ComputedRulePrediction implements RulePrediction {
 	private List<Symbol> determineDerivationPrefixes(Symbol symbol) {
 		List<Symbol> derivations = new ObjectArrayList<>();
 		derivations.add(symbol);
-		boolean changed;
-		int i = 0;
-		do {
-			int size = derivations.size();
-			changed = false;
-			for (; i < size; i++) {
-				for (Rule rule : grammar.rules()) {
-					if (rule.left().equals(derivations.get(i))) {
-						Symbol prefix = rule.symbolAt(0);
-						derivations.add(prefix);
-						changed = true;
-					}
+		for (int i = 0; i < derivations.size(); i++) {
+			for (Rule rule : grammar.rules()) {
+				if (rule.left().equals(derivations.get(i))) {
+					Symbol prefix = rule.symbolAt(0);
+					derivations.add(prefix);
 				}
 			}
-		} while (changed);
+		}
 		return derivations;
 	}
 }

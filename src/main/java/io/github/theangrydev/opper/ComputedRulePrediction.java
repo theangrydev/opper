@@ -3,6 +3,9 @@ package io.github.theangrydev.opper;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import java.util.List;
+import java.util.function.Predicate;
+
+import static java.util.stream.Collectors.toList;
 
 public class ComputedRulePrediction implements RulePrediction {
 
@@ -24,17 +27,12 @@ public class ComputedRulePrediction implements RulePrediction {
 	}
 
 	private List<Rule> determineApplicableRules(List<Symbol> derivationPrefixes) {
-		List<Rule> applicableRules = new ObjectArrayList<>();
-		for (Symbol derivationPrefix : derivationPrefixes) {
-			for (Rule rule : grammar.rules()) {
-				if (rule.left().equals(derivationPrefix)) {
-					applicableRules.add(rule);
-				}
-			}
-		}
-		return applicableRules;
+		return grammar.rules().stream().filter(leftIsIn(derivationPrefixes)).collect(toList());
 	}
 
+	private Predicate<Rule> leftIsIn(List<Symbol> derivationPrefixes) {
+		return rule -> derivationPrefixes.contains(rule.left());
+	}
 
 	// this could be precomputed per symbol
 	private List<Symbol> determineDerivationPrefixes(Symbol symbol) {

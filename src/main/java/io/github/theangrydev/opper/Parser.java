@@ -41,7 +41,7 @@ public class Parser {
 			expand();
 			scan(i);
 			if (earlySet(i).isEmpty()) {
-				//log("The early set was empty after scanning, failing the parse.");
+				logger.log(() -> "The early set was empty after scanning, failing the parse.");
 				return false;
 			}
 			reduce(i);

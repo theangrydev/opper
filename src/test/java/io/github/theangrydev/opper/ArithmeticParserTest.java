@@ -24,7 +24,7 @@ public class ArithmeticParserTest {
 	public void shouldParseALeftRecursiveGrammar() {
 		Corpus corpus = new FixedCorpus(grammar.two, grammar.plus, grammar.three, grammar.plus, grammar.two, grammar.plus, grammar.three, grammar.times, grammar.four);
 
-		Parser parser = new Parser(grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
 		assertThat(parser.parse()).isTrue();
 	}

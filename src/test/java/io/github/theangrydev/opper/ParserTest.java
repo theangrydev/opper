@@ -15,7 +15,7 @@ public class ParserTest {
 	public void shouldParseASimpleGrammar() {
 		Corpus corpus = new FixedCorpus(grammar.middle, grammar.second, grammar.dummy);
 
-		Parser parser = new Parser(grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
 		assertThat(parser.parse()).isTrue();
 	}

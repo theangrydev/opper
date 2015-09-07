@@ -1,9 +1,12 @@
 package io.github.theangrydev.opper;
 
+import com.google.common.base.Stopwatch;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
@@ -12,12 +15,21 @@ public class LeftRecursiveParserTest {
 	private final ExampleGrammar grammar = new ExampleGrammar();
 
 	@Test
-	public void shouldParseALeftRecursiveGrammar() {
-		Corpus corpus = new FixedCorpus(grammar.repeated, grammar.repeated, grammar.repeated);
+	public void shouldParseALeftRecursiveGrammar() throws IOException, InterruptedException {
+		Corpus corpus = new FixedCorpus(repeat(10));
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
-		Parser parser = new Parser(grammar, corpus);
-
+		Stopwatch stopwatch = Stopwatch.createStarted();
 		assertThat(parser.parse()).isTrue();
+		System.out.println("took " + stopwatch.elapsed(TimeUnit.MILLISECONDS));
+	}
+
+	private Symbol[] repeat(int n) {
+		Symbol[] symbols = new Symbol[n];
+		for (int i = 0; i < n; i++) {
+			symbols[i] = grammar.repeated;
+		}
+		return symbols;
 	}
 
 	private static class ExampleGrammar implements Grammar {

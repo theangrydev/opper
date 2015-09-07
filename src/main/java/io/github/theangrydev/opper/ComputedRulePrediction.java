@@ -12,9 +12,11 @@ import static java.util.stream.Collectors.toList;
 
 public class ComputedRulePrediction implements RulePrediction {
 
+	private final Logger logger;
 	private final Grammar grammar;
 
-	public ComputedRulePrediction(Grammar grammar) {
+	public ComputedRulePrediction(Logger logger, Grammar grammar) {
+		this.logger = logger;
 		this.grammar = grammar;
 	}
 
@@ -23,9 +25,9 @@ public class ComputedRulePrediction implements RulePrediction {
 		// prediction
 		// aim is to find rules with LHS that is the prefix of any string that can be derived from the postdot symbol
 		List<Symbol> derivationPrefixes = determineDerivationPrefixes(symbol);
-		System.out.println("Derivation prefixes are: " + derivationPrefixes);
+		logger.log(() -> "Derivation prefixes are: " + derivationPrefixes);
 		List<Rule> applicableRules = determineApplicableRules(derivationPrefixes);
-		System.out.println("Applicable rules are: " + applicableRules);
+		logger.log(() -> "Applicable rules are: " + applicableRules);
 		return applicableRules;
 	}
 

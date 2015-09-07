@@ -1,11 +1,13 @@
 package io.github.theangrydev.opper;
 
+import com.google.common.base.Stopwatch;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import static org.assertj.core.api.StrictAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class RightRecursiveParserTest {
 
@@ -13,11 +15,21 @@ public class RightRecursiveParserTest {
 
 	@Test
 	public void shouldParseARightRecursiveGrammar() {
-		Corpus corpus = new FixedCorpus(grammar.repeated, grammar.repeated, grammar.terminal);
+		Corpus corpus = new FixedCorpus(repeat(10));
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
-		Parser parser = new Parser(grammar, corpus);
-
+		Stopwatch stopwatch = Stopwatch.createStarted();
 		assertThat(parser.parse()).isTrue();
+		System.out.println("took " + stopwatch.elapsed(TimeUnit.MILLISECONDS));
+	}
+
+	private Symbol[] repeat(int n) {
+		Symbol[] symbols = new Symbol[n+1];
+		for (int i = 0; i < n; i++) {
+			symbols[i] = grammar.repeated;
+		}
+		symbols[n] = grammar.terminal;
+		return symbols;
 	}
 
 	private static class ExampleGrammar implements Grammar {

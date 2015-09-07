@@ -8,6 +8,7 @@ import static io.github.theangrydev.opper.Streams.stream;
 
 public class Parser {
 
+	private final Logger logger;
 	private final Grammar grammar;
 	private final Corpus corpus;
 	private final RulePrediction rulePrediction;
@@ -15,21 +16,22 @@ public class Parser {
 	private final TransitionTables transitionTables;
 	private final EarlySetsTable earlySetsTable;
 
-	public Parser(Grammar grammar, Corpus corpus) {
+	public Parser(Logger logger, Grammar grammar, Corpus corpus) {
+		this.logger = logger;
 		this.grammar = grammar;
 		this.corpus = corpus;
-		this.rulePrediction = new ComputedRulePrediction(grammar);
+		this.rulePrediction = new CachedRulePrediction(grammar, new ComputedRulePrediction(logger, grammar));
 		this.earlyItemFactory = new EarlyItemFactory();
 		this.earlySetsTable = new EarlySetsTable();
 		this.transitionTables = new TransitionTables(grammar);
 	}
 
 	private void debug(int i) {
-		System.out.println("");
-		System.out.println("State at end of iteration #" + i);
-		System.out.println("Early set [" + i + "]: " + earlySet(i));
-		System.out.println("Transition tables: " + transitionTables);
-		System.out.println("");
+		logger.log(() -> "");
+		logger.log(() -> "State at end of iteration #" + i);
+		logger.log(() -> "Early set [" + i + "]: " + earlySet(i));
+		logger.log(() -> "Transition tables: " + transitionTables);
+		logger.log(() -> "");
 	}
 
 	// Algorithm 1
@@ -39,7 +41,7 @@ public class Parser {
 			expand();
 			scan(i);
 			if (earlySet(i).isEmpty()) {
-				System.out.println("The early set was empty after scanning, failing the parse.");
+				//log("The early set was empty after scanning, failing the parse.");
 				return false;
 			}
 			reduce(i);
@@ -71,28 +73,28 @@ public class Parser {
 
 	// Algorithm 3
 	private void scan(int i) {
-		System.out.println("Scan #" + i);
+		logger.log(() -> "Scan #" + i);
 		Symbol symbol = corpus.nextSymbol();
-		System.out.println("Processing symbol: " + symbol);
+		logger.log(() -> "Processing symbol: " + symbol);
 		Set<EarlyOrLeoItem> predecessors = transitionEarlySet(i - 1, symbol);
-		System.out.println("Predecessors in transition early set #" + (i - 1) + ": " + predecessors);
+		logger.log(() -> "Predecessors in transition early set #" + (i - 1) + ": " + predecessors);
 		for (EarlyOrLeoItem predecessor : predecessors) {
 			int origin = predecessor.origin();
-			System.out.println("origin: " + origin);
+			logger.log(() -> "origin: " + origin);
 			DottedRule next = predecessor.transition(symbol);
-			System.out.println("next: " + next);
+			logger.log(() -> "next: " + next);
 			addEarlyItem(i, next, origin);
 		}
 	}
 
 	// Algorithm 4
 	private void reduce(int i) {
-		System.out.println("Reduce #" + i);
+		logger.log(() -> "Reduce #" + i);
 		for (EarlyItem earlyItem : earlySet(i)) {
-			System.out.println("Processing: " + earlyItem);
+			logger.log(() -> "Processing: " + earlyItem);
 			int origin = earlyItem.origin();
 			Optional<Symbol> left = earlyItem.leftOfCompletedRule();
-			System.out.println("Left of completed rule: " + left);
+			logger.log(() -> "Left of completed rule: " + left);
 			if (left.isPresent()) {
 				reduceOneLeft(i, origin, left.get());
 			}
@@ -119,9 +121,9 @@ public class Parser {
 
 	// Algorithm 6
 	private void reduceOneLeft(int i, int origin, Symbol left) {
-		System.out.println("Reduce one");
+		logger.log(() -> "Reduce one");
 		Set<EarlyOrLeoItem> transitionEarlySet = transitionEarlySet(origin, left);
-		System.out.println("Origin transitions[" + origin + "," + left + "]: " + transitionEarlySet);
+		logger.log(() -> "Origin transitions[" + origin + "," + left + "]: " + transitionEarlySet);
 		for (EarlyOrLeoItem item : transitionEarlySet) {
 			performEarlyReduction(i, left, item);
 		}
@@ -136,20 +138,20 @@ public class Parser {
 
 	// Algorithm 9
 	private void addEarlyItem(int earlySetIndex, DottedRule confirmed, int origin) {
-		System.out.println("Adding early item to set #" + earlySetIndex + " with rule " + confirmed + " and origin " + origin);
+		logger.log(() -> "Adding early item to set #" + earlySetIndex + " with rule " + confirmed + " and origin " + origin);
 		EarlyItem confirmedEarlyItem = earlyItemFactory.createEarlyItem(confirmed, origin);
 		EarlySet earlySet = earlySet(earlySetIndex);
 		if (isNew(earlySetIndex, confirmedEarlyItem)) {
-			System.out.println("Early item is new, adding it...");
+			logger.log(() -> "Early item is new, adding it...");
 			earlySet.add(earlySetIndex, confirmedEarlyItem);
 		} else {
-			System.out.println("Early item is not new, ignored it.");
+			logger.log(() -> "Early item is not new, ignored it.");
 		}
 		if (confirmed.isComplete()) {
-			System.out.println("Dotted rule is complete, not doing any predictions.");
+			logger.log(() -> "Dotted rule is complete, not doing any predictions.");
 			return;
 		}
-		System.out.println("Making predictions based on the postdot symbol: " + confirmed.postDot());
+		logger.log(() -> "Making predictions based on the postdot symbol: " + confirmed.postDot());
 		for (Rule rule : rulePrediction.predict(confirmed.postDot())) {
 			earlySet.add(earlySetIndex, earlyItemFactory.createEarlyItem(rule, earlySetIndex));
 		}

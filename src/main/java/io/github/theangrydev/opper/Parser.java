@@ -66,7 +66,7 @@ public class Parser {
 	// Algorithm 2
 	private void initialize() {
 		expand();
-		addEarlyItem(0, DottedRule.begin(grammar.startRule()), 0);
+		addEarlyItem(0, DottedRule.begin(grammar.acceptanceRule()), 0);
 		reduce(0);
 		debug(0);
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 public interface Grammar {
 	List<Symbol> symbols();
 	List<Rule> rules();
-	Rule startRule();
+	Rule acceptanceRule();
 	Symbol acceptanceSymbol();
+	Symbol symbolByName(String name);
 }

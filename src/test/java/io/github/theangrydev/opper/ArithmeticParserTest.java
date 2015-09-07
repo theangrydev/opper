@@ -2,9 +2,7 @@ package io.github.theangrydev.opper;
 
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
-
+import static io.github.theangrydev.opper.FixedCorpus.corpus;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
 /**
@@ -18,61 +16,26 @@ import static org.assertj.core.api.StrictAssertions.assertThat;
  */
 public class ArithmeticParserTest {
 
-	private final ExampleGrammar grammar = new ExampleGrammar();
-
 	@Test
 	public void shouldParseALeftRecursiveGrammar() {
-		Corpus corpus = new FixedCorpus(grammar.two, grammar.plus, grammar.three, grammar.plus, grammar.two, grammar.plus, grammar.three, grammar.times, grammar.four);
+		Grammar grammar = new GrammarBuilder()
+			.withAcceptanceSymbol("P")
+			.withStartSymbol("S")
+			.withSymbols("+", "*", "M", "T", "1", "2", "3", "4")
+			.withRule("S", "S", "+", "M")
+			.withRule("S", "M")
+			.withRule("M", "M", "*", "T")
+			.withRule("M", "T")
+			.withRule("T", "1")
+			.withRule("T", "2")
+			.withRule("T", "3")
+			.withRule("T", "4")
+			.build();
+
+		Corpus corpus = corpus(grammar, "2", "+", "3", "+", "2", "+", "3", "*", "4");
 
 		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
 		assertThat(parser.parse()).isTrue();
-	}
-
-	private static class ExampleGrammar implements Grammar {
-
-		private final SymbolFactory symbolFactory = new SymbolFactory();
-		private final RuleFactory ruleFactory = new RuleFactory();
-
-		private final Symbol accept = symbolFactory.createSymbol("P");
-		private final Symbol plus = symbolFactory.createSymbol("+");
-		private final Symbol addition = symbolFactory.createSymbol("S");
-		private final Symbol times = symbolFactory.createSymbol("*");
-		private final Symbol multiplication = symbolFactory.createSymbol("M");
-		private final Symbol number = symbolFactory.createSymbol("T");
-		private final Symbol one = symbolFactory.createSymbol("1");
-		private final Symbol two = symbolFactory.createSymbol("2");
-		private final Symbol three = symbolFactory.createSymbol("3");
-		private final Symbol four = symbolFactory.createSymbol("4");
-
-		private final Rule acceptRule = ruleFactory.createRule(accept, addition);
-		private final Rule addRuleRecursive = ruleFactory.createRule(addition, addition, plus, multiplication);
-		private final Rule addRuleTerminal = ruleFactory.createRule(addition, multiplication);
-		private final Rule multRuleRecursive = ruleFactory.createRule(multiplication, multiplication, times, number);
-		private final Rule multRuleTerminal = ruleFactory.createRule(multiplication, number);
-		private final Rule oneIsANumber = ruleFactory.createRule(number, one);
-		private final Rule twoIsANumber = ruleFactory.createRule(number, two);
-		private final Rule threeIsANumber = ruleFactory.createRule(number, three);
-		private final Rule fourIsANumber = ruleFactory.createRule(number, four);
-
-		@Override
-		public List<Symbol> symbols() {
-			return Arrays.asList(accept, plus, addition, times, multiplication, number, one, two, three, four);
-		}
-
-		@Override
-		public List<Rule> rules() {
-			return Arrays.asList(acceptRule, addRuleRecursive, addRuleTerminal, multRuleRecursive, multRuleTerminal, oneIsANumber, twoIsANumber, threeIsANumber, fourIsANumber);
-		}
-
-		@Override
-		public Symbol acceptanceSymbol() {
-			return accept;
-		}
-
-		@Override
-		public Rule startRule() {
-			return acceptRule;
-		}
 	}
 }

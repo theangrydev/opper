@@ -61,10 +61,10 @@ public class GrammarBuilder {
 		return this;
 	}
 
-	private Symbol symbolByName(String left) {
-		Symbol symbol = symbolsByName.get(left);
+	private Symbol symbolByName(String name) {
+		Symbol symbol = symbolsByName.get(name);
 		if (symbol == null) {
-			throw new IllegalArgumentException("'" + left + "' is not a known symbol");
+			throw new IllegalArgumentException("'" + name + "' is not a known symbol");
 		}
 		return symbol;
 	}

@@ -2,6 +2,7 @@ package io.github.theangrydev.opper;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.joining;
 
@@ -24,5 +25,22 @@ public class SymbolSequence {
 	@Override
 	public String toString() {
 		return symbols.stream().map(Symbol::toString).collect(joining(" "));
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(symbols);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		final SymbolSequence other = (SymbolSequence) obj;
+		return Objects.equals(this.symbols, other.symbols);
 	}
 }

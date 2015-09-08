@@ -1,7 +1,6 @@
 package io.github.theangrydev.opper;
 
-import java.lang.*;
-import java.lang.String;
+import java.util.Objects;
 
 public class Symbol {
 
@@ -20,5 +19,23 @@ public class Symbol {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(index, name);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		final Symbol other = (Symbol) obj;
+		return Objects.equals(this.index, other.index)
+			&& Objects.equals(this.name, other.name);
 	}
 }

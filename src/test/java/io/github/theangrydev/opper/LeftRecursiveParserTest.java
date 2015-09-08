@@ -23,18 +23,10 @@ public class LeftRecursiveParserTest {
 			.build();
 		Corpus corpus = corpus(nCopies(10, grammar.symbolByName("REPEATED")));
 
-		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new SystemOutLogger(), grammar, corpus);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		assertThat(parser.parse()).isTrue();
 		System.out.println("took " + stopwatch.elapsed(TimeUnit.MILLISECONDS));
-	}
-
-	private Symbol[] repeat(Symbol symbol, int n) {
-		Symbol[] symbols = new Symbol[n];
-		for (int i = 0; i < n; i++) {
-			symbols[i] = symbol;
-		}
-		return symbols;
 	}
 }

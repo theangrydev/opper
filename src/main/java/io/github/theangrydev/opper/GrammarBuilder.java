@@ -54,11 +54,19 @@ public class GrammarBuilder {
 	}
 
 	public GrammarBuilder withRule(String left, String... right) {
-		Symbol leftSymbol = symbolsByName.get(left);
-		Symbol[] rightSymbols = Arrays.stream(right).map(symbolsByName::get).toArray(Symbol[]::new);
+		Symbol leftSymbol = symbolByName(left);
+		Symbol[] rightSymbols = Arrays.stream(right).map(this::symbolByName).toArray(Symbol[]::new);
 		Rule rule = ruleFactory.createRule(leftSymbol, rightSymbols);
 		rules.add(rule);
 		return this;
+	}
+
+	private Symbol symbolByName(String left) {
+		Symbol symbol = symbolsByName.get(left);
+		if (symbol == null) {
+			throw new IllegalArgumentException("'" + left + "' is not a known symbol");
+		}
+		return symbol;
 	}
 
 	private Symbol createSymbol(String name) {

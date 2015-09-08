@@ -18,13 +18,13 @@ public class EarlySetTest implements WithAssertions {
 		EarlyItem newItem = createEarlyItem("new");
 
 		EarlySet earlySet = new EarlySet();
-		earlySet.add(0, oldItem);
+		earlySet.add(oldItem);
 
 		List<EarlyItem> itemsSeen = new ArrayList<>();
 		boolean addedNewItem = false;
 		for (EarlyItem earlyItem : earlySet) {
 			if (!addedNewItem) {
-				earlySet.add(0, newItem);
+				earlySet.add(newItem);
 				addedNewItem = true;
 			}
 			itemsSeen.add(earlyItem);

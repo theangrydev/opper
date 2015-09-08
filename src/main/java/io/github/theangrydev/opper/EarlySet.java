@@ -15,10 +15,10 @@ public class EarlySet implements Iterable<EarlyItem> {
 	public EarlySet() {
 		this.earlyItems = new ObjectArrayList<>();
 		this.oldRules = new Object2IntArrayMap<>();
+		oldRules.defaultReturnValue(-1);
 	}
 
-	public void add(int earlySetIndex, EarlyItem earlyItem) {
-		oldRules.put(earlyItem.dottedRule(), earlySetIndex);
+	public void add(EarlyItem earlyItem) {
 		earlyItems.add(earlyItem);
 	}
 
@@ -32,7 +32,7 @@ public class EarlySet implements Iterable<EarlyItem> {
 	}
 
 	public boolean isNew(int earlySetIndex, EarlyItem earlyItem) {
-		return earlySetIndex != oldRules.getInt(earlyItem.dottedRule());
+		return earlySetIndex != oldRules.put(earlyItem.dottedRule(), earlySetIndex);
 	}
 
 	@Override

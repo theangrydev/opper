@@ -141,19 +141,24 @@ public class Parser {
 		logger.log(() -> "Adding early item to set #" + earlySetIndex + " with rule " + confirmed + " and origin " + origin);
 		EarlyItem confirmedEarlyItem = earlyItemFactory.createEarlyItem(confirmed, origin);
 		EarlySet earlySet = earlySet(earlySetIndex);
-		if (isNew(earlySetIndex, confirmedEarlyItem)) {
-			logger.log(() -> "Early item is new, adding it...");
-			earlySet.add(earlySetIndex, confirmedEarlyItem);
-		} else {
-			logger.log(() -> "Early item is not new, ignored it.");
-		}
+		addEarlyItemIfItIsNew(earlySetIndex, earlySet, confirmedEarlyItem);
 		if (confirmed.isComplete()) {
 			logger.log(() -> "Dotted rule is complete, not doing any predictions.");
 			return;
 		}
 		logger.log(() -> "Making predictions based on the postdot symbol: " + confirmed.postDot());
 		for (Rule rule : rulePrediction.predict(confirmed.postDot())) {
-			earlySet.add(earlySetIndex, earlyItemFactory.createEarlyItem(rule, earlySetIndex));
+			EarlyItem earlyItem = earlyItemFactory.createEarlyItem(rule, earlySetIndex);
+			addEarlyItemIfItIsNew(earlySetIndex, earlySet, earlyItem);
+		}
+	}
+
+	private void addEarlyItemIfItIsNew(int earlySetIndex, EarlySet earlySet, EarlyItem earlyItem) {
+		if (isNew(earlySetIndex, earlyItem)) {
+			logger.log(() -> "Early item is new, adding it...");
+			earlySet.add(earlyItem);
+		} else {
+			logger.log(() -> "Early item is not new, ignored it.");
 		}
 	}
 
@@ -162,7 +167,7 @@ public class Parser {
 	}
 
 	private boolean isNew(int earlySetIndex, EarlyItem earlyItem) {
-		return earlySetIndex == 0 || earlySet(earlySetIndex - 1).isNew(earlySetIndex, earlyItem);
+		return earlySet(earlyItem.origin()).isNew(earlySetIndex, earlyItem);
 	}
 
 	private EarlySet earlySet(int i) {

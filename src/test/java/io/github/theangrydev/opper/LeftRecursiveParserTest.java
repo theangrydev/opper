@@ -23,7 +23,7 @@ public class LeftRecursiveParserTest {
 			.build();
 		Corpus corpus = corpus(nCopies(10, grammar.symbolByName("REPEATED")));
 
-		Parser parser = new Parser(new SystemOutLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		assertThat(parser.parse()).isTrue();

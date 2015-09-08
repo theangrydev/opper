@@ -63,7 +63,7 @@ public class DottedRule {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(rule, dotPosition);
+		return rule.hashCode() + 31 * dotPosition;
 	}
 
 	@Override

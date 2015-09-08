@@ -1,13 +1,13 @@
 package io.github.theangrydev.opper;
 
-import java.util.Objects;
-
 public class Rule {
 
+	private final int id;
 	private final Symbol left;
 	private final SymbolSequence right;
 
-	public Rule(Symbol left, SymbolSequence right) {
+	public Rule(int id, Symbol left, SymbolSequence right) {
+		this.id = id;
 		this.left = left;
 		this.right = right;
 	}
@@ -35,7 +35,7 @@ public class Rule {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(left, right);
+		return id;
 	}
 
 	@Override
@@ -47,7 +47,6 @@ public class Rule {
 			return false;
 		}
 		final Rule other = (Rule) obj;
-		return Objects.equals(this.left, other.left)
-			&& Objects.equals(this.right, other.right);
+		return this.id == other.id;
 	}
 }

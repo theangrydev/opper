@@ -1,7 +1,5 @@
 package io.github.theangrydev.opper.grammar;
 
-import io.github.theangrydev.opper.grammar.Symbol;
-
 import java.util.Arrays;
 import java.util.List;
 

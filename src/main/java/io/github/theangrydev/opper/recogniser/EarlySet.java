@@ -1,7 +1,5 @@
 package io.github.theangrydev.opper.recogniser;
 
-import io.github.theangrydev.opper.recogniser.DottedRule;
-import io.github.theangrydev.opper.recogniser.EarlyItem;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;

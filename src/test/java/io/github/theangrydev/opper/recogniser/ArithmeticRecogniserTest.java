@@ -1,7 +1,7 @@
 package io.github.theangrydev.opper.recogniser;
 
-import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.common.DoNothingLogger;
+import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import org.junit.Test;

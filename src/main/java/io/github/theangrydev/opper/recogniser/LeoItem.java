@@ -3,9 +3,6 @@ package io.github.theangrydev.opper.recogniser;
 import com.google.common.base.Preconditions;
 import io.github.theangrydev.opper.grammar.Symbol;
 
-import java.lang.*;
-import java.lang.String;
-
 public class LeoItem implements EarlyOrLeoItem {
 
 	private final DottedRule top;

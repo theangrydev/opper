@@ -112,11 +112,7 @@ public class Parser {
 			}
 			Symbol postdot = dottedRule.postDot();
 			Set<EarlyOrLeoItem> transitions = currentTransitionsEarlySet(postdot);
-			if (postdotTransitionIsUniqueByRightRecursiveRule(dottedRule)) {
-				transitions.add(new LeoItem(dottedRule, postdot, currentEarlySetIndex));
-			} else {
-				transitions.add(earlyItem);
-			}
+			transitions.add(earlyItem);
 		}
 	}
 
@@ -161,10 +157,6 @@ public class Parser {
 		} else {
 			logger.log(() -> "Early item is not new, ignored it.");
 		}
-	}
-
-	private boolean postdotTransitionIsUniqueByRightRecursiveRule(DottedRule postdot) {
-		return false;
 	}
 
 	private boolean isNew(EarlyItem earlyItem) {

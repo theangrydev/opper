@@ -1,5 +1,10 @@
 package io.github.theangrydev.opper;
 
+import io.github.theangrydev.opper.grammar.RuleFactory;
+import io.github.theangrydev.opper.grammar.SymbolFactory;
+import io.github.theangrydev.opper.recogniser.EarlyItem;
+import io.github.theangrydev.opper.recogniser.EarlyItemFactory;
+import io.github.theangrydev.opper.recogniser.EarlySet;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 

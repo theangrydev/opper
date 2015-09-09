@@ -1,12 +1,21 @@
-package io.github.theangrydev.opper;
+package io.github.theangrydev.opper.recogniser;
+
+import io.github.theangrydev.opper.*;
+import io.github.theangrydev.opper.common.Logger;
+import io.github.theangrydev.opper.grammar.Grammar;
+import io.github.theangrydev.opper.grammar.Rule;
+import io.github.theangrydev.opper.grammar.Symbol;
+import io.github.theangrydev.opper.prediction.ComputedRulePrediction;
+import io.github.theangrydev.opper.prediction.PrecomputedRulePrediction;
+import io.github.theangrydev.opper.prediction.RulePrediction;
 
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import static io.github.theangrydev.opper.Streams.stream;
+import static io.github.theangrydev.opper.common.Streams.stream;
 
-public class Parser {
+public class Recogniser {
 
 	private final Logger logger;
 	private final Grammar grammar;
@@ -17,7 +26,7 @@ public class Parser {
 	private final EarlySetsTable earlySetsTable;
 	private int currentEarlySetIndex;
 
-	public Parser(Logger logger, Grammar grammar, Corpus corpus) {
+	public Recogniser(Logger logger, Grammar grammar, Corpus corpus) {
 		this.logger = logger;
 		this.grammar = grammar;
 		this.corpus = corpus;
@@ -36,13 +45,13 @@ public class Parser {
 	}
 
 	// Algorithm 1
-	public boolean parse() {
+	public boolean recognise() {
 		initialize();
 		for (currentEarlySetIndex = 1; corpus.hasNextSymbol(); currentEarlySetIndex++) {
 			expand();
 			scan();
 			if (currentEarlySet().isEmpty()) {
-				logger.log(() -> "The early set was empty after scanning, failing the parse.");
+				logger.log(() -> "The early set was empty after scanning, failing the recognise.");
 				return false;
 			}
 			reduce();

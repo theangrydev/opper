@@ -1,5 +1,6 @@
-package io.github.theangrydev.opper;
+package io.github.theangrydev.opper.recogniser;
 
+import io.github.theangrydev.opper.recogniser.EarlySet;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import java.lang.*;

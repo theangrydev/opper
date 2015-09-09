@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper;
+package io.github.theangrydev.opper.common;
 
 import java.util.function.Supplier;
 

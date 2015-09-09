@@ -1,5 +1,8 @@
 package io.github.theangrydev.opper;
 
+import io.github.theangrydev.opper.grammar.Grammar;
+import io.github.theangrydev.opper.grammar.GrammarBuilder;
+import io.github.theangrydev.opper.recogniser.Recogniser;
 import org.junit.Test;
 
 import static io.github.theangrydev.opper.FixedCorpus.corpus;
@@ -12,12 +15,12 @@ import static org.assertj.core.api.StrictAssertions.assertThat;
  * <M> ::= <M> "*" <T> | <T>
  * <T> ::= "1" | "2" | "3" | "4"
  * </pre>
- * @see <a href="https://en.wikipedia.org/w/index.php?title=Earley_parser&oldid=667926718#Example">Early parser example</a>
+ * @see <a href="https://en.wikipedia.org/w/index.php?title=Earley_recogniser&oldid=667926718#Example">Early recogniser example</a>
  */
-public class ArithmeticParserTest {
+public class ArithmeticRecogniserTest {
 
 	@Test
-	public void shouldParseALeftRecursiveGrammar() {
+	public void shouldrecogniseALeftRecursiveGrammar() {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("P")
 			.withStartSymbol("S")
@@ -34,8 +37,8 @@ public class ArithmeticParserTest {
 
 		Corpus corpus = corpus(grammar, "2", "+", "3", "+", "2", "+", "3", "*", "4");
 
-		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
+		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(parser.parse()).isTrue();
+		assertThat(recogniser.recognise()).isTrue();
 	}
 }

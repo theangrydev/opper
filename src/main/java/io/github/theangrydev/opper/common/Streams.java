@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper;
+package io.github.theangrydev.opper.common;
 
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;

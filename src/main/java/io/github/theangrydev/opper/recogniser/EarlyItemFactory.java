@@ -1,4 +1,8 @@
-package io.github.theangrydev.opper;
+package io.github.theangrydev.opper.recogniser;
+
+import io.github.theangrydev.opper.grammar.Rule;
+import io.github.theangrydev.opper.recogniser.DottedRule;
+import io.github.theangrydev.opper.recogniser.EarlyItem;
 
 public class EarlyItemFactory {
 

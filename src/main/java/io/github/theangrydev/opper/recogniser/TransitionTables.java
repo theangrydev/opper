@@ -1,5 +1,7 @@
-package io.github.theangrydev.opper;
+package io.github.theangrydev.opper.recogniser;
 
+import io.github.theangrydev.opper.grammar.Grammar;
+import io.github.theangrydev.opper.grammar.Symbol;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 

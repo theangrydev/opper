@@ -1,4 +1,6 @@
-package io.github.theangrydev.opper;
+package io.github.theangrydev.opper.grammar;
+
+import io.github.theangrydev.opper.grammar.Symbol;
 
 import java.util.HashSet;
 import java.util.Set;

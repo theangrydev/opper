@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper;
+package io.github.theangrydev.opper.grammar;
 
 import java.util.List;
 import java.util.Map;

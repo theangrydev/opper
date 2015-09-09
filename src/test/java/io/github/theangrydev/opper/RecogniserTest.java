@@ -1,14 +1,17 @@
 package io.github.theangrydev.opper;
 
+import io.github.theangrydev.opper.grammar.Grammar;
+import io.github.theangrydev.opper.grammar.GrammarBuilder;
+import io.github.theangrydev.opper.recogniser.Recogniser;
 import org.junit.Test;
 
 import static io.github.theangrydev.opper.FixedCorpus.corpus;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
-public class ParserTest {
+public class RecogniserTest {
 
 	@Test
-	public void shouldParseASimpleGrammar() {
+	public void shouldrecogniseASimpleGrammar() {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")
@@ -18,8 +21,8 @@ public class ParserTest {
 			.build();
 		Corpus corpus = corpus(grammar, "MIDDLE", "SECOND", "DUMMY");
 
-		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
+		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(parser.parse()).isTrue();
+		assertThat(recogniser.recognise()).isTrue();
 	}
 }

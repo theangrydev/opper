@@ -21,7 +21,7 @@ public class Parser {
 		this.logger = logger;
 		this.grammar = grammar;
 		this.corpus = corpus;
-		this.rulePrediction = new CachedRulePrediction(grammar, new ComputedRulePrediction(logger, grammar));
+		this.rulePrediction = new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(logger, grammar));
 		this.earlyItemFactory = new EarlyItemFactory();
 		this.earlySetsTable = new EarlySetsTable();
 		this.transitionTables = new TransitionTables(grammar);

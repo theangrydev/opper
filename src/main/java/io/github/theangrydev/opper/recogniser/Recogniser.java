@@ -1,13 +1,13 @@
 package io.github.theangrydev.opper.recogniser;
 
-import io.github.theangrydev.opper.*;
 import io.github.theangrydev.opper.common.Logger;
+import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Rule;
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.prediction.ComputedRulePrediction;
-import io.github.theangrydev.opper.prediction.PrecomputedRulePrediction;
-import io.github.theangrydev.opper.prediction.RulePrediction;
+import io.github.theangrydev.opper.recogniser.prediction.ComputedRulePrediction;
+import io.github.theangrydev.opper.recogniser.prediction.PrecomputedRulePrediction;
+import io.github.theangrydev.opper.recogniser.prediction.RulePrediction;
 
 import java.util.Optional;
 import java.util.Set;

@@ -1,6 +1,4 @@
-package io.github.theangrydev.opper;
-
-import io.github.theangrydev.opper.common.Logger;
+package io.github.theangrydev.opper.common;
 
 import java.util.function.Supplier;
 

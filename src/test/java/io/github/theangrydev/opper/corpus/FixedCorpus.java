@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper;
+package io.github.theangrydev.opper.corpus;
 
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;

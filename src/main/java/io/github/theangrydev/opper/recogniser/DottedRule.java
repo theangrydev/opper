@@ -23,7 +23,7 @@ public class DottedRule {
 
 	public Symbol postDot() {
 		checkThatDotPositionIsInsideRule();
-		return rule.symbolAt(dotPosition);
+		return rule.derivation(dotPosition);
 	}
 
 	public DottedRule next() {
@@ -32,33 +32,33 @@ public class DottedRule {
 	}
 
 	public Symbol left() {
-		return rule.left();
+		return rule.start();
 	}
 
 	private void checkThatDotPositionIsInsideRule() {
-		checkState(dotPosition < rule.length(), "The dot position is past the end of the rule (dot at %s, rule length is %s)", dotPosition, rule.length());
+		checkState(dotPosition < rule.derivationLength(), "The dot position is past the end of the rule (dot at %s, rule length is %s)", dotPosition, rule.derivationLength());
 	}
 
 	public boolean isCompletedAcceptanceRule(Symbol acceptanceSymbol) {
-		return rule.left().equals(acceptanceSymbol) && isComplete();
+		return rule.start().equals(acceptanceSymbol) && isComplete();
 	}
 
 	public boolean isComplete() {
-		return dotPosition == rule.length();
+		return dotPosition == rule.derivationLength();
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder string = new StringBuilder();
-		string.append(rule.left());
+		string.append(rule.start());
 		string.append(" -> ");
 		for (int i = 0; i < dotPosition; i++) {
-			string.append(rule.symbolAt(i));
+			string.append(rule.derivation(i));
 			string.append(" ");
 		}
 		string.append(". ");
-		for (int i = dotPosition; i < rule.length(); i++) {
-			string.append(rule.symbolAt(i));
+		for (int i = dotPosition; i < rule.derivationLength(); i++) {
+			string.append(rule.derivation(i));
 			string.append(" ");
 		}
 		return string.toString();

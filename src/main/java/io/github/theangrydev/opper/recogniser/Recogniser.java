@@ -153,7 +153,7 @@ public class Recogniser {
 			return;
 		}
 		logger.log(() -> "Making predictions based on the postdot symbol: " + confirmed.postDot());
-		for (Rule rule : rulePrediction.predict(confirmed.postDot())) {
+		for (Rule rule : rulePrediction.rulesThatCanBeReachedFrom(confirmed.postDot())) {
 			EarlyItem earlyItem = earlyItemFactory.createEarlyItem(rule, currentEarlySetIndex);
 			addEarlyItemIfItIsNew(earlySet, earlyItem);
 		}

@@ -3,34 +3,34 @@ package io.github.theangrydev.opper.grammar;
 public class Rule {
 
 	private final int id;
-	private final Symbol left;
-	private final SymbolSequence right;
+	private final Symbol start;
+	private final SymbolSequence derivation;
 
-	public Rule(int id, Symbol left, SymbolSequence right) {
+	public Rule(int id, Symbol start, SymbolSequence derivation) {
 		this.id = id;
-		this.left = left;
-		this.right = right;
+		this.start = start;
+		this.derivation = derivation;
 	}
 
-	public int length() {
-		return right.length();
+	public int derivationLength() {
+		return derivation.length();
 	}
 
-	public Symbol symbolAt(int dotPosition) {
-		return right.symbolAt(dotPosition);
+	public Symbol derivation(int dotPosition) {
+		return derivation.symbolAt(dotPosition);
 	}
 
-	public Symbol rightPrefix() {
-		return symbolAt(0);
+	public Symbol derivationPrefix() {
+		return derivation(0);
 	}
 
-	public Symbol left() {
-		return left;
+	public Symbol start() {
+		return start;
 	}
 
 	@Override
 	public java.lang.String toString() {
-		return left + " -> " + right;
+		return start + " -> " + derivation;
 	}
 
 	@Override

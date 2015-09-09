@@ -4,7 +4,7 @@ public class RuleFactory {
 
 	private int ruleId;
 
-	public Rule createRule(Symbol left, Symbol... right) {
-		return new Rule(ruleId++, left, new SymbolSequence(right));
+	public Rule createRule(Symbol start, Symbol... derivation) {
+		return new Rule(ruleId++, start, new SymbolSequence(derivation));
 	}
 }

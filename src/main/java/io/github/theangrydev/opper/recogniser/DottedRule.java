@@ -31,8 +31,8 @@ public class DottedRule {
 		return new DottedRule(rule, dotPosition + 1);
 	}
 
-	public Symbol left() {
-		return rule.start();
+	public Symbol trigger() {
+		return rule.trigger();
 	}
 
 	private void checkThatDotPositionIsInsideRule() {
@@ -40,7 +40,7 @@ public class DottedRule {
 	}
 
 	public boolean isCompletedAcceptanceRule(Symbol acceptanceSymbol) {
-		return rule.start().equals(acceptanceSymbol) && isComplete();
+		return rule.trigger().equals(acceptanceSymbol) && isComplete();
 	}
 
 	public boolean isComplete() {
@@ -50,7 +50,7 @@ public class DottedRule {
 	@Override
 	public String toString() {
 		StringBuilder string = new StringBuilder();
-		string.append(rule.start());
+		string.append(rule.trigger());
 		string.append(" -> ");
 		for (int i = 0; i < dotPosition; i++) {
 			string.append(rule.derivation(i));

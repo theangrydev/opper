@@ -3,12 +3,12 @@ package io.github.theangrydev.opper.grammar;
 public class Rule {
 
 	private final int id;
-	private final Symbol start;
+	private final Symbol trigger;
 	private final SymbolSequence derivation;
 
-	public Rule(int id, Symbol start, SymbolSequence derivation) {
+	public Rule(int id, Symbol trigger, SymbolSequence derivation) {
 		this.id = id;
-		this.start = start;
+		this.trigger = trigger;
 		this.derivation = derivation;
 	}
 
@@ -24,13 +24,13 @@ public class Rule {
 		return derivation(0);
 	}
 
-	public Symbol start() {
-		return start;
+	public Symbol trigger() {
+		return trigger;
 	}
 
 	@Override
 	public java.lang.String toString() {
-		return start + " -> " + derivation;
+		return trigger + " -> " + derivation;
 	}
 
 	@Override

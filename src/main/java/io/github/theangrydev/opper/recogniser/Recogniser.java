@@ -103,10 +103,10 @@ public class Recogniser {
 		for (EarlyItem earlyItem : currentEarlySet()) {
 			logger.log(() -> "Processing: " + earlyItem);
 			int origin = earlyItem.origin();
-			Optional<Symbol> left = earlyItem.leftOfCompletedRule();
-			logger.log(() -> "Left of completed rule: " + left);
-			if (left.isPresent()) {
-				reduceOneLeft(origin, left.get());
+			Optional<Symbol> trigger = earlyItem.triggerOfCompletedRule();
+			logger.log(() -> "Trigger of completed rule: " + trigger);
+			if (trigger.isPresent()) {
+				reduceOneLeft(origin, trigger.get());
 			}
 		}
 		memoizeTransitions();
@@ -153,7 +153,7 @@ public class Recogniser {
 			return;
 		}
 		logger.log(() -> "Making predictions based on the postdot symbol: " + confirmed.postDot());
-		for (Rule rule : rulePrediction.rulesThatCanBeReachedFrom(confirmed.postDot())) {
+		for (Rule rule : rulePrediction.rulesThatCanBeTriggeredBy(confirmed.postDot())) {
 			EarlyItem earlyItem = earlyItemFactory.createEarlyItem(rule, currentEarlySetIndex);
 			addEarlyItemIfItIsNew(earlySet, earlyItem);
 		}

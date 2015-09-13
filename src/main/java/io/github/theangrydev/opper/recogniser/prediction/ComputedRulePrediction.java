@@ -25,45 +25,43 @@ public class ComputedRulePrediction implements RulePrediction {
 	}
 
 	@Override
-	public List<Rule> rulesThatCanBeReachedFrom(Symbol startSymbol) {
-		// prediction
-		// aim is to find rules with LHS that is the prefix of any string that can be derived from the given symbol
-		List<Symbol> derivationPrefixes = determineDerivationPrefixes(startSymbol);
+	public List<Rule> rulesThatCanBeTriggeredBy(Symbol symbol) {
+		Set<Symbol> derivationPrefixes = derivationPrefixes(symbol);
 		logger.log(() -> "Derivation prefixes are: " + derivationPrefixes);
-		List<Rule> applicableRules = determineApplicableRules(derivationPrefixes);
+		List<Rule> applicableRules = rulesTriggeredBy(derivationPrefixes);
 		logger.log(() -> "Applicable rules are: " + applicableRules);
 		return applicableRules;
 	}
 
-	private List<Rule> determineApplicableRules(List<Symbol> derivationPrefixes) {
-		return grammar.rules().stream().filter(startsWithOneOf(derivationPrefixes)).collect(toList());
+	private List<Rule> rulesTriggeredBy(Set<Symbol> symbols) {
+		return grammar.rules().stream().filter(triggeredByOneOf(symbols)).collect(toList());
 	}
 
-	private Predicate<Rule> startsWithOneOf(List<Symbol> derivationPrefixes) {
-		return rule -> derivationPrefixes.contains(rule.start());
+	private Predicate<Rule> triggeredByOneOf(Set<Symbol> symbols) {
+		return rule -> symbols.contains(rule.trigger());
 	}
 
-	private List<Symbol> determineDerivationPrefixes(Symbol startSymbol) {
-		List<Symbol> confirmedPrefixes = new ObjectArrayList<>();
-		Set<Symbol> uniquePrefixes = new ObjectArraySet<>();
-		confirmedPrefixes.add(startSymbol);
-		uniquePrefixes.add(startSymbol);
-		for (Symbol confirmedPrefix : confirmedPrefixes) {
-			rulesThatStartWith(confirmedPrefix).map(Rule::derivationPrefix).forEach(derivationPrefix -> {
-				boolean wasNew = uniquePrefixes.add(derivationPrefix);
-				if (wasNew) {
-					confirmedPrefixes.add(derivationPrefix);
-				}
-			});
-		}
-		return confirmedPrefixes;
+	private Set<Symbol> derivationPrefixes(Symbol symbol) {
+		List<Symbol> confirmedPrefixes = new ObjectArrayList<Symbol>(){{
+			add(symbol);
+		}};
+		Set<Symbol> uniquePrefixes = new ObjectArraySet<Symbol>(){{
+			add(symbol);
+		}};
+		confirmedPrefixes.forEach(confirmedPrefix -> rulesTriggeredBy(confirmedPrefix).map(Rule::derivationPrefix).forEach(derivationPrefix -> {
+			boolean wasNew = uniquePrefixes.add(derivationPrefix);
+			if (wasNew) {
+				confirmedPrefixes.add(derivationPrefix);
+			}
+		}));
+		return uniquePrefixes;
 	}
 
-	private Stream<Rule> rulesThatStartWith(Symbol symbol) {
-		return grammar.rules().stream().filter(startsWith(symbol));
+	private Stream<Rule> rulesTriggeredBy(Symbol symbol) {
+		return grammar.rules().stream().filter(triggeredBy(symbol));
 	}
 
-	private Predicate<Rule> startsWith(Symbol symbol) {
-		return rule -> symbol.equals(rule.start());
+	private Predicate<Rule> triggeredBy(Symbol symbol) {
+		return rule -> symbol.equals(rule.trigger());
 	}
 }

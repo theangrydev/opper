@@ -48,7 +48,6 @@ public class Recogniser {
 		logger.log(() -> "");
 	}
 
-	// Algorithm 1
 	public boolean recognise() {
 		initialize();
 		for (currentEarlySetIndex = 1; corpus.hasNextSymbol(); currentEarlySetIndex++) {
@@ -77,7 +76,6 @@ public class Recogniser {
 		earlySetsTable.expand();
 	}
 
-	// Algorithm 2
 	private void initialize() {
 		expand();
 		addEarlyItem(DottedRule.begin(grammar.acceptanceRule()), 0);
@@ -85,7 +83,6 @@ public class Recogniser {
 		debug();
 	}
 
-	// Algorithm 3
 	private void read() {
 		logger.log(() -> "Read #" + currentEarlySetIndex);
 		Symbol symbol = corpus.nextSymbol();
@@ -101,7 +98,6 @@ public class Recogniser {
 		}
 	}
 
-	// Algorithm 4
 	private void reduce() {
 		logger.log(() -> "Reduce #" + currentEarlySetIndex);
 		for (EarlyItem earlyItem : currentEarlySet()) {
@@ -114,7 +110,6 @@ public class Recogniser {
 		memoizeTransitions();
 	}
 
-	// Algorithm 5
 	private void memoizeTransitions() {
 		for (EarlyItem earlyItem : currentEarlySet()) {
 			DottedRule dottedRule = earlyItem.dottedRule();
@@ -134,7 +129,6 @@ public class Recogniser {
 		}
 	}
 
-	// Algorithm 6
 	private void reduceOneLeft(int origin, Symbol left) {
 		logger.log(() -> "Reduce one");
 		Set<EarlyOrLeoItem> transitionEarlySet = transitionEarlySet(origin, left);
@@ -146,13 +140,11 @@ public class Recogniser {
 	}
 
 	private void performEarlyReduction(Symbol left, EarlyOrLeoItem item) {
-		// Algorithm 7 and 8 are handled using polymorphism
 		DottedRule next = item.transition(left);
 		int origin = item.origin();
 		addEarlyItem(next, origin);
 	}
 
-	// Algorithm 9
 	private void addEarlyItem(DottedRule confirmed, int origin) {
 		logger.log(() -> "Adding early item to set #" + currentEarlySetIndex + " with rule " + confirmed + " and origin " + origin);
 		EarlyItem confirmedEarlyItem = earlyItemFactory.createEarlyItem(confirmed, origin);

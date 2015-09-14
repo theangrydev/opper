@@ -1,6 +1,5 @@
 package io.github.theangrydev.opper.recogniser.prediction;
 
-import io.github.theangrydev.opper.common.Logger;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Rule;
 import io.github.theangrydev.opper.grammar.Symbol;
@@ -16,21 +15,15 @@ import static java.util.stream.Collectors.toList;
 
 public class ComputedRulePrediction implements RulePrediction {
 
-	private final Logger logger;
 	private final Grammar grammar;
 
-	public ComputedRulePrediction(Logger logger, Grammar grammar) {
-		this.logger = logger;
+	public ComputedRulePrediction(Grammar grammar) {
 		this.grammar = grammar;
 	}
 
 	@Override
 	public List<Rule> rulesThatCanBeTriggeredBy(Symbol symbol) {
-		Set<Symbol> derivationPrefixes = derivationPrefixes(symbol);
-		logger.log(() -> "Derivation prefixes are: " + derivationPrefixes);
-		List<Rule> applicableRules = rulesTriggeredBy(derivationPrefixes);
-		logger.log(() -> "Applicable rules are: " + applicableRules);
-		return applicableRules;
+		return rulesTriggeredBy(derivationPrefixes(symbol));
 	}
 
 	private List<Rule> rulesTriggeredBy(Set<Symbol> symbols) {

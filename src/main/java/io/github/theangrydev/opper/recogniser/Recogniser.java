@@ -34,7 +34,7 @@ public class Recogniser {
 		this.grammar = grammar;
 		this.corpus = corpus;
 		this.rightRecursion = new PrecomputedRightRecursion(grammar, new ComputedRightRecursion(grammar));
-		this.rulePrediction = new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(logger, grammar));
+		this.rulePrediction = new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(grammar));
 		this.earlyItemFactory = new EarlyItemFactory();
 		this.earlySetsTable = new EarlySetsTable();
 		this.transitionTables = new TransitionTables(grammar);

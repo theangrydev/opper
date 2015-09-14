@@ -28,6 +28,7 @@ public class GrammarBuilder {
 
 	public Grammar build() {
 		Rule acceptanceRule = ruleFactory.createRule(acceptanceSymbol, startSymbol);
+		rules.add(acceptanceRule);
 		return new SpecifiedGrammar(symbols, symbolsByName, rules, acceptanceRule, acceptanceSymbol);
 	}
 

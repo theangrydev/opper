@@ -17,12 +17,12 @@ public class PrecomputedRulePrediction implements RulePrediction {
 		this.predictions = new ObjectArrayList<>(symbols);
 		predictions.size(symbols);
 		for (Symbol symbol : grammar.symbols()) {
-			predictions.set(symbol.index(), computedRulePrediction.rulesThatCanBeTriggeredBy(symbol));
+			predictions.set(symbol.id(), computedRulePrediction.rulesThatCanBeTriggeredBy(symbol));
 		}
 	}
 
 	@Override
 	public List<Rule> rulesThatCanBeTriggeredBy(Symbol startSymbol) {
-		return predictions.get(startSymbol.index());
+		return predictions.get(startSymbol.id());
 	}
 }

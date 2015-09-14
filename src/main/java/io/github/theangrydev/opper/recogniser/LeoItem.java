@@ -30,4 +30,9 @@ public class LeoItem implements EarlyOrLeoItem {
 	public String toString() {
 		return top + " via " + transition + " @ " + origin;
 	}
+
+	@Override
+	public DottedRule dottedRule() {
+		return top;
+	}
 }

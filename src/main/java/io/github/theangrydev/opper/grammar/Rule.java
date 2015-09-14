@@ -16,6 +16,18 @@ public class Rule {
 		return derivation.length();
 	}
 
+	public int derivationSuffixDotPosition() {
+		return derivation.length() - 1;
+	}
+
+	public Symbol derivationSuffix() {
+		return derivation(derivationSuffixDotPosition());
+	}
+
+	public boolean isRightRecursive() {
+		return derivationSuffix().equals(trigger());
+	}
+
 	public Symbol derivation(int dotPosition) {
 		return derivation.symbolAt(dotPosition);
 	}
@@ -28,8 +40,12 @@ public class Rule {
 		return trigger;
 	}
 
+	public int id() {
+		return id;
+	}
+
 	@Override
-	public java.lang.String toString() {
+	public String toString() {
 		return trigger + " -> " + derivation;
 	}
 

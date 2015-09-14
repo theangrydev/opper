@@ -8,8 +8,10 @@ import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.recogniser.prediction.ComputedRulePrediction;
 import io.github.theangrydev.opper.recogniser.prediction.PrecomputedRulePrediction;
 import io.github.theangrydev.opper.recogniser.prediction.RulePrediction;
+import io.github.theangrydev.opper.recogniser.recursion.ComputedRightRecursion;
+import io.github.theangrydev.opper.recogniser.recursion.PrecomputedRightRecursion;
+import io.github.theangrydev.opper.recogniser.recursion.RightRecursion;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -21,6 +23,7 @@ public class Recogniser {
 	private final Grammar grammar;
 	private final Corpus corpus;
 	private final RulePrediction rulePrediction;
+	private final RightRecursion rightRecursion;
 	private final EarlyItemFactory earlyItemFactory;
 	private final TransitionTables transitionTables;
 	private final EarlySetsTable earlySetsTable;
@@ -30,6 +33,7 @@ public class Recogniser {
 		this.logger = logger;
 		this.grammar = grammar;
 		this.corpus = corpus;
+		this.rightRecursion = new PrecomputedRightRecursion(grammar, new ComputedRightRecursion(grammar));
 		this.rulePrediction = new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(logger, grammar));
 		this.earlyItemFactory = new EarlyItemFactory();
 		this.earlySetsTable = new EarlySetsTable();
@@ -49,7 +53,7 @@ public class Recogniser {
 		initialize();
 		for (currentEarlySetIndex = 1; corpus.hasNextSymbol(); currentEarlySetIndex++) {
 			expand();
-			scan();
+			read();
 			if (currentEarlySet().isEmpty()) {
 				logger.log(() -> "The early set was empty after scanning, failing the recognise.");
 				return false;
@@ -61,7 +65,7 @@ public class Recogniser {
 	}
 
 	private boolean lastEarlySetHasCompletedAcceptanceRule() {
-		return stream(earlySetsTable.lastEntry()).filter(hasCompletedAcceptanceRule()).findFirst().isPresent();
+		return stream(earlySetsTable.lastEntry()).anyMatch(hasCompletedAcceptanceRule());
 	}
 
 	private Predicate<EarlyItem> hasCompletedAcceptanceRule() {
@@ -82,8 +86,8 @@ public class Recogniser {
 	}
 
 	// Algorithm 3
-	private void scan() {
-		logger.log(() -> "Scan #" + currentEarlySetIndex);
+	private void read() {
+		logger.log(() -> "Read #" + currentEarlySetIndex);
 		Symbol symbol = corpus.nextSymbol();
 		logger.log(() -> "Processing symbol: " + symbol);
 		Set<EarlyOrLeoItem> predecessors = previousTransitionsEarlySet(symbol);
@@ -103,11 +107,9 @@ public class Recogniser {
 		for (EarlyItem earlyItem : currentEarlySet()) {
 			logger.log(() -> "Processing: " + earlyItem);
 			int origin = earlyItem.origin();
-			Optional<Symbol> trigger = earlyItem.triggerOfCompletedRule();
-			logger.log(() -> "Trigger of completed rule: " + trigger);
-			if (trigger.isPresent()) {
-				reduceOneLeft(origin, trigger.get());
-			}
+			Symbol trigger = earlyItem.trigger();
+			logger.log(() -> "Trigger of rule: " + trigger);
+			reduceOneLeft(origin, trigger);
 		}
 		memoizeTransitions();
 	}
@@ -121,7 +123,14 @@ public class Recogniser {
 			}
 			Symbol postdot = dottedRule.postDot();
 			Set<EarlyOrLeoItem> transitions = currentTransitionsEarlySet(postdot);
-			transitions.add(earlyItem);
+			if (isLeoEligible(dottedRule)) {
+				transitions.clear();
+				logger.log(() -> dottedRule + " is Leo eligible for " + postdot);
+				transitions.add(new LeoItem(dottedRule, dottedRule.penult().get(), earlyItem.origin()));
+			} else {
+				logger.log(() -> dottedRule + " is not Leo eligible for " + postdot);
+				transitions.add(earlyItem);
+			}
 		}
 	}
 
@@ -131,6 +140,7 @@ public class Recogniser {
 		Set<EarlyOrLeoItem> transitionEarlySet = transitionEarlySet(origin, left);
 		logger.log(() -> "Origin transitions[" + origin + "," + left + "]: " + transitionEarlySet);
 		for (EarlyOrLeoItem item : transitionEarlySet) {
+			logger.log(() -> "Reducing " + item);
 			performEarlyReduction(left, item);
 		}
 	}
@@ -154,18 +164,22 @@ public class Recogniser {
 		}
 		logger.log(() -> "Making predictions based on the postdot symbol: " + confirmed.postDot());
 		for (Rule rule : rulePrediction.rulesThatCanBeTriggeredBy(confirmed.postDot())) {
-			EarlyItem earlyItem = earlyItemFactory.createEarlyItem(rule, currentEarlySetIndex);
-			addEarlyItemIfItIsNew(earlySet, earlyItem);
+			EarlyItem predictedEarlyItem = earlyItemFactory.createEarlyItem(rule, currentEarlySetIndex);
+			addEarlyItemIfItIsNew(earlySet, predictedEarlyItem);
 		}
 	}
 
 	private void addEarlyItemIfItIsNew(EarlySet earlySet, EarlyItem earlyItem) {
 		if (isNew(earlyItem)) {
-			logger.log(() -> "Early item is new, adding it...");
+			logger.log(() -> "Early item '" + earlyItem + "' is new, adding it...");
 			earlySet.add(earlyItem);
 		} else {
-			logger.log(() -> "Early item is not new, ignored it.");
+			logger.log(() -> "Early item '" + earlyItem + "' is not new, ignored it.");
 		}
+	}
+
+	private boolean isLeoEligible(DottedRule dottedRule) {
+		return rightRecursion.isRightRecursive(dottedRule.rule()) && currentEarlySet().isLeoUnique(dottedRule);
 	}
 
 	private boolean isNew(EarlyItem earlyItem) {

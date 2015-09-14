@@ -22,7 +22,7 @@ public class TransitionTables {
 	}
 
 	public Set<EarlyOrLeoItem> transitions(Symbol symbol, int location) {
-		return earlyOrLeoSetsTables.get(symbol.index()).earlySet(location);
+		return earlyOrLeoSetsTables.get(symbol.id()).earlySet(location);
 	}
 
 	public void expand() {
@@ -36,7 +36,7 @@ public class TransitionTables {
 		for (Symbol symbol : symbols) {
 			string.append(symbol);
 			string.append(':');
-			string.append(earlyOrLeoSetsTables.get(symbol.index()));
+			string.append(earlyOrLeoSetsTables.get(symbol.id()));
 			string.append('\n');
 		}
 		return string.toString();

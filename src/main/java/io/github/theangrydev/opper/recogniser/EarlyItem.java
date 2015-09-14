@@ -3,8 +3,6 @@ package io.github.theangrydev.opper.recogniser;
 import com.google.common.base.Preconditions;
 import io.github.theangrydev.opper.grammar.Symbol;
 
-import java.util.Optional;
-
 public class EarlyItem implements EarlyOrLeoItem {
 
 	private final DottedRule dottedRule;
@@ -30,14 +28,11 @@ public class EarlyItem implements EarlyOrLeoItem {
 		return origin;
 	}
 
-	public Optional<Symbol> triggerOfCompletedRule() {
-		if (dottedRule.isComplete()) {
-			return Optional.of(dottedRule.trigger());
-		} else {
-			return Optional.empty();
-		}
+	public Symbol trigger() {
+		return dottedRule.trigger();
 	}
 
+	@Override
 	public DottedRule dottedRule() {
 		return dottedRule;
 	}

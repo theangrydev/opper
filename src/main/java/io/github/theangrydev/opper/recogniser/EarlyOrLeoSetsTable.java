@@ -6,6 +6,8 @@ import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.stream.Collectors.joining;
+
 public class EarlyOrLeoSetsTable {
 
 	private final List<Set<EarlyOrLeoItem>> earlySets;
@@ -24,6 +26,6 @@ public class EarlyOrLeoSetsTable {
 
 	@Override
 	public String toString() {
-		return earlySets.toString();
+		return earlySets.stream().map(Object::toString).collect(joining("\n", "\n", ""));
 	}
 }

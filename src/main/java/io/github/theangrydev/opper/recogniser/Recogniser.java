@@ -41,11 +41,9 @@ public class Recogniser {
 	}
 
 	private void debug() {
-		logger.log(() -> "");
 		logger.log(() -> "State at end of iteration #" + currentEarlySetIndex);
-		logger.log(() -> "Early set [" + currentEarlySetIndex + "]: " + currentEarlySet());
+		logger.log(() -> "Early sets: " + earlySetsTable);
 		logger.log(() -> "Transition tables: " + transitionTables);
-		logger.log(() -> "");
 	}
 
 	public boolean recognise() {
@@ -54,7 +52,6 @@ public class Recogniser {
 			expand();
 			read();
 			if (currentEarlySet().isEmpty()) {
-				logger.log(() -> "The early set was empty after scanning, failing the recognise.");
 				return false;
 			}
 			reduce();
@@ -84,27 +81,19 @@ public class Recogniser {
 	}
 
 	private void read() {
-		logger.log(() -> "Read #" + currentEarlySetIndex);
 		Symbol symbol = corpus.nextSymbol();
-		logger.log(() -> "Processing symbol: " + symbol);
 		Set<EarlyOrLeoItem> predecessors = previousTransitionsEarlySet(symbol);
-		logger.log(() -> "Predecessors in transition early set #" + (currentEarlySetIndex - 1) + ": " + predecessors);
 		for (EarlyOrLeoItem predecessor : predecessors) {
 			int origin = predecessor.origin();
-			logger.log(() -> "origin: " + origin);
 			DottedRule next = predecessor.transition(symbol);
-			logger.log(() -> "next: " + next);
 			addEarlyItem(next, origin);
 		}
 	}
 
 	private void reduce() {
-		logger.log(() -> "Reduce #" + currentEarlySetIndex);
 		for (EarlyItem earlyItem : currentEarlySet()) {
-			logger.log(() -> "Processing: " + earlyItem);
 			int origin = earlyItem.origin();
 			Symbol trigger = earlyItem.trigger();
-			logger.log(() -> "Trigger of rule: " + trigger);
 			reduceOneLeft(origin, trigger);
 		}
 		memoizeTransitions();
@@ -120,21 +109,16 @@ public class Recogniser {
 			Set<EarlyOrLeoItem> transitions = currentTransitionsEarlySet(postdot);
 			if (isLeoEligible(dottedRule)) {
 				transitions.clear();
-				logger.log(() -> dottedRule + " is Leo eligible for " + postdot);
 				transitions.add(new LeoItem(dottedRule, dottedRule.penult().get(), earlyItem.origin()));
 			} else {
-				logger.log(() -> dottedRule + " is not Leo eligible for " + postdot);
 				transitions.add(earlyItem);
 			}
 		}
 	}
 
 	private void reduceOneLeft(int origin, Symbol left) {
-		logger.log(() -> "Reduce one");
 		Set<EarlyOrLeoItem> transitionEarlySet = transitionEarlySet(origin, left);
-		logger.log(() -> "Origin transitions[" + origin + "," + left + "]: " + transitionEarlySet);
 		for (EarlyOrLeoItem item : transitionEarlySet) {
-			logger.log(() -> "Reducing " + item);
 			performEarlyReduction(left, item);
 		}
 	}
@@ -146,15 +130,12 @@ public class Recogniser {
 	}
 
 	private void addEarlyItem(DottedRule confirmed, int origin) {
-		logger.log(() -> "Adding early item to set #" + currentEarlySetIndex + " with rule " + confirmed + " and origin " + origin);
 		EarlyItem confirmedEarlyItem = earlyItemFactory.createEarlyItem(confirmed, origin);
 		EarlySet earlySet = currentEarlySet();
 		addEarlyItemIfItIsNew(earlySet, confirmedEarlyItem);
 		if (confirmed.isComplete()) {
-			logger.log(() -> "Dotted rule is complete, not doing any predictions.");
 			return;
 		}
-		logger.log(() -> "Making predictions based on the postdot symbol: " + confirmed.postDot());
 		for (Rule rule : rulePrediction.rulesThatCanBeTriggeredBy(confirmed.postDot())) {
 			EarlyItem predictedEarlyItem = earlyItemFactory.createEarlyItem(rule, currentEarlySetIndex);
 			addEarlyItemIfItIsNew(earlySet, predictedEarlyItem);
@@ -163,10 +144,7 @@ public class Recogniser {
 
 	private void addEarlyItemIfItIsNew(EarlySet earlySet, EarlyItem earlyItem) {
 		if (isNew(earlyItem)) {
-			logger.log(() -> "Early item '" + earlyItem + "' is new, adding it...");
 			earlySet.add(earlyItem);
-		} else {
-			logger.log(() -> "Early item '" + earlyItem + "' is not new, ignored it.");
 		}
 	}
 

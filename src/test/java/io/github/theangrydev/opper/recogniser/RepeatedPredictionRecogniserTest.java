@@ -14,7 +14,7 @@ import static org.assertj.core.api.StrictAssertions.assertThat;
 public class RepeatedPredictionRecogniserTest {
 
 	@Test
-	public void shouldrecogniseALeftRecursiveGrammar() throws IOException, InterruptedException {
+	public void shouldRecogniseALeftRecursiveGrammar() throws IOException, InterruptedException {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")

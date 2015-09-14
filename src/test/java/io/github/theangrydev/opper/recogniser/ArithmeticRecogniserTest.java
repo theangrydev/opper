@@ -21,7 +21,7 @@ import static org.assertj.core.api.StrictAssertions.assertThat;
 public class ArithmeticRecogniserTest {
 
 	@Test
-	public void shouldrecogniseALeftRecursiveGrammar() {
+	public void shouldRecogniseALeftRecursiveGrammar() {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("P")
 			.withStartSymbol("S")

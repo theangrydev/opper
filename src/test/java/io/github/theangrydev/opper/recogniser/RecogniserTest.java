@@ -12,7 +12,7 @@ import static org.assertj.core.api.StrictAssertions.assertThat;
 public class RecogniserTest {
 
 	@Test
-	public void shouldrecogniseASimpleGrammar() {
+	public void shouldRecogniseASimpleGrammar() {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")

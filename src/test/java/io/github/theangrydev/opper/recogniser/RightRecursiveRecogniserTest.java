@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RightRecursiveRecogniserTest {
 
 	@Test
-	public void shouldrecogniseARightRecursiveGrammar() {
+	public void shouldRecogniseARightRecursiveGrammar() {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")

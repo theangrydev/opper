@@ -6,8 +6,6 @@ import io.github.theangrydev.opper.grammar.Symbol;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.google.common.base.Preconditions.checkState;
-
 public class DottedRule {
 
 	private final Rule rule;
@@ -27,12 +25,10 @@ public class DottedRule {
 	}
 
 	public Symbol postDot() {
-		checkThatDotPositionIsInsideRule();
 		return rule.derivation(dotPosition);
 	}
 
 	public DottedRule next() {
-		checkThatDotPositionIsInsideRule();
 		return new DottedRule(rule, dotPosition + 1);
 	}
 
@@ -46,14 +42,6 @@ public class DottedRule {
 
 	public Symbol trigger() {
 		return rule.trigger();
-	}
-
-	private void checkThatDotPositionIsInsideRule() {
-		checkState(dotPositionIsInsideRule(), "The dot position is past the end of the rule (dot at %s, rule length is %s)", dotPosition, rule.derivationLength());
-	}
-
-	private boolean dotPositionIsInsideRule() {
-		return dotPosition < rule.derivationLength();
 	}
 
 	public boolean isCompletedAcceptanceRule(Symbol acceptanceSymbol) {

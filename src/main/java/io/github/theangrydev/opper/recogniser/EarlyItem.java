@@ -1,6 +1,5 @@
 package io.github.theangrydev.opper.recogniser;
 
-import com.google.common.base.Preconditions;
 import io.github.theangrydev.opper.grammar.Symbol;
 
 public class EarlyItem implements EarlyOrLeoItem {
@@ -19,7 +18,6 @@ public class EarlyItem implements EarlyOrLeoItem {
 
 	@Override
 	public DottedRule transition(Symbol symbol) {
-		Preconditions.checkArgument(symbol.equals(dottedRule.postDot()), "Cannot transition rule %s under symbol %s because the post dot symbol does not match", dottedRule, symbol);
 		return dottedRule.next();
 	}
 

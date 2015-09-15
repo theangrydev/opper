@@ -26,6 +26,6 @@ public class EarlyOrLeoSetsTable {
 
 	@Override
 	public String toString() {
-		return earlySets.stream().map(Object::toString).collect(joining("\n", "\n", ""));
+		return earlySets.stream().map(Object::toString).collect(joining("\n", "\n", "\n"));
 	}
 }

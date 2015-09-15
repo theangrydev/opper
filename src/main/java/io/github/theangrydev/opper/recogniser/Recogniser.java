@@ -52,6 +52,7 @@ public class Recogniser {
 			expand();
 			read();
 			if (currentEarlySet().isEmpty()) {
+				logger.log(() -> "Exiting early because the current early set is empty after reading");
 				return false;
 			}
 			reduce();
@@ -82,6 +83,7 @@ public class Recogniser {
 
 	private void read() {
 		Symbol symbol = corpus.nextSymbol();
+		logger.log(() -> "Reading " + symbol);
 		Set<EarlyOrLeoItem> predecessors = previousTransitionsEarlySet(symbol);
 		for (EarlyOrLeoItem predecessor : predecessors) {
 			int origin = predecessor.origin();
@@ -92,9 +94,11 @@ public class Recogniser {
 
 	private void reduce() {
 		for (EarlyItem earlyItem : currentEarlySet()) {
-			int origin = earlyItem.origin();
-			Symbol trigger = earlyItem.trigger();
-			reduceOneLeft(origin, trigger);
+			if (earlyItem.dottedRule().isComplete()) {
+				int origin = earlyItem.origin();
+				Symbol trigger = earlyItem.trigger();
+				reduceOneLeft(origin, trigger);
+			}
 		}
 		memoizeTransitions();
 	}
@@ -149,7 +153,8 @@ public class Recogniser {
 	}
 
 	private boolean isLeoEligible(DottedRule dottedRule) {
-		return rightRecursion.isRightRecursive(dottedRule.rule()) && currentEarlySet().isLeoUnique(dottedRule);
+		return false; //TODO: enable once Leo memoization is fixed
+//		return rightRecursion.isRightRecursive(dottedRule.rule()) && currentEarlySet().isLeoUnique(dottedRule);//
 	}
 
 	private boolean isNew(EarlyItem earlyItem) {

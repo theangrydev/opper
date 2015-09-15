@@ -1,5 +1,6 @@
 package io.github.theangrydev.opper.corpus;
 
+import io.github.theangrydev.opper.common.Streams;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;
 
@@ -16,7 +17,11 @@ public class FixedCorpus implements Corpus {
 	}
 
 	public static FixedCorpus corpus(Grammar grammar, String... symbols) {
-		return new FixedCorpus(Arrays.stream(symbols).map(grammar::symbolByName).iterator());
+		return corpus(grammar, Arrays.asList(symbols));
+	}
+
+	public static FixedCorpus corpus(Grammar grammar, Iterable<String> symbols) {
+		return new FixedCorpus(Streams.stream(symbols).map(grammar::symbolByName).iterator());
 	}
 
 	public static FixedCorpus corpus(Symbol... symbols) {

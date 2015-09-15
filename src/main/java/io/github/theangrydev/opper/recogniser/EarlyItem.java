@@ -30,7 +30,6 @@ public class EarlyItem implements EarlyOrLeoItem {
 		return dottedRule.trigger();
 	}
 
-	@Override
 	public DottedRule dottedRule() {
 		return dottedRule;
 	}

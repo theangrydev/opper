@@ -13,10 +13,10 @@ import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
 import static java.util.Collections.nCopies;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RightRecursiveRecogniserTest {
+public class DirectlyRightRecursiveRecogniserTest {
 
 	@Test
-	public void shouldRecogniseARightRecursiveGrammar() {
+	public void shouldRecogniseADirectlyRightRecursiveGrammar() {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")

@@ -12,7 +12,7 @@ import io.github.theangrydev.opper.recogniser.recursion.ComputedRightRecursion;
 import io.github.theangrydev.opper.recogniser.recursion.PrecomputedRightRecursion;
 import io.github.theangrydev.opper.recogniser.recursion.RightRecursion;
 
-import java.util.Set;
+import java.util.Collection;
 import java.util.function.Predicate;
 
 import static io.github.theangrydev.opper.common.Streams.stream;
@@ -84,7 +84,7 @@ public class Recogniser {
 	private void read() {
 		Symbol symbol = corpus.nextSymbol();
 		logger.log(() -> "Reading " + symbol);
-		Set<EarlyOrLeoItem> predecessors = previousTransitionsEarlySet(symbol);
+		Collection<EarlyOrLeoItem> predecessors = previousTransitionsEarlySet(symbol);
 		for (EarlyOrLeoItem predecessor : predecessors) {
 			int origin = predecessor.origin();
 			DottedRule next = predecessor.transition(symbol);
@@ -110,7 +110,7 @@ public class Recogniser {
 				continue;
 			}
 			Symbol postdot = dottedRule.postDot();
-			Set<EarlyOrLeoItem> transitions = currentTransitionsEarlySet(postdot);
+			Collection<EarlyOrLeoItem> transitions = currentTransitionsEarlySet(postdot);
 			if (isLeoEligible(dottedRule)) {
 				transitions.clear();
 				transitions.add(new LeoItem(dottedRule.next(), dottedRule.penult().get(), earlyItem.origin()));
@@ -121,7 +121,7 @@ public class Recogniser {
 	}
 
 	private void reduceOneLeft(int origin, Symbol left) {
-		Set<EarlyOrLeoItem> transitionEarlySet = transitionEarlySet(origin, left);
+		Collection<EarlyOrLeoItem> transitionEarlySet = transitionEarlySet(origin, left);
 		for (EarlyOrLeoItem item : transitionEarlySet) {
 			performEarlyReduction(left, item);
 		}
@@ -168,15 +168,15 @@ public class Recogniser {
 		return earlySet(currentEarlySetIndex);
 	}
 
-	private Set<EarlyOrLeoItem> transitionEarlySet(int earlySetIndex, Symbol symbol) {
+	private Collection<EarlyOrLeoItem> transitionEarlySet(int earlySetIndex, Symbol symbol) {
 		return transitionTables.transitions(symbol, earlySetIndex);
 	}
 
-	private Set<EarlyOrLeoItem> currentTransitionsEarlySet(Symbol postdot) {
+	private Collection<EarlyOrLeoItem> currentTransitionsEarlySet(Symbol postdot) {
 		return transitionEarlySet(currentEarlySetIndex, postdot);
 	}
 
-	private Set<EarlyOrLeoItem> previousTransitionsEarlySet(Symbol symbol) {
+	private Collection<EarlyOrLeoItem> previousTransitionsEarlySet(Symbol symbol) {
 		return transitionEarlySet(currentEarlySetIndex - 1, symbol);
 	}
 }

@@ -1,27 +1,26 @@
 package io.github.theangrydev.opper.recogniser;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import static java.util.stream.Collectors.joining;
 
 public class EarlyOrLeoSetsTable {
 
-	private final List<Set<EarlyOrLeoItem>> earlySets;
+	private final List<Collection<EarlyOrLeoItem>> earlySets;
 
 	public EarlyOrLeoSetsTable() {
 		this.earlySets = new ObjectArrayList<>();
 	}
 
-	public Set<EarlyOrLeoItem> earlySet(int location) {
+	public Collection<EarlyOrLeoItem> earlySet(int location) {
 		return earlySets.get(location);
 	}
 
 	public void expand() {
-		earlySets.add(new ObjectArraySet<>());
+		earlySets.add(new ObjectArrayList<>());
 	}
 
 	@Override

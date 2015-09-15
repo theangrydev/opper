@@ -1,32 +1,28 @@
 package io.github.theangrydev.opper.recogniser;
 
-import io.github.theangrydev.opper.grammar.RuleFactory;
-import io.github.theangrydev.opper.grammar.SymbolFactory;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EarlySetTest implements WithAssertions {
+import static org.mockito.Mockito.mock;
 
-	private final EarlyItemFactory earlyItemFactory = new EarlyItemFactory();
-	private final RuleFactory ruleFactory = new RuleFactory();
-	private final SymbolFactory symbolFactory = new SymbolFactory();
+public class EarlySetTest implements WithAssertions {
 
 	@Test
 	public void shouldBeAbleToIterateItemsThatWereAddedDuringTheSameIteration() {
-		EarlyItem oldItem = createEarlyItem("old");
-		EarlyItem newItem = createEarlyItem("new");
+		EarlyItem oldItem = createEarlyItem();
+		EarlyItem newItem = createEarlyItem();
 
 		EarlySet earlySet = new EarlySet();
-		earlySet.add(oldItem);
+		earlySet.addIfNew(oldItem);
 
 		List<EarlyItem> itemsSeen = new ArrayList<>();
 		boolean addedNewItem = false;
 		for (EarlyItem earlyItem : earlySet) {
 			if (!addedNewItem) {
-				earlySet.add(newItem);
+				earlySet.addIfNew(newItem);
 				addedNewItem = true;
 			}
 			itemsSeen.add(earlyItem);
@@ -35,7 +31,7 @@ public class EarlySetTest implements WithAssertions {
 		assertThat(itemsSeen).containsExactly(oldItem, newItem);
 	}
 
-	private EarlyItem createEarlyItem(String symbolName) {
-		return earlyItemFactory.createEarlyItem(ruleFactory.createRule(symbolFactory.createSymbol(symbolName)), 0);
+	private EarlyItem createEarlyItem() {
+		return mock(EarlyItem.class);
 	}
 }

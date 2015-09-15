@@ -1,8 +1,6 @@
 package io.github.theangrydev.opper.recogniser;
 
 import io.github.theangrydev.opper.grammar.Symbol;
-import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import java.util.Iterator;
@@ -14,16 +12,15 @@ import static io.github.theangrydev.opper.common.Predicates.not;
 public class EarlySet implements Iterable<EarlyItem> {
 
 	private final List<EarlyItem> earlyItems;
-	private final Object2IntMap<DottedRule> oldRules;
 
 	public EarlySet() {
 		this.earlyItems = new ObjectArrayList<>();
-		this.oldRules = new Object2IntArrayMap<>();
-		oldRules.defaultReturnValue(-1);
 	}
 
-	public void add(EarlyItem earlyItem) {
-		earlyItems.add(earlyItem);
+	public void addIfNew(EarlyItem earlyItem) {
+		if (!earlyItems.contains(earlyItem)) {
+			earlyItems.add(earlyItem);
+		}
 	}
 
 	public boolean isEmpty() {
@@ -33,10 +30,6 @@ public class EarlySet implements Iterable<EarlyItem> {
 	@Override
 	public Iterator<EarlyItem> iterator() {
 		return earlyItems.iterator();
-	}
-
-	public boolean isNew(int earlySetIndex, EarlyItem earlyItem) {
-		return earlySetIndex != oldRules.put(earlyItem.dottedRule(), earlySetIndex);
 	}
 
 	public boolean isLeoUnique(DottedRule dottedRule) {

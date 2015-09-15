@@ -3,17 +3,22 @@ package io.github.theangrydev.opper.recogniser;
 import io.github.theangrydev.opper.grammar.Rule;
 import io.github.theangrydev.opper.grammar.Symbol;
 
-import java.util.Objects;
 import java.util.Optional;
 
 public class DottedRule {
 
+	private final DottedRule next;
 	private final Rule rule;
 	private final int dotPosition;
 
 	private DottedRule(Rule rule, int dotPosition) {
 		this.rule = rule;
 		this.dotPosition = dotPosition;
+		if (dotPosition < rule.derivationLength()) {
+			this.next = new DottedRule(rule, dotPosition + 1);
+		} else {
+			this.next = null;
+		}
 	}
 
 	public static DottedRule begin(Rule rule) {
@@ -29,7 +34,7 @@ public class DottedRule {
 	}
 
 	public DottedRule next() {
-		return new DottedRule(rule, dotPosition + 1);
+		return next;
 	}
 
 	public Optional<Symbol> penult() {
@@ -83,7 +88,7 @@ public class DottedRule {
 			return false;
 		}
 		final DottedRule other = (DottedRule) obj;
-		return Objects.equals(this.rule, other.rule)
-			&& Objects.equals(this.dotPosition, other.dotPosition);
+		return this.rule.equals(other.rule)
+			&& this.dotPosition == other.dotPosition;
 	}
 }

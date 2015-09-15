@@ -1,6 +1,6 @@
 package io.github.theangrydev.opper.recogniser;
 
-import io.github.theangrydev.opper.common.DoNothingLogger;
+import io.github.theangrydev.opper.common.SystemOutLogger;
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
@@ -18,13 +18,15 @@ public class RepeatedPredictionRecogniserTest {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")
-			.withRule("START", "A", "B")
-			.withRule("B", "C")
-			.withRule("B", "C")
+			.withRule("START", "BEGIN", "B")
+			.withRule("START", "BEGIN", "C")
+			.withRule("B", "REPEATED")
+			.withRule("C", "REPEATED")
+			.withRule("REPEATED", "END")
 			.build();
-		Corpus corpus = corpus(grammar, "A", "C");
+		Corpus corpus = corpus(grammar, "BEGIN", "END");
 
-		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
+		Recogniser recogniser = new Recogniser(new SystemOutLogger(), grammar, corpus);
 
 		assertThat(recogniser.recognise()).isTrue();
 	}

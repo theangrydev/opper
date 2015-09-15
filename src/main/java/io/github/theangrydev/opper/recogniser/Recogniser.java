@@ -25,6 +25,7 @@ public class Recogniser {
 	private final Corpus corpus;
 	private final RulePrediction rulePrediction;
 	private final RightRecursion rightRecursion;
+	private final DottedRuleFactory dottedRuleFactory;
 	private final EarlyItemFactory earlyItemFactory;
 	private final TransitionTables transitionTables;
 	private final EarlySetsTable earlySetsTable;
@@ -36,7 +37,8 @@ public class Recogniser {
 		this.corpus = corpus;
 		this.rightRecursion = new PrecomputedRightRecursion(grammar, new ComputedRightRecursion(grammar));
 		this.rulePrediction = new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(grammar));
-		this.earlyItemFactory = new EarlyItemFactory();
+		this.dottedRuleFactory = new DottedRuleFactory(grammar);
+		this.earlyItemFactory = new EarlyItemFactory(dottedRuleFactory);
 		this.earlySetsTable = new EarlySetsTable();
 		this.transitionTables = new TransitionTables(grammar);
 	}
@@ -77,7 +79,7 @@ public class Recogniser {
 
 	private void initialize() {
 		expand();
-		addEarlyItem(DottedRule.begin(grammar.acceptanceRule()), 0);
+		addEarlyItem(dottedRuleFactory.begin(grammar.acceptanceRule()), 0);
 		reduce();
 		debug();
 	}
@@ -146,28 +148,18 @@ public class Recogniser {
 	private void addEarlyItem(DottedRule confirmed, int origin) {
 		EarlyItem confirmedEarlyItem = earlyItemFactory.createEarlyItem(confirmed, origin);
 		EarlySet earlySet = currentEarlySet();
-		addEarlyItemIfItIsNew(earlySet, confirmedEarlyItem);
+		earlySet.addIfNew(confirmedEarlyItem);
 		if (confirmed.isComplete()) {
 			return;
 		}
 		for (Rule rule : rulePrediction.rulesThatCanBeTriggeredBy(confirmed.postDot())) {
 			EarlyItem predictedEarlyItem = earlyItemFactory.createEarlyItem(rule, currentEarlySetIndex);
-			addEarlyItemIfItIsNew(earlySet, predictedEarlyItem);
-		}
-	}
-
-	private void addEarlyItemIfItIsNew(EarlySet earlySet, EarlyItem earlyItem) {
-		if (isNew(earlyItem)) {
-			earlySet.add(earlyItem);
+			earlySet.addIfNew(predictedEarlyItem);
 		}
 	}
 
 	private boolean isLeoEligible(DottedRule dottedRule) {
 		return rightRecursion.isRightRecursive(dottedRule.rule()) && currentEarlySet().isLeoUnique(dottedRule);//
-	}
-
-	private boolean isNew(EarlyItem earlyItem) {
-		return earlySet(earlyItem.origin()).isNew(currentEarlySetIndex, earlyItem);
 	}
 
 	private EarlySet earlySet(int earlySetIndex) {

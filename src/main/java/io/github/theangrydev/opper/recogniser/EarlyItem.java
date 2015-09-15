@@ -39,4 +39,22 @@ public class EarlyItem implements EarlyOrLeoItem {
 	public String toString() {
 		return dottedRule + " @ " + origin;
 	}
+
+	@Override
+	public int hashCode() {
+		return dottedRule.hashCode() + 31 * origin;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		final EarlyItem other = (EarlyItem) obj;
+		return this.dottedRule.equals(other.dottedRule)
+			&& this.origin == other.origin;
+	}
 }

@@ -113,7 +113,7 @@ public class Recogniser {
 			Set<EarlyOrLeoItem> transitions = currentTransitionsEarlySet(postdot);
 			if (isLeoEligible(dottedRule)) {
 				transitions.clear();
-				transitions.add(new LeoItem(dottedRule, dottedRule.penult().get(), earlyItem.origin()));
+				transitions.add(new LeoItem(dottedRule.next(), dottedRule.penult().get(), earlyItem.origin()));
 			} else {
 				transitions.add(earlyItem);
 			}
@@ -153,8 +153,7 @@ public class Recogniser {
 	}
 
 	private boolean isLeoEligible(DottedRule dottedRule) {
-		return false; //TODO: enable once Leo memoization is fixed
-//		return rightRecursion.isRightRecursive(dottedRule.rule()) && currentEarlySet().isLeoUnique(dottedRule);//
+		return rightRecursion.isRightRecursive(dottedRule.rule()) && currentEarlySet().isLeoUnique(dottedRule);//
 	}
 
 	private boolean isNew(EarlyItem earlyItem) {

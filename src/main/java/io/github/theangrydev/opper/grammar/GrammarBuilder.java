@@ -42,18 +42,6 @@ public class GrammarBuilder {
 		return this;
 	}
 
-	public GrammarBuilder withSymbol(String name) {
-		createSymbol(name);
-		return this;
-	}
-
-	public GrammarBuilder withSymbols(String... names) {
-		for (String name : names) {
-			withSymbol(name);
-		}
-		return this;
-	}
-
 	public GrammarBuilder withRule(String left, String... right) {
 		Symbol leftSymbol = symbolByName(left);
 		Symbol[] rightSymbols = Arrays.stream(right).map(this::symbolByName).toArray(Symbol[]::new);
@@ -65,7 +53,7 @@ public class GrammarBuilder {
 	private Symbol symbolByName(String name) {
 		Symbol symbol = symbolsByName.get(name);
 		if (symbol == null) {
-			throw new IllegalArgumentException("'" + name + "' is not a known symbol");
+			return createSymbol(name);
 		}
 		return symbol;
 	}

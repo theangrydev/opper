@@ -19,7 +19,6 @@ public class IndireclytRightRecursiveRecogniserTest {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")
-			.withSymbols("REPEATED", "INDIRECT", "MIDDLE")
 			.withRule("START", "REPEATED", "INDIRECT")
 			.withRule("START", "REPEATED")
 			.withRule("INDIRECT", "MIDDLE", "START")

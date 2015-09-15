@@ -21,7 +21,6 @@ public class LeftRecursiveRecogniserTest {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")
-			.withSymbol("REPEATED")
 			.withRule("START", "START", "REPEATED")
 			.withRule("START", "REPEATED")
 			.build();

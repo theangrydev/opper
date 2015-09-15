@@ -25,7 +25,6 @@ public class ArithmeticRecogniserTest {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("P")
 			.withStartSymbol("S")
-			.withSymbols("+", "*", "M", "T", "1", "2", "3", "4")
 			.withRule("S", "S", "+", "M")
 			.withRule("S", "M")
 			.withRule("M", "M", "*", "T")

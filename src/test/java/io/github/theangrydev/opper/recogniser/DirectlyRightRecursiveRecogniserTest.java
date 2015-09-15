@@ -20,7 +20,6 @@ public class DirectlyRightRecursiveRecogniserTest {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")
-			.withSymbol("REPEATED")
 			.withRule("START", "REPEATED", "START")
 			.withRule("START", "REPEATED")
 			.build();

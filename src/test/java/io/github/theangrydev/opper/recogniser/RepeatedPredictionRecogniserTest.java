@@ -18,7 +18,6 @@ public class RepeatedPredictionRecogniserTest {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")
-			.withSymbols("A", "B", "C")
 			.withRule("START", "A", "B")
 			.withRule("B", "C")
 			.withRule("B", "C")

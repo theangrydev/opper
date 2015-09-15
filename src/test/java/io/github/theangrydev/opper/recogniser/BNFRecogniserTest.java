@@ -34,7 +34,6 @@ public class BNFRecogniserTest {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("TREE")
-			.withSymbols("(", ")", ",", "ant", "bat", "cow", "LIST", "THING", "NAME")
 			.withRule("TREE", "(", "LIST", ")")
 			.withRule("LIST", "THING")
 			.withRule("LIST", "LIST", ",", "THING")

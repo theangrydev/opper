@@ -16,7 +16,6 @@ public class RecogniserTest {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")
-			.withSymbols("FIRST", "SECOND", "DUMMY", "MIDDLE")
 			.withRule("START", "MIDDLE", "FIRST")
 			.withRule("FIRST", "SECOND", "DUMMY")
 			.build();

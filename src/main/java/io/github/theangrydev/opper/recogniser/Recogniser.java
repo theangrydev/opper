@@ -13,6 +13,7 @@ import io.github.theangrydev.opper.recogniser.recursion.PrecomputedRightRecursio
 import io.github.theangrydev.opper.recogniser.recursion.RightRecursion;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import static io.github.theangrydev.opper.common.Streams.stream;
@@ -113,11 +114,20 @@ public class Recogniser {
 			Collection<EarlyOrLeoItem> transitions = currentTransitionsEarlySet(postdot);
 			if (isLeoEligible(dottedRule)) {
 				transitions.clear();
-				transitions.add(new LeoItem(dottedRule.next(), dottedRule.penult().get(), earlyItem.origin()));
+				Optional<EarlyOrLeoItem> predecessor = leoItemPredecessor(dottedRule);
+				if (predecessor.isPresent()) {
+					transitions.add(new LeoItem(predecessor.get().dottedRule(), dottedRule.penult().get(), predecessor.get().origin()));
+				} else {
+					transitions.add(new LeoItem(dottedRule.next(), dottedRule.penult().get(), earlyItem.origin()));
+				}
 			} else {
 				transitions.add(earlyItem);
 			}
 		}
+	}
+
+	private Optional<EarlyOrLeoItem> leoItemPredecessor(DottedRule dottedRule) {
+		return previousTransitionsEarlySet(dottedRule.trigger()).stream().filter(LeoItem.class::isInstance).findFirst();
 	}
 
 	private void reduceOneLeft(int origin, Symbol left) {

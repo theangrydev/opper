@@ -15,11 +15,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RecogniserPerformanceTest {
 
 	@Test
-	public void shouldRecogniseADirectlyRightRecursiveGrammar() {
+	public void shouldRecogniseADirectlyRightRecursiveGrammarInGoodTime() {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")
 			.withRule("START", "REPEATED", "START")
+			.withRule("START", "REPEATED")
+			.build();
+		Corpus corpus = corpus(nCopies(1000, grammar.symbolByName("REPEATED")));
+
+		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
+
+		Stopwatch stopwatch = Stopwatch.createStarted();
+		recogniser.recognise();
+		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
+	}
+
+	@Test
+	public void shouldRecogniseALefttRecursiveGrammarInGoodTime() {
+		Grammar grammar = new GrammarBuilder()
+			.withAcceptanceSymbol("ACCEPT")
+			.withStartSymbol("START")
+			.withRule("START", "START", "REPEATED")
 			.withRule("START", "REPEATED")
 			.build();
 		Corpus corpus = corpus(nCopies(1000, grammar.symbolByName("REPEATED")));

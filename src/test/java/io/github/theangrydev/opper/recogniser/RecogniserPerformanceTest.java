@@ -32,7 +32,7 @@ public class RecogniserPerformanceTest {
 	}
 
 	@Test
-	public void shouldRecogniseALefttRecursiveGrammarInGoodTime() {
+	public void shouldRecogniseALeftRecursiveGrammarInGoodTime() {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")

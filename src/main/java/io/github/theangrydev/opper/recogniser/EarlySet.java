@@ -15,6 +15,7 @@ public class EarlySet implements Iterable<EarlyItem> {
 		this.earlyItems = new ObjectArrayList<>();
 	}
 
+	//7% new
 	public void addIfNew(EarlyItem earlyItem) {
 		if (!contains(earlyItem)) {
 			earlyItems.add(earlyItem);

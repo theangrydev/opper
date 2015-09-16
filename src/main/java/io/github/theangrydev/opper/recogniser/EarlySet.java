@@ -16,7 +16,7 @@ public class EarlySet implements Iterable<EarlyItem> {
 	}
 
 	public void addIfNew(EarlyItem earlyItem) {
-		if (!earlyItems.contains(earlyItem)) {
+		if (!contains(earlyItem)) {
 			earlyItems.add(earlyItem);
 		}
 	}
@@ -52,6 +52,15 @@ public class EarlySet implements Iterable<EarlyItem> {
 			}
 		}
 		return contains;
+	}
+
+	private boolean contains(EarlyItem earlyItem) {
+		for (int i = earlyItems.size() - 1; i >= 0; i--) {
+			if (earlyItems.get(i).equals(earlyItem)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

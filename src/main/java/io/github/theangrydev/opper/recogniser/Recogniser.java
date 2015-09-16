@@ -115,7 +115,6 @@ public class Recogniser {
 			Symbol postdot = dottedRule.postDot();
 			Collection<EarlyOrLeoItem> transitions = currentTransitionsEarlySet(postdot);
 			if (isLeoEligible(dottedRule)) {
-				transitions.clear();
 				Optional<EarlyOrLeoItem> predecessor = leoItemPredecessor(dottedRule);
 				if (predecessor.isPresent()) {
 					transitions.add(new LeoItem(predecessor.get().dottedRule(), dottedRule.penult().get(), predecessor.get().origin()));
@@ -159,7 +158,7 @@ public class Recogniser {
 	}
 
 	private boolean isLeoEligible(DottedRule dottedRule) {
-		return rightRecursion.isRightRecursive(dottedRule.rule()) && currentEarlySet().isLeoUnique(dottedRule);//
+		return rightRecursion.isRightRecursive(dottedRule.rule()) && currentEarlySet().isLeoUnique(dottedRule);
 	}
 
 	private EarlySet earlySet(int earlySetIndex) {

@@ -29,10 +29,10 @@ public class DerivationConsequences {
 		Set<Symbol> uniqueConsequences = new ObjectArraySet<Symbol>(){{
 			add(symbol);
 		}};
-		confirmedConsequences.forEach(confirmedPrefix -> rulesTriggeredBy(confirmedPrefix).map(consequence).forEach(derivationPrefix -> {
-			boolean wasNew = uniqueConsequences.add(derivationPrefix);
+		confirmedConsequences.forEach(confirmedConsequence -> rulesTriggeredBy(confirmedConsequence).map(consequence).forEach(consequence -> {
+			boolean wasNew = uniqueConsequences.add(consequence);
 			if (wasNew) {
-				confirmedConsequences.add(derivationPrefix);
+				confirmedConsequences.add(consequence);
 			}
 		}));
 		return uniqueConsequences;

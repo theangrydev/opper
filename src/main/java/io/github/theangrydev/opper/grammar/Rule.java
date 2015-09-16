@@ -1,5 +1,7 @@
 package io.github.theangrydev.opper.grammar;
 
+import java.util.function.Predicate;
+
 public class Rule {
 
 	private final int id;
@@ -10,6 +12,10 @@ public class Rule {
 		this.id = id;
 		this.trigger = trigger;
 		this.derivation = derivation;
+	}
+
+	public static Predicate<Rule> triggeredBy(Symbol symbol) {
+		return rule -> symbol.equals(rule.trigger());
 	}
 
 	public int derivationLength() {

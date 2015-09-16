@@ -9,8 +9,9 @@ import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
+
+import static io.github.theangrydev.opper.grammar.Rule.triggeredBy;
 
 public class DerivationConsequences {
 
@@ -40,9 +41,5 @@ public class DerivationConsequences {
 
 	private Stream<Rule> rulesTriggeredBy(Symbol symbol) {
 		return grammar.rules().stream().filter(triggeredBy(symbol));
-	}
-
-	private Predicate<Rule> triggeredBy(Symbol symbol) {
-		return rule -> symbol.equals(rule.trigger());
 	}
 }

@@ -12,6 +12,7 @@ public class DottedRule {
 	private final DottedRule next;
 	private final Rule rule;
 	private final int dotPosition;
+	private final boolean isComplete;
 
 	private DottedRule(Rule rule, int dotPosition) {
 		this.rule = rule;
@@ -19,6 +20,7 @@ public class DottedRule {
 		this.next = computeNext(rule, dotPosition);
 		this.postDot = computePostDot(rule, dotPosition);
 		this.penult = computePenult(dotPosition, rule, postDot);
+		this.isComplete = dotPosition == rule.derivationLength();
 	}
 
 	private static DottedRule computeNext(Rule rule, int dotPosition) {
@@ -74,7 +76,7 @@ public class DottedRule {
 	}
 
 	public boolean isComplete() {
-		return dotPosition == rule.derivationLength();
+		return isComplete;
 	}
 
 	@Override

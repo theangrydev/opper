@@ -73,22 +73,4 @@ public class DottedRule {
 		}
 		return string.toString();
 	}
-
-	@Override
-	public int hashCode() {
-		return rule.hashCode() + 31 * dotPosition;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || getClass() != obj.getClass()) {
-			return false;
-		}
-		final DottedRule other = (DottedRule) obj;
-		return this.rule.equals(other.rule)
-			&& this.dotPosition == other.dotPosition;
-	}
 }

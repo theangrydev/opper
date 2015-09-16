@@ -54,21 +54,4 @@ public class Rule {
 	public String toString() {
 		return trigger + " -> " + derivation;
 	}
-
-	@Override
-	public int hashCode() {
-		return id;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null || getClass() != obj.getClass()) {
-			return false;
-		}
-		final Rule other = (Rule) obj;
-		return this.id == other.id;
-	}
 }

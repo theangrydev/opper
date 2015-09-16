@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import static io.github.theangrydev.opper.common.Predicates.not;
-
 public class EarlySet implements Iterable<EarlyItem> {
 
 	private final List<EarlyItem> earlyItems;
@@ -34,21 +32,26 @@ public class EarlySet implements Iterable<EarlyItem> {
 
 	public boolean isLeoUnique(DottedRule dottedRule) {
 		Optional<Symbol> penult = dottedRule.penult();
-		return penult.isPresent() && contains(dottedRule) && penultUnique(dottedRule, penult);
+		return penult.isPresent() && containsAndPenultUnique(dottedRule, penult.get());
 	}
 
-	private boolean contains(DottedRule dottedRule) {
-		return earlyItems.stream()
-			.map(EarlyItem::dottedRule)
-			.anyMatch(dottedRule::equals);
-	}
-
-	private boolean penultUnique(DottedRule dottedRule, Optional<Symbol> penult) {
-		return earlyItems.stream()
-			.map(EarlyItem::dottedRule)
-			.filter(not(dottedRule::equals))
-			.map(DottedRule::penult)
-			.noneMatch(penult::equals);
+	private boolean containsAndPenultUnique(DottedRule dottedRule, Symbol penult) {
+		boolean contains = false;
+		for (int i = earlyItems.size() - 1; i >= 0; i--) {
+			DottedRule testRule = earlyItems.get(i).dottedRule();
+			if (testRule.equals(dottedRule)) {
+				contains = true;
+				continue;
+			}
+			Optional<Symbol> testPenult = testRule.penult();
+			if (!testPenult.isPresent()) {
+				continue;
+			}
+			if (testPenult.get().equals(penult)) {
+				return false;
+			}
+		}
+		return contains;
 	}
 
 	@Override

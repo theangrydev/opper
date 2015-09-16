@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public class DottedRule {
 
+	private final Symbol postDot;
+	private final Optional<Symbol> penult;
 	private final DottedRule next;
 	private final Rule rule;
 	private final int dotPosition;
@@ -14,10 +16,24 @@ public class DottedRule {
 	private DottedRule(Rule rule, int dotPosition) {
 		this.rule = rule;
 		this.dotPosition = dotPosition;
+		this.next = computeNext(rule, dotPosition);
+		this.postDot = computePostDot(rule, dotPosition);
+		this.penult = computePenult(dotPosition, rule, postDot);
+	}
+
+	private static DottedRule computeNext(Rule rule, int dotPosition) {
 		if (dotPosition < rule.derivationLength()) {
-			this.next = new DottedRule(rule, dotPosition + 1);
+			return new DottedRule(rule, dotPosition + 1);
 		} else {
-			this.next = null;
+			return null;
+		}
+	}
+
+	private static Symbol computePostDot(Rule rule, int dotPosition) {
+		if (dotPosition < rule.derivationLength()) {
+			return rule.derivation(dotPosition);
+		} else {
+			return null;
 		}
 	}
 
@@ -25,12 +41,20 @@ public class DottedRule {
 		return new DottedRule(rule, 0);
 	}
 
+	public static Optional<Symbol> computePenult(int dotPosition, Rule rule, Symbol postDot) {
+		if (dotPosition == rule.derivationSuffixDotPosition()) {
+			return Optional.of(postDot);
+		} else {
+			return Optional.empty();
+		}
+	}
+
 	public Rule rule() {
 		return rule;
 	}
 
 	public Symbol postDot() {
-		return rule.derivation(dotPosition);
+		return postDot;
 	}
 
 	public DottedRule next() {
@@ -38,11 +62,7 @@ public class DottedRule {
 	}
 
 	public Optional<Symbol> penult() {
-		if (dotPosition == rule.derivationSuffixDotPosition()) {
-			return Optional.of(postDot());
-		} else {
-			return Optional.empty();
-		}
+		return penult;
 	}
 
 	public Symbol trigger() {

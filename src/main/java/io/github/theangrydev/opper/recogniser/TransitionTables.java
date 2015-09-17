@@ -5,7 +5,6 @@ import io.github.theangrydev.opper.grammar.Symbol;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 
-import java.util.Collection;
 import java.util.List;
 
 public class TransitionTables {
@@ -21,7 +20,7 @@ public class TransitionTables {
 		}
 	}
 
-	public Collection<EarlyOrLeoItem> transitions(Symbol symbol, int location) {
+	public TransitionsEarlySet transitions(Symbol symbol, int location) {
 		return earlyOrLeoSetsTables.get(symbol.id()).earlySet(location);
 	}
 

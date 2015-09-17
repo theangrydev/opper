@@ -20,7 +20,7 @@ public class TransitionsEarlySet implements Iterable<EarlyOrLeoItem> {
 	}
 
 	public void add(EarlyItem earlyItem) {
-		if (earlyItems.isEmpty()) {
+		if (earlyItems == NONE) {
 			earlyItems = new ObjectArrayList<>();
 		}
 		earlyItems.add(earlyItem);

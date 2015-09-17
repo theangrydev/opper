@@ -114,15 +114,19 @@ public class Recogniser {
 			Symbol postdot = dottedRule.postDot();
 			TransitionsEarlySet transitions = currentTransitionsEarlySet(postdot);
 			if (isLeoEligible(dottedRule)) {
-				Optional<EarlyOrLeoItem> predecessor = leoItemPredecessor(dottedRule);
-				if (predecessor.isPresent()) {
-					transitions.add(new LeoItem(predecessor.get().dottedRule(), dottedRule.penult().get(), predecessor.get().origin()));
-				} else {
-					transitions.add(new LeoItem(dottedRule.next(), dottedRule.penult().get(), earlyItem.origin()));
-				}
+				transitions.add(leoItemToMemoize(earlyItem, dottedRule));
 			} else {
 				transitions.add(earlyItem);
 			}
+		}
+	}
+
+	private LeoItem leoItemToMemoize(EarlyItem earlyItem, DottedRule dottedRule) {
+		Optional<EarlyOrLeoItem> predecessor = leoItemPredecessor(dottedRule);
+		if (predecessor.isPresent()) {
+			return new LeoItem(predecessor.get().dottedRule(), dottedRule.penult().get(), predecessor.get().origin());
+		} else {
+			return new LeoItem(dottedRule.next(), dottedRule.penult().get(), earlyItem.origin());
 		}
 	}
 

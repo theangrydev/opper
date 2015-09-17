@@ -41,6 +41,6 @@ public class EarlyItem implements EarlyOrLeoItem {
 	}
 
 	public boolean equals(EarlyItem other) {
-		return this.origin == other.origin && this.dottedRule.equals(other.dottedRule);
+		return this.origin == other.origin && this.dottedRule == other.dottedRule;
 	}
 }

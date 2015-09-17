@@ -36,4 +36,9 @@ public class TransitionsEarlySet implements Iterable<EarlyOrLeoItem> {
 			return Optional.empty();
 		}
 	}
+
+	@Override
+	public String toString() {
+		return earlyItems.toString();
+	}
 }

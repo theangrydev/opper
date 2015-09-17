@@ -39,7 +39,7 @@ public class EarlySet implements Iterable<EarlyItem> {
 		boolean contains = false;
 		for (int i = earlyItems.size() - 1; i >= 0; i--) {
 			DottedRule testRule = earlyItems.get(i).dottedRule();
-			if (testRule.equals(dottedRule)) {
+			if (testRule == dottedRule) {
 				contains = true;
 				continue;
 			}
@@ -47,7 +47,7 @@ public class EarlySet implements Iterable<EarlyItem> {
 			if (!testPenult.isPresent()) {
 				continue;
 			}
-			if (testPenult.get().equals(penult)) {
+			if (testPenult.get() == penult) {
 				return false;
 			}
 		}

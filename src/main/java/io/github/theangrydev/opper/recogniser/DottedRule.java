@@ -72,7 +72,7 @@ public class DottedRule {
 	}
 
 	public boolean isCompletedAcceptanceRule(Symbol acceptanceSymbol) {
-		return rule.trigger().equals(acceptanceSymbol) && isComplete();
+		return rule.trigger() == acceptanceSymbol && isComplete();
 	}
 
 	public boolean isComplete() {

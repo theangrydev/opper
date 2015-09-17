@@ -15,7 +15,7 @@ public class Rule {
 	}
 
 	public static Predicate<Rule> triggeredBy(Symbol symbol) {
-		return rule -> symbol.equals(rule.trigger());
+		return rule -> symbol == rule.trigger();
 	}
 
 	public int derivationLength() {
@@ -31,7 +31,7 @@ public class Rule {
 	}
 
 	public boolean isRightRecursive() {
-		return derivationSuffix().equals(trigger());
+		return derivationSuffix() == trigger();
 	}
 
 	public Symbol derivation(int dotPosition) {

@@ -9,8 +9,10 @@ import java.util.Optional;
 
 public class TransitionsEarlySet implements Iterable<EarlyOrLeoItem> {
 
+	private static final List<EarlyOrLeoItem> NONE = Collections.emptyList();
+
 	private boolean isLeoSet;
-	private List<EarlyOrLeoItem> earlyItems = Collections.emptyList();
+	private List<EarlyOrLeoItem> earlyItems = NONE;
 
 	public void add(LeoItem leoItem) {
 		earlyItems = Collections.singletonList(leoItem);

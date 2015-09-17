@@ -25,7 +25,9 @@ public class TransitionTables {
 	}
 
 	public void expand() {
-		earlyOrLeoSetsTables.forEach(EarlyOrLeoSetsTable::expand);
+		for (int i = earlyOrLeoSetsTables.size() - 1; i >= 0; i--) {
+			earlyOrLeoSetsTables.get(i).expand();
+		}
 	}
 
 	@Override

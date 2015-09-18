@@ -156,14 +156,13 @@ public class Recogniser {
 
 	private void addEarlyItem(DottedRule confirmed, int origin) {
 		EarlyItem confirmedEarlyItem = earlyItemFactory.createEarlyItem(confirmed, origin);
-		EarlySet earlySet = currentEarlySet;
-		earlySet.addIfNew(confirmedEarlyItem);
+		currentEarlySet.addIfNew(confirmedEarlyItem);
 		if (confirmed.isComplete()) {
 			return;
 		}
 		for (Rule rule : rulePrediction.rulesThatCanBeTriggeredBy(confirmed.postDot())) {
 			EarlyItem predictedEarlyItem = earlyItemFactory.createEarlyItem(rule, currentEarlySetIndex);
-			earlySet.addIfNew(predictedEarlyItem);
+			currentEarlySet.addIfNew(predictedEarlyItem);
 		}
 	}
 

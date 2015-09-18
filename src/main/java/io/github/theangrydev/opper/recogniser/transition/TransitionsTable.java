@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper.recogniser.transitions;
+package io.github.theangrydev.opper.recogniser.transition;
 
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;

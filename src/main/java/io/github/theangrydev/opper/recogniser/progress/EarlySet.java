@@ -1,6 +1,8 @@
-package io.github.theangrydev.opper.recogniser;
+package io.github.theangrydev.opper.recogniser.progress;
 
 import io.github.theangrydev.opper.grammar.Symbol;
+import io.github.theangrydev.opper.recogniser.item.DottedRule;
+import io.github.theangrydev.opper.recogniser.item.EarlyItem;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import java.util.Iterator;

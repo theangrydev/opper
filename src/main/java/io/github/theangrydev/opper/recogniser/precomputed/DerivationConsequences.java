@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper.recogniser;
+package io.github.theangrydev.opper.recogniser.precomputed;
 
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Rule;

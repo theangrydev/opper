@@ -1,5 +1,6 @@
-package io.github.theangrydev.opper.recogniser;
+package io.github.theangrydev.opper.recogniser.progress;
 
+import io.github.theangrydev.opper.recogniser.item.EarlyItem;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 

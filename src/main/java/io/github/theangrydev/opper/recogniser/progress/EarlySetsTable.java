@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper.recogniser;
+package io.github.theangrydev.opper.recogniser.progress;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 

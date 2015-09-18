@@ -1,8 +1,8 @@
-package io.github.theangrydev.opper.recogniser.recursion;
+package io.github.theangrydev.opper.recogniser.precomputed.recursion;
 
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Rule;
-import io.github.theangrydev.opper.recogniser.DerivationConsequences;
+import io.github.theangrydev.opper.recogniser.precomputed.DerivationConsequences;
 
 public class ComputedRightRecursion implements RightRecursion {
 

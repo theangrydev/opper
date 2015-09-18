@@ -1,9 +1,9 @@
-package io.github.theangrydev.opper.recogniser.prediction;
+package io.github.theangrydev.opper.recogniser.precomputed.prediction;
 
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Rule;
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.recogniser.DerivationConsequences;
+import io.github.theangrydev.opper.recogniser.precomputed.DerivationConsequences;
 
 import java.util.List;
 import java.util.Set;

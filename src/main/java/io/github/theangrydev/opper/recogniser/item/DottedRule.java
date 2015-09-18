@@ -39,16 +39,16 @@ public class DottedRule {
 		}
 	}
 
-	public static DottedRule begin(Rule rule) {
-		return new DottedRule(rule, 0);
-	}
-
-	public static Optional<Symbol> computePenult(int dotPosition, Rule rule, Symbol postDot) {
+	private static Optional<Symbol> computePenult(int dotPosition, Rule rule, Symbol postDot) {
 		if (dotPosition == rule.derivationSuffixDotPosition()) {
 			return Optional.of(postDot);
 		} else {
 			return Optional.empty();
 		}
+	}
+
+	public static DottedRule begin(Rule rule) {
+		return new DottedRule(rule, 0);
 	}
 
 	public Rule rule() {

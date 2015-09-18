@@ -11,6 +11,9 @@ import io.github.theangrydev.opper.recogniser.prediction.RulePrediction;
 import io.github.theangrydev.opper.recogniser.recursion.ComputedRightRecursion;
 import io.github.theangrydev.opper.recogniser.recursion.PrecomputedRightRecursion;
 import io.github.theangrydev.opper.recogniser.recursion.RightRecursion;
+import io.github.theangrydev.opper.recogniser.transitions.TransitionsEarlySet;
+import io.github.theangrydev.opper.recogniser.transitions.TransitionsEarlySetsBySymbol;
+import io.github.theangrydev.opper.recogniser.transitions.TransitionsTable;
 
 import java.util.Optional;
 import java.util.function.Predicate;

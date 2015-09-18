@@ -1,5 +1,8 @@
-package io.github.theangrydev.opper.recogniser;
+package io.github.theangrydev.opper.recogniser.transitions;
 
+import io.github.theangrydev.opper.recogniser.EarlyItem;
+import io.github.theangrydev.opper.recogniser.EarlyOrLeoItem;
+import io.github.theangrydev.opper.recogniser.LeoItem;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import java.util.Collections;

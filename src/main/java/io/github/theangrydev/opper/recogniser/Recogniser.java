@@ -131,9 +131,9 @@ public class Recogniser {
 	private LeoItem leoItemToMemoize(EarlyItem earlyItem, DottedRule dottedRule) {
 		Optional<LeoItem> predecessor = leoItemPredecessor(dottedRule);
 		if (predecessor.isPresent()) {
-			return new LeoItem(predecessor.get().dottedRule(), dottedRule.penult().get(), predecessor.get().origin());
+			return new LeoItem(predecessor.get().dottedRule(), predecessor.get().origin());
 		} else {
-			return new LeoItem(dottedRule.next(), dottedRule.penult().get(), earlyItem.origin());
+			return new LeoItem(dottedRule.next(), earlyItem.origin());
 		}
 	}
 

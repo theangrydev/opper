@@ -9,18 +9,19 @@ import java.util.Optional;
 
 public class TransitionsEarlySet implements Iterable<EarlyOrLeoItem> {
 
-	private static final List<EarlyOrLeoItem> NONE = Collections.emptyList();
+	private static final List<EarlyOrLeoItem> NO_TRANSITIONS = Collections.emptyList();
+	private static final Optional<LeoItem> NO_LEO_ITEM = Optional.empty();
 
-	private boolean isLeoSet;
-	private List<EarlyOrLeoItem> earlyItems = NONE;
+	private Optional<LeoItem> leoItem = NO_LEO_ITEM;
+	private List<EarlyOrLeoItem> earlyItems = NO_TRANSITIONS;
 
 	public void add(LeoItem leoItem) {
 		earlyItems = Collections.singletonList(leoItem);
-		isLeoSet = true;
+		this.leoItem = Optional.of(leoItem);
 	}
 
 	public void add(EarlyItem earlyItem) {
-		if (earlyItems == NONE) {
+		if (earlyItems == NO_TRANSITIONS) {
 			earlyItems = new ObjectArrayList<>();
 		}
 		earlyItems.add(earlyItem);
@@ -31,12 +32,8 @@ public class TransitionsEarlySet implements Iterable<EarlyOrLeoItem> {
 		return earlyItems.iterator();
 	}
 
-	public Optional<EarlyOrLeoItem> leoItem() {
-		if (isLeoSet) {
-			return Optional.of(earlyItems.get(0));
-		} else {
-			return Optional.empty();
-		}
+	public Optional<LeoItem> leoItem() {
+		return leoItem;
 	}
 
 	@Override

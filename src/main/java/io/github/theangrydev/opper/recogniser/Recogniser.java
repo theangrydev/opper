@@ -129,7 +129,7 @@ public class Recogniser {
 	}
 
 	private LeoItem leoItemToMemoize(EarlyItem earlyItem, DottedRule dottedRule) {
-		Optional<EarlyOrLeoItem> predecessor = leoItemPredecessor(dottedRule);
+		Optional<LeoItem> predecessor = leoItemPredecessor(dottedRule);
 		if (predecessor.isPresent()) {
 			return new LeoItem(predecessor.get().dottedRule(), dottedRule.penult().get(), predecessor.get().origin());
 		} else {
@@ -137,7 +137,7 @@ public class Recogniser {
 		}
 	}
 
-	private Optional<EarlyOrLeoItem> leoItemPredecessor(DottedRule dottedRule) {
+	private Optional<LeoItem> leoItemPredecessor(DottedRule dottedRule) {
 		return previousTransitions.forSymbol(dottedRule.trigger()).leoItem();
 	}
 

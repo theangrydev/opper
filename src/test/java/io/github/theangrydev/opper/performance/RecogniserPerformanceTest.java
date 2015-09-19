@@ -29,7 +29,7 @@ public class RecogniserPerformanceTest {
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		recogniser.recognise();
-		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
+		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(1);
 	}
 
 	@Test
@@ -46,7 +46,7 @@ public class RecogniserPerformanceTest {
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		recogniser.recognise();
-		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
+		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(1);
 	}
 
 	@Test
@@ -63,6 +63,6 @@ public class RecogniserPerformanceTest {
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		recogniser.recognise();
-		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
+		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(1);
 	}
 }

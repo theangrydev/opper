@@ -1,5 +1,6 @@
 package io.github.theangrydev.opper.recogniser.progress;
 
+import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import io.github.theangrydev.opper.recogniser.item.EarlyItem;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
@@ -16,7 +17,7 @@ public class EarlySetTest implements WithAssertions {
 		EarlyItem oldItem = createEarlyItem();
 		EarlyItem newItem = createEarlyItem();
 
-		EarlySet earlySet = new EarlySet();
+		EarlySet earlySet = new EarlySet(new GrammarBuilder().build());
 		earlySet.addIfNew(oldItem);
 
 		List<EarlyItem> itemsSeen = new ArrayList<>();

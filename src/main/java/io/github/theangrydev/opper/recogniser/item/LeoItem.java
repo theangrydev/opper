@@ -1,6 +1,5 @@
 package io.github.theangrydev.opper.recogniser.item;
 
-import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySetsBySymbol;
 
 public class LeoItem implements EarlyOrLeoItem {
@@ -14,8 +13,8 @@ public class LeoItem implements EarlyOrLeoItem {
 	}
 
 	@Override
-	public DottedRule transition() {
-		return top;
+	public EarlyItem transition() {
+		return new EarlyItem(transitions, top);
 	}
 
 	@Override

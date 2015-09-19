@@ -19,8 +19,8 @@ public class EarlyItem implements EarlyOrLeoItem {
 	}
 
 	@Override
-	public DottedRule transition() {
-		return dottedRule.next();
+	public EarlyItem transition() {
+		return new EarlyItem(transitions, dottedRule.next());
 	}
 
 	public TransitionsEarlySet reductionTransitions() {
@@ -44,5 +44,13 @@ public class EarlyItem implements EarlyOrLeoItem {
 
 	public boolean equals(EarlyItem other) {
 		return this.transitions == other.transitions && this.dottedRule == other.dottedRule;
+	}
+
+	public boolean isComplete() {
+		return dottedRule.isComplete();
+	}
+
+	public Symbol postDot() {
+		return dottedRule.postDot();
 	}
 }

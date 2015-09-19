@@ -4,6 +4,6 @@ import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySetsByS
 
 public interface EarlyOrLeoItem {
 	DottedRule dottedRule();
-	DottedRule transition();
+	EarlyItem transition();
 	TransitionsEarlySetsBySymbol transitions();
 }

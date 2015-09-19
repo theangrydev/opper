@@ -62,7 +62,7 @@ public class Recogniser {
 	private void initialize() {
 		prepareIteration();
 		initialTransitions = currentTransitions;
-		addEarlyItem(rulePrediction.initial(), currentTransitions);
+		addEarlyItem(new EarlyItem(currentTransitions, rulePrediction.initial()));
 		reduce();
 		memoizeTransitions();
 		debug();
@@ -79,14 +79,16 @@ public class Recogniser {
 		logger.log(() -> "Reading " + symbol);
 		Iterable<EarlyOrLeoItem> predecessors = previousTransitions.forSymbol(symbol);
 		for (EarlyOrLeoItem predecessor : predecessors) {
-			addEarlyItem(predecessor);
+			addEarlyItem(predecessor.transition());
 		}
 	}
 
 	private void reduce() {
 		for (EarlyItem earlyItem : currentEarlySet) {
-			if (earlyItem.dottedRule().isComplete()) {
-				reduceOneLeft(earlyItem);
+			if (earlyItem.isComplete()) {
+				for (EarlyOrLeoItem item : earlyItem.reductionTransitions()) {
+					addEarlyItem(item.transition());
+				}
 			}
 		}
 	}
@@ -124,22 +126,12 @@ public class Recogniser {
 		return previousTransitions.forSymbol(dottedRule.trigger()).leoItem();
 	}
 
-	private void reduceOneLeft(EarlyItem earlyItem) {
-		for (EarlyOrLeoItem item : earlyItem.reductionTransitions()) {
-			addEarlyItem(item);
-		}
-	}
-
-	private void addEarlyItem(EarlyOrLeoItem earlyOrLeoItem) {
-		addEarlyItem(earlyOrLeoItem.transition(), earlyOrLeoItem.transitions());
-	}
-
-	private void addEarlyItem(DottedRule confirmed, TransitionsEarlySetsBySymbol originTransitions) {
-		currentEarlySet.addIfNew(new EarlyItem(originTransitions, confirmed));
-		if (confirmed.isComplete()) {
+	private void addEarlyItem(EarlyItem earlyItem) {
+		currentEarlySet.addIfNew(earlyItem);
+		if (earlyItem.isComplete()) {
 			return;
 		}
-		for (DottedRule predicted : rulePrediction.rulesThatCanBeTriggeredBy(confirmed.postDot())) {
+		for (DottedRule predicted : rulePrediction.rulesThatCanBeTriggeredBy(earlyItem.postDot())) {
 			currentEarlySet.addIfNew(new EarlyItem(currentTransitions, predicted));
 		}
 	}

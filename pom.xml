@@ -213,7 +213,7 @@
 					<execution>
 						<configuration>
 							<excludes>
-								<exclude>io.github.theangrydev.opper.performance</exclude>
+								<exclude>io.github.theangrydev.opper.performance.*</exclude>
 							</excludes>
 						</configuration>
 						<id>default-test</id>

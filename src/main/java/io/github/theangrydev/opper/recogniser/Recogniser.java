@@ -52,7 +52,7 @@ public class Recogniser {
 				logger.log(() -> "Exiting early because the current early set is empty after reading");
 				return false;
 			}
-			advance();
+			advanceItemsThatWereWaitingOnCompletions();
 			memoizeTransitions();
 			debug();
 		}
@@ -85,7 +85,7 @@ public class Recogniser {
 		}
 	}
 
-	private void advance() {
+	private void advanceItemsThatWereWaitingOnCompletions() {
 		for (EarlyItem earlyItem : currentEarlySet) {
 			if (earlyItem.isComplete()) {
 				for (EarlyItem itemThatCanAdvane : earlyItem.itemsThatCanAdvanceWhenThisIsComplete()) {

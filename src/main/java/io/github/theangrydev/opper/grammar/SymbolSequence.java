@@ -21,8 +21,16 @@ public class SymbolSequence {
 		return symbols.get(dotPosition);
 	}
 
+	public List<Symbol> symbols() {
+		return symbols;
+	}
+
 	@Override
 	public String toString() {
 		return symbols.stream().map(Symbol::toString).collect(joining(" "));
+	}
+
+	public int lastIndexOf(Symbol symbol) {
+		return symbols.indexOf(symbol);
 	}
 }

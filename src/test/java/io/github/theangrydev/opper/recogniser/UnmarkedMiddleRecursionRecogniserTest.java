@@ -1,7 +1,7 @@
 package io.github.theangrydev.opper.recogniser;
 
 import com.google.common.base.Stopwatch;
-import io.github.theangrydev.opper.common.SystemOutLogger;
+import io.github.theangrydev.opper.common.DoNothingLogger;
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
@@ -20,11 +20,11 @@ public class UnmarkedMiddleRecursionRecogniserTest {
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")
 			.withRule("START", "REPEATED", "START", "REPEATED")
-			.withRule("START", "REPEATED")
+			.withRule("START", "REPEATED", "REPEATED")
 			.build();
 		Corpus corpus = corpus(nCopies(10, grammar.symbolByName("REPEATED")));
 
-		Recogniser recogniser = new Recogniser(new SystemOutLogger(), grammar, corpus);
+		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		recogniser.recognise();

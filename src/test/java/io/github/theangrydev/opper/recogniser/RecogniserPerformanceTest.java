@@ -47,4 +47,21 @@ public class RecogniserPerformanceTest {
 		recogniser.recognise();
 		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
 	}
+
+	@Test
+	public void shouldRecogniseAGrammarWithAnUnmarkedMiddleRecursionInGoodTime() {
+		Grammar grammar = new GrammarBuilder()
+			.withAcceptanceSymbol("ACCEPT")
+			.withStartSymbol("START")
+			.withRule("START", "REPEATED", "START", "REPEATED")
+			.withRule("START", "REPEATED", "REPEATED")
+			.build();
+		Corpus corpus = corpus(nCopies(50000, grammar.symbolByName("REPEATED")));
+
+		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
+
+		Stopwatch stopwatch = Stopwatch.createStarted();
+		recogniser.recognise();
+		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
+	}
 }

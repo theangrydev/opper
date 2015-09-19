@@ -15,27 +15,23 @@ import static io.github.theangrydev.opper.grammar.Rule.triggeredBy;
 
 public class DerivationConsequences {
 
-	private final Function<Rule, Symbol> consequence;
+	private final Function<Rule, List<Symbol>> consequence;
 	private final Grammar grammar;
 
-	public DerivationConsequences(Grammar grammar, Function<Rule, Symbol> consequence) {
+	public DerivationConsequences(Grammar grammar, Function<Rule, List<Symbol>> consequence) {
 		this.consequence = consequence;
 		this.grammar = grammar;
 	}
 
-	public Set<Symbol> of(Symbol symbol) {
-		List<Symbol> confirmedConsequences = new ObjectArrayList<Symbol>(){{
-			add(symbol);
-		}};
-		Set<Symbol> uniqueConsequences = new ObjectArraySet<Symbol>(){{
-			add(symbol);
-		}};
-		confirmedConsequences.forEach(confirmedConsequence -> rulesTriggeredBy(confirmedConsequence).map(consequence).forEach(consequence -> {
-			boolean wasNew = uniqueConsequences.add(consequence);
+	public Set<Symbol> of(List<Symbol> symbols) {
+		Set<Symbol> uniqueConsequences = new ObjectArraySet<>(symbols);
+		List<Symbol> confirmedConsequences = new ObjectArrayList<>(uniqueConsequences);
+		confirmedConsequences.forEach(confirmedConsequence -> rulesTriggeredBy(confirmedConsequence).map(consequence).forEach(consequence -> consequence.forEach(symbol -> {
+			boolean wasNew = uniqueConsequences.add(symbol);
 			if (wasNew) {
-				confirmedConsequences.add(consequence);
+				confirmedConsequences.add(symbol);
 			}
-		}));
+		})));
 		return uniqueConsequences;
 	}
 

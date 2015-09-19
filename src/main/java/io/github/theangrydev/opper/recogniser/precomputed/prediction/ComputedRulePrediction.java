@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 public class ComputedRulePrediction implements RulePrediction {
@@ -27,7 +28,7 @@ public class ComputedRulePrediction implements RulePrediction {
 
 	@Override
 	public List<DottedRule> rulesThatCanBeTriggeredBy(Symbol symbol) {
-		return rulesTriggeredBy(derivationPrefixes.of(symbol));
+		return rulesTriggeredBy(derivationPrefixes.of(singletonList(symbol)));
 	}
 
 	@Override

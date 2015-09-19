@@ -144,5 +144,6 @@ public class Recogniser {
 		logger.log(() -> "State at end of iteration #" + currentEarlySetIndex);
 		logger.log(() -> "Current Early set: " + currentEarlySet);
 		logger.log(() -> "Current transitions: " + currentTransitions);
+		logger.log(() -> "");
 	}
 }

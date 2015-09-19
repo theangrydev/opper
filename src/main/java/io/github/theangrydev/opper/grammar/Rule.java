@@ -1,6 +1,9 @@
 package io.github.theangrydev.opper.grammar;
 
+import java.util.List;
 import java.util.function.Predicate;
+
+import static java.util.Collections.singletonList;
 
 public class Rule {
 
@@ -18,12 +21,16 @@ public class Rule {
 		return rule -> symbol == rule.trigger();
 	}
 
+	public List<Symbol> symbols() {
+		return derivation.symbols();
+	}
+
 	public int derivationLength() {
 		return derivation.length();
 	}
 
 	public int derivationSuffixDotPosition() {
-		return derivation.length() - 1;
+		return derivation.lastIndexOf(trigger);
 	}
 
 	public Symbol derivationSuffix() {
@@ -31,15 +38,15 @@ public class Rule {
 	}
 
 	public boolean isRightRecursive() {
-		return derivationSuffix() == trigger();
+		return derivationSuffixDotPosition() > 0 && derivationSuffix() == trigger();
 	}
 
 	public Symbol derivation(int dotPosition) {
 		return derivation.symbolAt(dotPosition);
 	}
 
-	public Symbol derivationPrefix() {
-		return derivation(0);
+	public List<Symbol> derivationPrefix() {
+		return singletonList(derivation(0));
 	}
 
 	public Symbol trigger() {

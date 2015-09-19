@@ -97,17 +97,20 @@ public class Recogniser {
 
 	private void memoizeTransitions() {
 		for (EarlyItem earlyItem : currentEarlySet) {
-			if (earlyItem.isComplete()) {
-				continue;
+			if (!earlyItem.isComplete()) {
+				memoizeTransitions(earlyItem);
 			}
-			DottedRule dottedRule = earlyItem.dottedRule();
-			Symbol postdot = dottedRule.postDot();
-			TransitionsEarlySet transitions = currentTransitions.itemsThatCanAdvanceGiven(postdot);
-			if (isLeoEligible(dottedRule)) {
-				transitions.addLeoItem(leoItemToMemoize(earlyItem, dottedRule));
-			} else {
-				transitions.addEarlyItem(earlyItem);
-			}
+		}
+	}
+
+	private void memoizeTransitions(EarlyItem earlyItem) {
+		DottedRule dottedRule = earlyItem.dottedRule();
+		Symbol postdot = dottedRule.postDot();
+		TransitionsEarlySet transitions = currentTransitions.itemsThatCanAdvanceGiven(postdot);
+		if (isLeoEligible(dottedRule)) {
+			transitions.addLeoItem(leoItemToMemoize(earlyItem, dottedRule));
+		} else {
+			transitions.addEarlyItem(earlyItem);
 		}
 	}
 
@@ -130,9 +133,12 @@ public class Recogniser {
 
 	private void addEarlyItem(EarlyItem earlyItem) {
 		currentEarlySet.addIfNew(earlyItem);
-		if (earlyItem.isComplete()) {
-			return;
+		if (!earlyItem.isComplete()) {
+			predict(earlyItem);
 		}
+	}
+
+	private void predict(EarlyItem earlyItem) {
 		for (DottedRule predicted : rulePrediction.rulesThatCanBeTriggeredBy(earlyItem.postDot())) {
 			currentEarlySet.addIfNew(new TraditionalEarlyItem(currentTransitions, predicted));
 		}

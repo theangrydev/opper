@@ -9,7 +9,7 @@ public class TraditionalEarlyItem extends EarlyItem {
 	}
 
 	@Override
-	public EarlyItem transition() {
+	public EarlyItem next() {
 		return new TraditionalEarlyItem(transitions, dottedRule.next());
 	}
 }

@@ -9,7 +9,7 @@ public class LeoItem extends EarlyItem {
 	}
 
 	@Override
-	public EarlyItem transition() {
+	public EarlyItem next() {
 		return this;
 	}
 }

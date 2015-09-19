@@ -47,7 +47,7 @@ public class Recogniser {
 		initialize();
 		for (currentEarlySetIndex = 1; corpus.hasNextSymbol(); currentEarlySetIndex++) {
 			prepareIteration();
-			read();
+			readNextSymbol();
 			if (currentEarlySet.isEmpty()) {
 				logger.log(() -> "Exiting early because the current early set is empty after reading");
 				return false;
@@ -78,12 +78,12 @@ public class Recogniser {
 		currentTransitions = new TransitionsEarlySetsBySymbol(grammar.symbols());
 	}
 
-	private void read() {
+	private void readNextSymbol() {
 		Symbol symbol = corpus.nextSymbol();
 		logger.log(() -> "Reading " + symbol);
 		Iterable<EarlyItem> predecessors = previousTransitions.forSymbol(symbol);
 		for (EarlyItem predecessor : predecessors) {
-			addEarlyItem(predecessor.transition());
+			addEarlyItem(predecessor.next());
 		}
 	}
 
@@ -91,7 +91,7 @@ public class Recogniser {
 		for (EarlyItem earlyItem : currentEarlySet) {
 			if (earlyItem.isComplete()) {
 				for (EarlyItem item : earlyItem.reductionTransitions()) {
-					addEarlyItem(item.transition());
+					addEarlyItem(item.next());
 				}
 			}
 		}

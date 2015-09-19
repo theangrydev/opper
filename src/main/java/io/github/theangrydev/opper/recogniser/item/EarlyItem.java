@@ -37,7 +37,7 @@ public abstract class EarlyItem {
 		return dottedRule.postDot();
 	}
 
-	public abstract EarlyItem transition();
+	public abstract EarlyItem next();
 
 	@Override
 	public boolean equals(Object object) {

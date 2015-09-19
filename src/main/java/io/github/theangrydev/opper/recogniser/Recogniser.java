@@ -133,14 +133,8 @@ public class Recogniser {
 	private void reduceOneLeft(int origin, Symbol left) {
 		Iterable<EarlyOrLeoItem> transitionEarlySet = transitionsTable.transitionsFromOrigin(origin).forSymbol(left);
 		for (EarlyOrLeoItem item : transitionEarlySet) {
-			performEarlyReduction(left, item);
+			addEarlyItem(item.transition(left), item.origin());
 		}
-	}
-
-	private void performEarlyReduction(Symbol left, EarlyOrLeoItem item) {
-		DottedRule next = item.transition(left);
-		int origin = item.origin();
-		addEarlyItem(next, origin);
 	}
 
 	private void addEarlyItem(DottedRule confirmed, int origin) {

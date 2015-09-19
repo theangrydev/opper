@@ -15,7 +15,6 @@ import io.github.theangrydev.opper.recogniser.precomputed.recursion.ComputedRigh
 import io.github.theangrydev.opper.recogniser.precomputed.recursion.PrecomputedRightRecursion;
 import io.github.theangrydev.opper.recogniser.precomputed.recursion.RightRecursion;
 import io.github.theangrydev.opper.recogniser.progress.EarlySet;
-import io.github.theangrydev.opper.recogniser.progress.EarlySetsTable;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySet;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySetsBySymbol;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsTable;
@@ -29,7 +28,6 @@ public class Recogniser {
 	private final RulePrediction rulePrediction;
 	private final RightRecursion rightRecursion;
 	private final TransitionsTable transitionsTable;
-	private final EarlySetsTable earlySetsTable;
 
 	private TransitionsEarlySetsBySymbol previousTransitions;
 	private TransitionsEarlySetsBySymbol currentTransitions;
@@ -41,7 +39,7 @@ public class Recogniser {
 		this.corpus = corpus;
 		this.rightRecursion = new PrecomputedRightRecursion(grammar, new ComputedRightRecursion(grammar));
 		this.rulePrediction = new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(grammar));
-		this.earlySetsTable = new EarlySetsTable(grammar);
+		this.currentEarlySet = new EarlySet(grammar);
 		this.transitionsTable = new TransitionsTable(grammar);
 	}
 
@@ -57,7 +55,7 @@ public class Recogniser {
 			reduce();
 			debug();
 		}
-		return earlySetsTable.lastEarlySetHasCompletedAcceptanceRule();
+		return currentEarlySet.hasCompletedAcceptanceRule();
 	}
 
 	private void initialize() {
@@ -69,8 +67,7 @@ public class Recogniser {
 
 	private void prepareIteration() {
 		transitionsTable.expand();
-		earlySetsTable.expand();
-		currentEarlySet = earlySetsTable.earlySet(currentEarlySetIndex);
+		currentEarlySet.reset();
 		previousTransitions = currentTransitions;
 		currentTransitions = transitionsTable.transitionsFromOrigin(currentEarlySetIndex);
 	}
@@ -149,7 +146,7 @@ public class Recogniser {
 
 	private void debug() {
 		logger.log(() -> "State at end of iteration #" + currentEarlySetIndex);
-		logger.log(() -> "Early sets: " + earlySetsTable);
+		logger.log(() -> "Current Early set: " + currentEarlySet);
 		logger.log(() -> "Transition tables: " + transitionsTable);
 	}
 }

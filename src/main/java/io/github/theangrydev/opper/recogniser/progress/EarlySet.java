@@ -1,5 +1,6 @@
 package io.github.theangrydev.opper.recogniser.progress;
 
+import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.recogniser.item.DottedRule;
 import io.github.theangrydev.opper.recogniser.item.EarlyItem;
@@ -12,8 +13,10 @@ import java.util.Optional;
 public class EarlySet implements Iterable<EarlyItem> {
 
 	private final List<EarlyItem> earlyItems;
+	private final Grammar grammar;
 
-	public EarlySet() {
+	public EarlySet(Grammar grammar) {
+		this.grammar = grammar;
 		this.earlyItems = new ObjectArrayList<>();
 	}
 
@@ -25,6 +28,14 @@ public class EarlySet implements Iterable<EarlyItem> {
 
 	public boolean isEmpty() {
 		return earlyItems.isEmpty();
+	}
+
+	public void reset() {
+		earlyItems.clear();
+	}
+
+	public boolean hasCompletedAcceptanceRule() {
+		return earlyItems.stream().anyMatch(earlyItem -> earlyItem.hasCompletedAcceptanceRule(grammar.acceptanceSymbol()));
 	}
 
 	@Override

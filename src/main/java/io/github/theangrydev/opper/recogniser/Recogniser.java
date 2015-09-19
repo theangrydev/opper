@@ -3,14 +3,11 @@ package io.github.theangrydev.opper.recogniser;
 import io.github.theangrydev.opper.common.Logger;
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
-import io.github.theangrydev.opper.grammar.Rule;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.recogniser.item.DottedRule;
-import io.github.theangrydev.opper.recogniser.item.DottedRuleFactory;
 import io.github.theangrydev.opper.recogniser.progress.EarlySet;
 import io.github.theangrydev.opper.recogniser.progress.EarlySetsTable;
 import io.github.theangrydev.opper.recogniser.item.EarlyItem;
-import io.github.theangrydev.opper.recogniser.item.EarlyItemFactory;
 import io.github.theangrydev.opper.recogniser.item.EarlyOrLeoItem;
 import io.github.theangrydev.opper.recogniser.item.LeoItem;
 import io.github.theangrydev.opper.recogniser.precomputed.prediction.ComputedRulePrediction;
@@ -35,8 +32,6 @@ public class Recogniser {
 	private final Corpus corpus;
 	private final RulePrediction rulePrediction;
 	private final RightRecursion rightRecursion;
-	private final DottedRuleFactory dottedRuleFactory;
-	private final EarlyItemFactory earlyItemFactory;
 	private final TransitionsTable transitionsTable;
 	private final EarlySetsTable earlySetsTable;
 
@@ -51,8 +46,6 @@ public class Recogniser {
 		this.corpus = corpus;
 		this.rightRecursion = new PrecomputedRightRecursion(grammar, new ComputedRightRecursion(grammar));
 		this.rulePrediction = new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(grammar));
-		this.dottedRuleFactory = new DottedRuleFactory(grammar);
-		this.earlyItemFactory = new EarlyItemFactory(dottedRuleFactory);
 		this.earlySetsTable = new EarlySetsTable();
 		this.transitionsTable = new TransitionsTable(grammar);
 	}
@@ -96,7 +89,7 @@ public class Recogniser {
 
 	private void initialize() {
 		prepareIteration();
-		addEarlyItem(dottedRuleFactory.begin(grammar.acceptanceRule()), 0);
+		addEarlyItem(rulePrediction.initial(), 0);
 		reduce();
 		debug();
 	}
@@ -166,14 +159,12 @@ public class Recogniser {
 	}
 
 	private void addEarlyItem(DottedRule confirmed, int origin) {
-		EarlyItem confirmedEarlyItem = earlyItemFactory.createEarlyItem(confirmed, origin);
-		currentEarlySet.addIfNew(confirmedEarlyItem);
+		currentEarlySet.addIfNew(new EarlyItem(confirmed, origin));
 		if (confirmed.isComplete()) {
 			return;
 		}
-		for (Rule rule : rulePrediction.rulesThatCanBeTriggeredBy(confirmed.postDot())) {
-			EarlyItem predictedEarlyItem = earlyItemFactory.createEarlyItem(rule, currentEarlySetIndex);
-			currentEarlySet.addIfNew(predictedEarlyItem);
+		for (DottedRule predicted : rulePrediction.rulesThatCanBeTriggeredBy(confirmed.postDot())) {
+			currentEarlySet.addIfNew(new EarlyItem(predicted, currentEarlySetIndex));
 		}
 	}
 

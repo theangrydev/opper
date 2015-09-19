@@ -5,8 +5,6 @@ import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.recogniser.item.DottedRule;
-import io.github.theangrydev.opper.recogniser.progress.EarlySet;
-import io.github.theangrydev.opper.recogniser.progress.EarlySetsTable;
 import io.github.theangrydev.opper.recogniser.item.EarlyItem;
 import io.github.theangrydev.opper.recogniser.item.EarlyOrLeoItem;
 import io.github.theangrydev.opper.recogniser.item.LeoItem;
@@ -16,14 +14,13 @@ import io.github.theangrydev.opper.recogniser.precomputed.prediction.RulePredict
 import io.github.theangrydev.opper.recogniser.precomputed.recursion.ComputedRightRecursion;
 import io.github.theangrydev.opper.recogniser.precomputed.recursion.PrecomputedRightRecursion;
 import io.github.theangrydev.opper.recogniser.precomputed.recursion.RightRecursion;
+import io.github.theangrydev.opper.recogniser.progress.EarlySet;
+import io.github.theangrydev.opper.recogniser.progress.EarlySetsTable;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySet;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySetsBySymbol;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsTable;
 
 import java.util.Optional;
-import java.util.function.Predicate;
-
-import static io.github.theangrydev.opper.common.Streams.stream;
 
 public class Recogniser {
 
@@ -46,14 +43,8 @@ public class Recogniser {
 		this.corpus = corpus;
 		this.rightRecursion = new PrecomputedRightRecursion(grammar, new ComputedRightRecursion(grammar));
 		this.rulePrediction = new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(grammar));
-		this.earlySetsTable = new EarlySetsTable();
+		this.earlySetsTable = new EarlySetsTable(grammar);
 		this.transitionsTable = new TransitionsTable(grammar);
-	}
-
-	private void debug() {
-		logger.log(() -> "State at end of iteration #" + currentEarlySetIndex);
-		logger.log(() -> "Early sets: " + earlySetsTable);
-		logger.log(() -> "Transition tables: " + transitionsTable);
 	}
 
 	public boolean recognise() {
@@ -68,15 +59,14 @@ public class Recogniser {
 			reduce();
 			debug();
 		}
-		return lastEarlySetHasCompletedAcceptanceRule();
+		return earlySetsTable.lastEarlySetHasCompletedAcceptanceRule();
 	}
 
-	private boolean lastEarlySetHasCompletedAcceptanceRule() {
-		return stream(earlySetsTable.lastEntry()).anyMatch(hasCompletedAcceptanceRule());
-	}
-
-	private Predicate<EarlyItem> hasCompletedAcceptanceRule() {
-		return earlyItem -> earlyItem.hasCompletedAcceptanceRule(grammar.acceptanceSymbol());
+	private void initialize() {
+		prepareIteration();
+		addEarlyItem(rulePrediction.initial(), 0);
+		reduce();
+		debug();
 	}
 
 	private void prepareIteration() {
@@ -85,13 +75,6 @@ public class Recogniser {
 		currentEarlySet = earlySetsTable.earlySet(currentEarlySetIndex);
 		previousTransitions = currentTransitions;
 		currentTransitions = transitionsTable.transitionsFromOrigin(currentEarlySetIndex);
-	}
-
-	private void initialize() {
-		prepareIteration();
-		addEarlyItem(rulePrediction.initial(), 0);
-		reduce();
-		debug();
 	}
 
 	private void read() {
@@ -132,6 +115,10 @@ public class Recogniser {
 		}
 	}
 
+	private boolean isLeoEligible(DottedRule dottedRule) {
+		return rightRecursion.isRightRecursive(dottedRule.rule()) && currentEarlySet.isLeoUnique(dottedRule);
+	}
+
 	private LeoItem leoItemToMemoize(EarlyItem earlyItem, DottedRule dottedRule) {
 		Optional<LeoItem> predecessor = leoItemPredecessor(dottedRule);
 		if (predecessor.isPresent()) {
@@ -168,7 +155,9 @@ public class Recogniser {
 		}
 	}
 
-	private boolean isLeoEligible(DottedRule dottedRule) {
-		return rightRecursion.isRightRecursive(dottedRule.rule()) && currentEarlySet.isLeoUnique(dottedRule);
+	private void debug() {
+		logger.log(() -> "State at end of iteration #" + currentEarlySetIndex);
+		logger.log(() -> "Early sets: " + earlySetsTable);
+		logger.log(() -> "Transition tables: " + transitionsTable);
 	}
 }

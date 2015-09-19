@@ -1,8 +1,8 @@
 package io.github.theangrydev.opper.recogniser;
 
 import com.googlecode.yatspec.junit.Row;
-import com.googlecode.yatspec.junit.SpecRunner;
 import com.googlecode.yatspec.junit.Table;
+import com.googlecode.yatspec.junit.TableRunner;
 import io.github.theangrydev.opper.common.DoNothingLogger;
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
@@ -16,7 +16,7 @@ import static java.lang.Integer.parseInt;
 import static java.util.Collections.nCopies;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
-@RunWith(SpecRunner.class)
+@RunWith(TableRunner.class)
 public class UnmarkedMiddleRecursionRecogniserTest {
 
 	@Table({

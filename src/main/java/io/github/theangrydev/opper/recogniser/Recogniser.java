@@ -120,7 +120,7 @@ public class Recogniser {
 	private LeoItem leoItemToMemoize(EarlyItem earlyItem, DottedRule dottedRule) {
 		Optional<LeoItem> predecessor = leoItemPredecessor(dottedRule);
 		if (predecessor.isPresent()) {
-			return new LeoItem(predecessor.get().dottedRule(), predecessor.get().transitions());
+			return predecessor.get();
 		} else {
 			return new LeoItem(dottedRule.next(), earlyItem.transitions());
 		}

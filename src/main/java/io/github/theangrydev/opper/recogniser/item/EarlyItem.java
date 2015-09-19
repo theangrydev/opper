@@ -21,8 +21,8 @@ public abstract class EarlyItem {
 		return origin;
 	}
 
-	public TransitionsEarlySet itemsTriggeredOnCompletion() {
-		return origin.itemsTriggeredBy(dottedRule.trigger());
+	public TransitionsEarlySet itemsThatCanAdvanceWhenThisIsComplete() {
+		return origin.itemsThatCanAdvanceGiven(dottedRule.trigger());
 	}
 
 	public boolean hasCompletedAcceptanceRule(TransitionsEarlySetsBySymbol initialTransitions, Symbol acceptanceSymbol) {
@@ -37,7 +37,7 @@ public abstract class EarlyItem {
 		return dottedRule.postDot();
 	}
 
-	public abstract EarlyItem next();
+	public abstract EarlyItem advance();
 
 	@Override
 	public boolean equals(Object object) {

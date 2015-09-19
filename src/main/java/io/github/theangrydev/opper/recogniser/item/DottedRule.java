@@ -59,7 +59,7 @@ public class DottedRule {
 		return postDot;
 	}
 
-	public DottedRule next() {
+	public DottedRule advance() {
 		return next;
 	}
 

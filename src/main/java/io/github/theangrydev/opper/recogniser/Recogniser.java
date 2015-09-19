@@ -52,7 +52,7 @@ public class Recogniser {
 				logger.log(() -> "Exiting early because the current early set is empty after reading");
 				return false;
 			}
-			reduce();
+			addItemsThatHaveBeenTriggered();
 			memoizeTransitions();
 			debug();
 		}
@@ -67,7 +67,6 @@ public class Recogniser {
 		prepareIteration();
 		initialTransitions = currentTransitions;
 		addEarlyItem(new TraditionalEarlyItem(currentTransitions, rulePrediction.initial()));
-		reduce();
 		memoizeTransitions();
 		debug();
 	}
@@ -81,17 +80,16 @@ public class Recogniser {
 	private void readNextSymbol() {
 		Symbol symbol = corpus.nextSymbol();
 		logger.log(() -> "Reading " + symbol);
-		Iterable<EarlyItem> predecessors = previousTransitions.itemsTriggeredBy(symbol);
-		for (EarlyItem predecessor : predecessors) {
-			addEarlyItem(predecessor.next());
+		for (EarlyItem itemThatCanAdvane : previousTransitions.itemsThatCanAdvanceGiven(symbol)) {
+			addEarlyItem(itemThatCanAdvane.advance());
 		}
 	}
 
-	private void reduce() {
+	private void addItemsThatHaveBeenTriggered() {
 		for (EarlyItem earlyItem : currentEarlySet) {
 			if (earlyItem.isComplete()) {
-				for (EarlyItem item : earlyItem.itemsTriggeredOnCompletion()) {
-					addEarlyItem(item.next());
+				for (EarlyItem itemThatCanAdvane : earlyItem.itemsThatCanAdvanceWhenThisIsComplete()) {
+					addEarlyItem(itemThatCanAdvane.advance());
 				}
 			}
 		}
@@ -104,7 +102,7 @@ public class Recogniser {
 			}
 			DottedRule dottedRule = earlyItem.dottedRule();
 			Symbol postdot = dottedRule.postDot();
-			TransitionsEarlySet transitions = currentTransitions.itemsTriggeredBy(postdot);
+			TransitionsEarlySet transitions = currentTransitions.itemsThatCanAdvanceGiven(postdot);
 			if (isLeoEligible(dottedRule)) {
 				transitions.addLeoItem(leoItemToMemoize(earlyItem, dottedRule));
 			} else {
@@ -122,12 +120,12 @@ public class Recogniser {
 		if (predecessor.isPresent()) {
 			return predecessor.get();
 		} else {
-			return new LeoItem(dottedRule.next(), earlyItem.origin());
+			return new LeoItem(dottedRule.advance(), earlyItem.origin());
 		}
 	}
 
 	private Optional<LeoItem> leoItemPredecessor(DottedRule dottedRule) {
-		return previousTransitions.itemsTriggeredBy(dottedRule.trigger()).leoItem();
+		return previousTransitions.itemsThatCanAdvanceGiven(dottedRule.trigger()).leoItem();
 	}
 
 	private void addEarlyItem(EarlyItem earlyItem) {

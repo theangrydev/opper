@@ -40,7 +40,7 @@ public class DottedRule {
 	}
 
 	private static Optional<Symbol> computePenult(int dotPosition, Rule rule, Symbol postDot) {
-		if (dotPosition == rule.derivationSuffixDotPosition() && dotPosition > 0) {
+		if (dotPosition == rule.derivationSuffixDotPosition()) {
 			return Optional.of(postDot);
 		} else {
 			return Optional.empty();

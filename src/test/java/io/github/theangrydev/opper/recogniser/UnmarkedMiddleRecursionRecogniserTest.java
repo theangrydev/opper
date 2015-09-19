@@ -1,34 +1,44 @@
 package io.github.theangrydev.opper.recogniser;
 
-import com.google.common.base.Stopwatch;
+import com.googlecode.yatspec.junit.Row;
+import com.googlecode.yatspec.junit.SpecRunner;
+import com.googlecode.yatspec.junit.Table;
 import io.github.theangrydev.opper.common.DoNothingLogger;
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
-import io.github.theangrydev.opper.recogniser.Recogniser;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
+import static java.lang.Boolean.valueOf;
+import static java.lang.Integer.parseInt;
 import static java.util.Collections.nCopies;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
+@RunWith(SpecRunner.class)
 public class UnmarkedMiddleRecursionRecogniserTest {
 
+	@Table({
+		@Row({"1", "false"}),
+		@Row({"2", "true"}),
+		@Row({"3", "false"}),
+		@Row({"4", "true"}),
+		@Row({"5", "false"}),
+		@Row({"6", "true"})
+	})
 	@Test
-	public void shouldRecogniseAGrammarWithAnUnmarkedMiddleRecursion() {
+	public void shouldRecogniseAGrammarWithAnUnmarkedMiddleRecursion(String repetitions, String shouldParse) {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")
 			.withRule("START", "REPEATED", "START", "REPEATED")
 			.withRule("START", "REPEATED", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(10, grammar.symbolByName("REPEATED")));
+		Corpus corpus = corpus(nCopies(parseInt(repetitions), grammar.symbolByName("REPEATED")));
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
-		Stopwatch stopwatch = Stopwatch.createStarted();
-		recogniser.recognise();
-		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
+		assertThat(recogniser.recognise()).describedAs(repetitions + " should be " + shouldParse).isEqualTo(valueOf(shouldParse));
 	}
 }

@@ -9,7 +9,7 @@ public class ComputedRightRecursion implements RightRecursion {
 	private final DerivationConsequences derivationSuffixes;
 
 	public ComputedRightRecursion(Grammar grammar) {
-		this.derivationSuffixes = new DerivationConsequences(grammar, Rule::symbols);
+		this.derivationSuffixes = new DerivationConsequences(grammar, Rule::derivationSuffix);
 	}
 
 	@Override
@@ -18,6 +18,6 @@ public class ComputedRightRecursion implements RightRecursion {
 	}
 
 	private boolean isIndirectlyRightRecursive(Rule rule) {
-		return derivationSuffixes.of(rule.symbols()).contains(rule.trigger());
+		return derivationSuffixes.of(rule.derivationSuffix()).contains(rule.trigger());
 	}
 }

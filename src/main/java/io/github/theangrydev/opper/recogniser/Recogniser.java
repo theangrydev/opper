@@ -25,7 +25,6 @@ import java.util.Optional;
 public class Recogniser {
 
 	private final Logger logger;
-	private final Grammar grammar;
 	private final Corpus corpus;
 	private final RulePrediction rulePrediction;
 	private final RightRecursion rightRecursion;
@@ -39,7 +38,6 @@ public class Recogniser {
 
 	public Recogniser(Logger logger, Grammar grammar, Corpus corpus) {
 		this.logger = logger;
-		this.grammar = grammar;
 		this.corpus = corpus;
 		this.rightRecursion = new PrecomputedRightRecursion(grammar, new ComputedRightRecursion(grammar));
 		this.rulePrediction = new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(grammar));

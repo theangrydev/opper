@@ -7,12 +7,14 @@ import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import io.github.theangrydev.opper.recogniser.Recogniser;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
 import static java.util.Collections.nCopies;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Category(PerformanceTests.class)
 public class RecogniserPerformanceTest {
 
 	@Test
@@ -29,7 +31,7 @@ public class RecogniserPerformanceTest {
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		recogniser.recognise();
-		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(1);
+		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
 	}
 
 	@Test
@@ -46,7 +48,7 @@ public class RecogniserPerformanceTest {
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		recogniser.recognise();
-		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(1);
+		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
 	}
 
 	@Test
@@ -63,6 +65,6 @@ public class RecogniserPerformanceTest {
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		recogniser.recognise();
-		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(1);
+		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
 	}
 }

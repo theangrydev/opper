@@ -41,9 +41,6 @@ public abstract class EarlyItem {
 
 	@Override
 	public boolean equals(Object object) {
-		if (this == object) {
-			return true;
-		}
 		if (getClass() != object.getClass()) {
 			return false;
 		}

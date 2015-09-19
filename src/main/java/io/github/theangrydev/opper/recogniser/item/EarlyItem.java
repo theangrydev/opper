@@ -47,4 +47,9 @@ public abstract class EarlyItem {
 		final EarlyItem other = (EarlyItem) object;
 		return this.transitions == other.transitions && this.dottedRule == other.dottedRule;
 	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + ":" + dottedRule.toString();
+	}
 }

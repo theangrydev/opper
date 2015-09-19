@@ -211,6 +211,11 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<executions>
 					<execution>
+						<configuration>
+							<excludes>
+								<exclude>io.github.theangrydev.opper.performance</exclude>
+							</excludes>
+						</configuration>
 						<id>default-test</id>
 						<phase>none</phase>
 					</execution>

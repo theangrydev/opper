@@ -1,10 +1,11 @@
-package io.github.theangrydev.opper.recogniser;
+package io.github.theangrydev.opper.performance;
 
 import com.google.common.base.Stopwatch;
 import io.github.theangrydev.opper.common.DoNothingLogger;
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
+import io.github.theangrydev.opper.recogniser.Recogniser;
 import org.junit.Test;
 
 import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
@@ -22,7 +23,7 @@ public class RecogniserPerformanceTest {
 			.withRule("START", "REPEATED", "START")
 			.withRule("START", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(10000, grammar.symbolByName("REPEATED")));
+		Corpus corpus = corpus(nCopies(100000, grammar.symbolByName("REPEATED")));
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
@@ -39,7 +40,7 @@ public class RecogniserPerformanceTest {
 			.withRule("START", "START", "REPEATED")
 			.withRule("START", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(10000, grammar.symbolByName("REPEATED")));
+		Corpus corpus = corpus(nCopies(100000, grammar.symbolByName("REPEATED")));
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
@@ -56,7 +57,7 @@ public class RecogniserPerformanceTest {
 			.withRule("START", "REPEATED", "START", "REPEATED")
 			.withRule("START", "REPEATED", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(10000, grammar.symbolByName("REPEATED")));
+		Corpus corpus = corpus(nCopies(50000, grammar.symbolByName("REPEATED")));
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 

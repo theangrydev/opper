@@ -4,6 +4,7 @@ import io.github.theangrydev.opper.common.DoNothingLogger;
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
+import io.github.theangrydev.opper.recogniser.Recogniser;
 import org.junit.Test;
 
 import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;

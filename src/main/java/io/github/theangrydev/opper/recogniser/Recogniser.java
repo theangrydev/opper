@@ -17,18 +17,18 @@ import io.github.theangrydev.opper.recogniser.precomputed.recursion.RightRecursi
 import io.github.theangrydev.opper.recogniser.progress.EarlySet;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySet;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySetsBySymbol;
-import io.github.theangrydev.opper.recogniser.transition.TransitionsTable;
 
 import java.util.Optional;
 
 public class Recogniser {
 
 	private final Logger logger;
+	private final Grammar grammar;
 	private final Corpus corpus;
 	private final RulePrediction rulePrediction;
 	private final RightRecursion rightRecursion;
-	private final TransitionsTable transitionsTable;
 
+	private TransitionsEarlySetsBySymbol initialTransitions;
 	private TransitionsEarlySetsBySymbol previousTransitions;
 	private TransitionsEarlySetsBySymbol currentTransitions;
 	private EarlySet currentEarlySet;
@@ -36,11 +36,11 @@ public class Recogniser {
 
 	public Recogniser(Logger logger, Grammar grammar, Corpus corpus) {
 		this.logger = logger;
+		this.grammar = grammar;
 		this.corpus = corpus;
 		this.rightRecursion = new PrecomputedRightRecursion(grammar, new ComputedRightRecursion(grammar));
 		this.rulePrediction = new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(grammar));
 		this.currentEarlySet = new EarlySet(grammar);
-		this.transitionsTable = new TransitionsTable(grammar);
 	}
 
 	public boolean recognise() {
@@ -53,23 +53,25 @@ public class Recogniser {
 				return false;
 			}
 			reduce();
+			memoizeTransitions();
 			debug();
 		}
-		return currentEarlySet.hasCompletedAcceptanceRule();
+		return currentEarlySet.hasCompletedAcceptanceRule(initialTransitions);
 	}
 
 	private void initialize() {
 		prepareIteration();
-		addEarlyItem(rulePrediction.initial(), 0);
+		initialTransitions = currentTransitions;
+		addEarlyItem(rulePrediction.initial(), currentTransitions);
 		reduce();
+		memoizeTransitions();
 		debug();
 	}
 
 	private void prepareIteration() {
-		transitionsTable.expand();
 		currentEarlySet.reset();
 		previousTransitions = currentTransitions;
-		currentTransitions = transitionsTable.transitionsFromOrigin(currentEarlySetIndex);
+		currentTransitions = new TransitionsEarlySetsBySymbol(grammar.symbols());
 	}
 
 	private void read() {
@@ -77,21 +79,16 @@ public class Recogniser {
 		logger.log(() -> "Reading " + symbol);
 		Iterable<EarlyOrLeoItem> predecessors = previousTransitions.forSymbol(symbol);
 		for (EarlyOrLeoItem predecessor : predecessors) {
-			int origin = predecessor.origin();
-			DottedRule next = predecessor.transition(symbol);
-			addEarlyItem(next, origin);
+			addEarlyItem(predecessor);
 		}
 	}
 
 	private void reduce() {
 		for (EarlyItem earlyItem : currentEarlySet) {
 			if (earlyItem.dottedRule().isComplete()) {
-				int origin = earlyItem.origin();
-				Symbol trigger = earlyItem.trigger();
-				reduceOneLeft(origin, trigger);
+				reduceOneLeft(earlyItem);
 			}
 		}
-		memoizeTransitions();
 	}
 
 	private void memoizeTransitions() {
@@ -117,9 +114,9 @@ public class Recogniser {
 	private LeoItem leoItemToMemoize(EarlyItem earlyItem, DottedRule dottedRule) {
 		Optional<LeoItem> predecessor = leoItemPredecessor(dottedRule);
 		if (predecessor.isPresent()) {
-			return new LeoItem(predecessor.get().dottedRule(), predecessor.get().origin());
+			return new LeoItem(predecessor.get().dottedRule(), predecessor.get().transitions());
 		} else {
-			return new LeoItem(dottedRule.next(), earlyItem.origin());
+			return new LeoItem(dottedRule.next(), earlyItem.transitions());
 		}
 	}
 
@@ -127,26 +124,29 @@ public class Recogniser {
 		return previousTransitions.forSymbol(dottedRule.trigger()).leoItem();
 	}
 
-	private void reduceOneLeft(int origin, Symbol left) {
-		Iterable<EarlyOrLeoItem> transitionEarlySet = transitionsTable.transitionsFromOrigin(origin).forSymbol(left);
-		for (EarlyOrLeoItem item : transitionEarlySet) {
-			addEarlyItem(item.transition(left), item.origin());
+	private void reduceOneLeft(EarlyItem earlyItem) {
+		for (EarlyOrLeoItem item : earlyItem.reductionTransitions()) {
+			addEarlyItem(item);
 		}
 	}
 
-	private void addEarlyItem(DottedRule confirmed, int origin) {
-		currentEarlySet.addIfNew(new EarlyItem(confirmed, origin));
+	private void addEarlyItem(EarlyOrLeoItem earlyOrLeoItem) {
+		addEarlyItem(earlyOrLeoItem.transition(), earlyOrLeoItem.transitions());
+	}
+
+	private void addEarlyItem(DottedRule confirmed, TransitionsEarlySetsBySymbol originTransitions) {
+		currentEarlySet.addIfNew(new EarlyItem(originTransitions, confirmed));
 		if (confirmed.isComplete()) {
 			return;
 		}
 		for (DottedRule predicted : rulePrediction.rulesThatCanBeTriggeredBy(confirmed.postDot())) {
-			currentEarlySet.addIfNew(new EarlyItem(predicted, currentEarlySetIndex));
+			currentEarlySet.addIfNew(new EarlyItem(currentTransitions, predicted));
 		}
 	}
 
 	private void debug() {
 		logger.log(() -> "State at end of iteration #" + currentEarlySetIndex);
 		logger.log(() -> "Current Early set: " + currentEarlySet);
-		logger.log(() -> "Transition tables: " + transitionsTable);
+		logger.log(() -> "Current transitions: " + currentTransitions);
 	}
 }

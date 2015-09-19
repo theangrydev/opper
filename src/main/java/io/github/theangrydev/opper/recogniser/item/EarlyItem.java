@@ -1,33 +1,35 @@
 package io.github.theangrydev.opper.recogniser.item;
 
 import io.github.theangrydev.opper.grammar.Symbol;
+import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySet;
+import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySetsBySymbol;
 
 public class EarlyItem implements EarlyOrLeoItem {
 
+	private final TransitionsEarlySetsBySymbol transitions;
 	private final DottedRule dottedRule;
-	private final int origin;
 
-	public EarlyItem(DottedRule dottedRule, int origin) {
+	public EarlyItem(TransitionsEarlySetsBySymbol transitions, DottedRule dottedRule) {
+		this.transitions = transitions;
 		this.dottedRule = dottedRule;
-		this.origin = origin;
 	}
 
-	public boolean hasCompletedAcceptanceRule(Symbol acceptanceSymbol) {
-		return origin == 0 && dottedRule.isCompletedAcceptanceRule(acceptanceSymbol);
+	public boolean hasCompletedAcceptanceRule(TransitionsEarlySetsBySymbol initialTransitions, Symbol acceptanceSymbol) {
+		return transitions == initialTransitions && dottedRule.isCompletedAcceptanceRule(acceptanceSymbol);
 	}
 
 	@Override
-	public DottedRule transition(Symbol symbol) {
+	public DottedRule transition() {
 		return dottedRule.next();
 	}
 
-	@Override
-	public int origin() {
-		return origin;
+	public TransitionsEarlySet reductionTransitions() {
+		return transitions.forSymbol(dottedRule.trigger());
 	}
 
-	public Symbol trigger() {
-		return dottedRule.trigger();
+	@Override
+	public TransitionsEarlySetsBySymbol transitions() {
+		return transitions;
 	}
 
 	@Override
@@ -37,10 +39,10 @@ public class EarlyItem implements EarlyOrLeoItem {
 
 	@Override
 	public String toString() {
-		return dottedRule + " @ " + origin;
+		return dottedRule + " @ " + transitions;
 	}
 
 	public boolean equals(EarlyItem other) {
-		return this.origin == other.origin && this.dottedRule == other.dottedRule;
+		return this.transitions == other.transitions && this.dottedRule == other.dottedRule;
 	}
 }

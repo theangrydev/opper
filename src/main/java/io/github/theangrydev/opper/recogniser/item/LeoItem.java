@@ -1,30 +1,31 @@
 package io.github.theangrydev.opper.recogniser.item;
 
 import io.github.theangrydev.opper.grammar.Symbol;
+import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySetsBySymbol;
 
 public class LeoItem implements EarlyOrLeoItem {
 
+	private final TransitionsEarlySetsBySymbol transitions;
 	private final DottedRule top;
-	private final int origin;
 
-	public LeoItem(DottedRule top, int origin) {
+	public LeoItem(DottedRule top, TransitionsEarlySetsBySymbol transitions) {
 		this.top = top;
-		this.origin = origin;
+		this.transitions = transitions;
 	}
 
 	@Override
-	public DottedRule transition(Symbol symbol) {
+	public DottedRule transition() {
 		return top;
 	}
 
 	@Override
-	public int origin() {
-		return origin;
+	public TransitionsEarlySetsBySymbol transitions() {
+		return transitions;
 	}
 
 	@Override
 	public String toString() {
-		return top + " @ " + origin;
+		return top + " @ " + transitions;
 	}
 
 	@Override

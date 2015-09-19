@@ -4,6 +4,7 @@ import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.recogniser.item.DottedRule;
 import io.github.theangrydev.opper.recogniser.item.EarlyItem;
+import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySetsBySymbol;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import java.util.Iterator;
@@ -34,8 +35,8 @@ public class EarlySet implements Iterable<EarlyItem> {
 		earlyItems.clear();
 	}
 
-	public boolean hasCompletedAcceptanceRule() {
-		return earlyItems.stream().anyMatch(earlyItem -> earlyItem.hasCompletedAcceptanceRule(grammar.acceptanceSymbol()));
+	public boolean hasCompletedAcceptanceRule(TransitionsEarlySetsBySymbol initialTransitions) {
+		return earlyItems.stream().anyMatch(earlyItem -> earlyItem.hasCompletedAcceptanceRule(initialTransitions, grammar.acceptanceSymbol()));
 	}
 
 	@Override

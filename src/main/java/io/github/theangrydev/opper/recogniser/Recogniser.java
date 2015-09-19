@@ -81,7 +81,7 @@ public class Recogniser {
 	private void readNextSymbol() {
 		Symbol symbol = corpus.nextSymbol();
 		logger.log(() -> "Reading " + symbol);
-		Iterable<EarlyItem> predecessors = previousTransitions.forSymbol(symbol);
+		Iterable<EarlyItem> predecessors = previousTransitions.itemsTriggeredBy(symbol);
 		for (EarlyItem predecessor : predecessors) {
 			addEarlyItem(predecessor.next());
 		}
@@ -90,7 +90,7 @@ public class Recogniser {
 	private void reduce() {
 		for (EarlyItem earlyItem : currentEarlySet) {
 			if (earlyItem.isComplete()) {
-				for (EarlyItem item : earlyItem.reductionTransitions()) {
+				for (EarlyItem item : earlyItem.itemsTriggeredOnCompletion()) {
 					addEarlyItem(item.next());
 				}
 			}
@@ -104,7 +104,7 @@ public class Recogniser {
 			}
 			DottedRule dottedRule = earlyItem.dottedRule();
 			Symbol postdot = dottedRule.postDot();
-			TransitionsEarlySet transitions = currentTransitions.forSymbol(postdot);
+			TransitionsEarlySet transitions = currentTransitions.itemsTriggeredBy(postdot);
 			if (isLeoEligible(dottedRule)) {
 				transitions.addLeoItem(leoItemToMemoize(earlyItem, dottedRule));
 			} else {
@@ -122,12 +122,12 @@ public class Recogniser {
 		if (predecessor.isPresent()) {
 			return predecessor.get();
 		} else {
-			return new LeoItem(dottedRule.next(), earlyItem.transitions());
+			return new LeoItem(dottedRule.next(), earlyItem.origin());
 		}
 	}
 
 	private Optional<LeoItem> leoItemPredecessor(DottedRule dottedRule) {
-		return previousTransitions.forSymbol(dottedRule.trigger()).leoItem();
+		return previousTransitions.itemsTriggeredBy(dottedRule.trigger()).leoItem();
 	}
 
 	private void addEarlyItem(EarlyItem earlyItem) {

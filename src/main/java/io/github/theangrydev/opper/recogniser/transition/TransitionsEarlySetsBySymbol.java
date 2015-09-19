@@ -18,7 +18,7 @@ public class TransitionsEarlySetsBySymbol {
 		}
 	}
 
-	public TransitionsEarlySet forSymbol(Symbol symbol) {
+	public TransitionsEarlySet itemsTriggeredBy(Symbol symbol) {
 		return earlySets.get(symbol.id());
 	}
 

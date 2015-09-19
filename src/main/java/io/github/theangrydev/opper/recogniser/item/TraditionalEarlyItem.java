@@ -10,6 +10,6 @@ public class TraditionalEarlyItem extends EarlyItem {
 
 	@Override
 	public EarlyItem next() {
-		return new TraditionalEarlyItem(transitions, dottedRule.next());
+		return new TraditionalEarlyItem(origin, dottedRule.next());
 	}
 }

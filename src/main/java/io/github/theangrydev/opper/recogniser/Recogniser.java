@@ -95,10 +95,10 @@ public class Recogniser {
 
 	private void memoizeTransitions() {
 		for (EarlyItem earlyItem : currentEarlySet) {
-			DottedRule dottedRule = earlyItem.dottedRule();
-			if (dottedRule.isComplete()) {
+			if (earlyItem.isComplete()) {
 				continue;
 			}
+			DottedRule dottedRule = earlyItem.dottedRule();
 			Symbol postdot = dottedRule.postDot();
 			TransitionsEarlySet transitions = currentTransitions.forSymbol(postdot);
 			if (isLeoEligible(dottedRule)) {

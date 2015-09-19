@@ -49,6 +49,10 @@ public class EarlySet implements Iterable<EarlyItem> {
 		return penult.isPresent() && containsAndPenultUnique(dottedRule, penult.get());
 	}
 
+	public int size() {
+		return earlyItems.size();
+	}
+
 	private boolean containsAndPenultUnique(DottedRule dottedRule, Symbol penult) {
 		boolean contains = false;
 		for (int i = earlyItems.size() - 1; i >= 0; i--) {

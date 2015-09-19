@@ -2,6 +2,7 @@ package io.github.theangrydev.opper.recogniser.progress;
 
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import io.github.theangrydev.opper.recogniser.item.EarlyItem;
+import io.github.theangrydev.opper.recogniser.item.TraditionalEarlyItem;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
@@ -14,8 +15,8 @@ public class EarlySetTest implements WithAssertions {
 
 	@Test
 	public void shouldBeAbleToIterateItemsThatWereAddedDuringTheSameIteration() {
-		EarlyItem oldItem = createEarlyItem();
-		EarlyItem newItem = createEarlyItem();
+		TraditionalEarlyItem oldItem = createEarlyItem();
+		TraditionalEarlyItem newItem = createEarlyItem();
 
 		EarlySet earlySet = new EarlySet(new GrammarBuilder().build());
 		earlySet.addIfNew(oldItem);
@@ -33,7 +34,7 @@ public class EarlySetTest implements WithAssertions {
 		assertThat(itemsSeen).containsExactly(oldItem, newItem);
 	}
 
-	private EarlyItem createEarlyItem() {
-		return mock(EarlyItem.class);
+	private TraditionalEarlyItem createEarlyItem() {
+		return mock(TraditionalEarlyItem.class);
 	}
 }

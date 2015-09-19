@@ -4,46 +4,29 @@ import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySet;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySetsBySymbol;
 
-public class EarlyItem implements EarlyOrLeoItem {
+public abstract class EarlyItem {
+	protected final TransitionsEarlySetsBySymbol transitions;
+	protected final DottedRule dottedRule;
 
-	private final TransitionsEarlySetsBySymbol transitions;
-	private final DottedRule dottedRule;
-
-	public EarlyItem(TransitionsEarlySetsBySymbol transitions, DottedRule dottedRule) {
+	protected EarlyItem(TransitionsEarlySetsBySymbol transitions, DottedRule dottedRule) {
 		this.transitions = transitions;
 		this.dottedRule = dottedRule;
 	}
 
-	public boolean hasCompletedAcceptanceRule(TransitionsEarlySetsBySymbol initialTransitions, Symbol acceptanceSymbol) {
-		return transitions == initialTransitions && dottedRule.isCompletedAcceptanceRule(acceptanceSymbol);
+	public DottedRule dottedRule() {
+		return dottedRule;
 	}
 
-	@Override
-	public EarlyItem transition() {
-		return new EarlyItem(transitions, dottedRule.next());
+	public TransitionsEarlySetsBySymbol transitions() {
+		return transitions;
 	}
 
 	public TransitionsEarlySet reductionTransitions() {
 		return transitions.forSymbol(dottedRule.trigger());
 	}
 
-	@Override
-	public TransitionsEarlySetsBySymbol transitions() {
-		return transitions;
-	}
-
-	@Override
-	public DottedRule dottedRule() {
-		return dottedRule;
-	}
-
-	@Override
-	public String toString() {
-		return dottedRule + " @ " + transitions;
-	}
-
-	public boolean equals(EarlyItem other) {
-		return this.transitions == other.transitions && this.dottedRule == other.dottedRule;
+	public boolean hasCompletedAcceptanceRule(TransitionsEarlySetsBySymbol initialTransitions, Symbol acceptanceSymbol) {
+		return transitions == initialTransitions && dottedRule.isCompletedAcceptanceRule(acceptanceSymbol);
 	}
 
 	public boolean isComplete() {
@@ -52,5 +35,19 @@ public class EarlyItem implements EarlyOrLeoItem {
 
 	public Symbol postDot() {
 		return dottedRule.postDot();
+	}
+
+	public abstract EarlyItem transition();
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+		if (getClass() != object.getClass()) {
+			return false;
+		}
+		final EarlyItem other = (EarlyItem) object;
+		return this.transitions == other.transitions && this.dottedRule == other.dottedRule;
 	}
 }

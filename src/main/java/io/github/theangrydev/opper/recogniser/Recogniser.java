@@ -6,7 +6,7 @@ import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.recogniser.item.DottedRule;
 import io.github.theangrydev.opper.recogniser.item.EarlyItem;
-import io.github.theangrydev.opper.recogniser.item.EarlyOrLeoItem;
+import io.github.theangrydev.opper.recogniser.item.TraditionalEarlyItem;
 import io.github.theangrydev.opper.recogniser.item.LeoItem;
 import io.github.theangrydev.opper.recogniser.precomputed.prediction.ComputedRulePrediction;
 import io.github.theangrydev.opper.recogniser.precomputed.prediction.PrecomputedRulePrediction;
@@ -59,10 +59,14 @@ public class Recogniser {
 		return currentEarlySet.hasCompletedAcceptanceRule(initialTransitions);
 	}
 
+	public int finalEarlySetSize() {
+		return currentEarlySet.size();
+	}
+
 	private void initialize() {
 		prepareIteration();
 		initialTransitions = currentTransitions;
-		addEarlyItem(new EarlyItem(currentTransitions, rulePrediction.initial()));
+		addEarlyItem(new TraditionalEarlyItem(currentTransitions, rulePrediction.initial()));
 		reduce();
 		memoizeTransitions();
 		debug();
@@ -77,8 +81,8 @@ public class Recogniser {
 	private void read() {
 		Symbol symbol = corpus.nextSymbol();
 		logger.log(() -> "Reading " + symbol);
-		Iterable<EarlyOrLeoItem> predecessors = previousTransitions.forSymbol(symbol);
-		for (EarlyOrLeoItem predecessor : predecessors) {
+		Iterable<EarlyItem> predecessors = previousTransitions.forSymbol(symbol);
+		for (EarlyItem predecessor : predecessors) {
 			addEarlyItem(predecessor.transition());
 		}
 	}
@@ -86,7 +90,7 @@ public class Recogniser {
 	private void reduce() {
 		for (EarlyItem earlyItem : currentEarlySet) {
 			if (earlyItem.isComplete()) {
-				for (EarlyOrLeoItem item : earlyItem.reductionTransitions()) {
+				for (EarlyItem item : earlyItem.reductionTransitions()) {
 					addEarlyItem(item.transition());
 				}
 			}
@@ -102,9 +106,9 @@ public class Recogniser {
 			Symbol postdot = dottedRule.postDot();
 			TransitionsEarlySet transitions = currentTransitions.forSymbol(postdot);
 			if (isLeoEligible(dottedRule)) {
-				transitions.add(leoItemToMemoize(earlyItem, dottedRule));
+				transitions.addLeoItem(leoItemToMemoize(earlyItem, dottedRule));
 			} else {
-				transitions.add(earlyItem);
+				transitions.addEarlyItem(earlyItem);
 			}
 		}
 	}
@@ -132,7 +136,7 @@ public class Recogniser {
 			return;
 		}
 		for (DottedRule predicted : rulePrediction.rulesThatCanBeTriggeredBy(earlyItem.postDot())) {
-			currentEarlySet.addIfNew(new EarlyItem(currentTransitions, predicted));
+			currentEarlySet.addIfNew(new TraditionalEarlyItem(currentTransitions, predicted));
 		}
 	}
 

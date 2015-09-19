@@ -6,15 +6,13 @@ import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import org.junit.Test;
 
-import java.io.IOException;
-
 import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
 public class RepeatedPredictionRecogniserTest {
 
 	@Test
-	public void shouldRecogniseALeftRecursiveGrammar() throws IOException, InterruptedException {
+	public void shouldRecogniseALeftRecursiveGrammar() throws Exception {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")
@@ -29,5 +27,6 @@ public class RepeatedPredictionRecogniserTest {
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
 		assertThat(recogniser.recognise()).isTrue();
+		assertThat(recogniser.finalEarlySetSize()).isEqualTo(6);
 	}
 }

@@ -80,16 +80,16 @@ public class Recogniser {
 	private void readNextSymbol() {
 		Symbol symbol = corpus.nextSymbol();
 		logger.log(() -> "Reading " + symbol);
-		for (EarlyItem itemThatCanAdvane : previousTransitions.itemsThatCanAdvanceGiven(symbol)) {
-			addEarlyItem(itemThatCanAdvane.advance());
+		for (EarlyItem itemThatCanAdvance : previousTransitions.itemsThatCanAdvanceGiven(symbol)) {
+			addEarlyItem(itemThatCanAdvance.advance());
 		}
 	}
 
 	private void advanceItemsThatWereWaitingOnCompletions() {
 		for (EarlyItem earlyItem : currentEarlySet) {
 			if (earlyItem.isComplete()) {
-				for (EarlyItem itemThatCanAdvane : earlyItem.itemsThatCanAdvanceWhenThisIsComplete()) {
-					addEarlyItem(itemThatCanAdvane.advance());
+				for (EarlyItem itemThatCanAdvance : earlyItem.itemsThatCanAdvanceWhenThisIsComplete()) {
+					addEarlyItem(itemThatCanAdvance.advance());
 				}
 			}
 		}

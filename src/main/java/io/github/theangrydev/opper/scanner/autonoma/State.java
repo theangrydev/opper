@@ -41,6 +41,17 @@ public class State {
 		return reached;
 	}
 
+	public void recordStatistics(StateStatistics stateStatistics) {
+		characterTransitions.entrySet().forEach(entry -> {
+			Character character = entry.getKey();
+			List<State> states = entry.getValue();
+			int times = states.size();
+			stateStatistics.recordCharacter(character, times);
+			stateStatistics.recordState(this, times);
+			states.forEach(stateStatistics::recordState);
+		});
+	}
+
 	public void markReachableStates() {
 		if (!reached) {
 			reached = true;

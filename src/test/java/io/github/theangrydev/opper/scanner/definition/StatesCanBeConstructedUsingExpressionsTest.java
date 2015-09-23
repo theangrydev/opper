@@ -3,6 +3,7 @@ package io.github.theangrydev.opper.scanner.definition;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.scanner.autonoma.State;
 import io.github.theangrydev.opper.scanner.autonoma.StateFactory;
+import io.github.theangrydev.opper.scanner.autonoma.StateStatistics;
 import io.github.theangrydev.opper.scanner.autonoma.SymbolDefinitionToStateConverter;
 import org.junit.Test;
 
@@ -30,6 +31,10 @@ public class StatesCanBeConstructedUsingExpressionsTest {
 		initial.markReachableStates();
 		stateFactory.removeUnreachableStates();
 
+		StateStatistics stateStatistics = new StateStatistics();
+		stateFactory.states().forEach(state -> state.recordStatistics(stateStatistics));
+
 		System.out.println(stateFactory.states().stream().map(Object::toString).collect(Collectors.joining("\n")));
+		System.out.println(stateStatistics);
 	}
 }

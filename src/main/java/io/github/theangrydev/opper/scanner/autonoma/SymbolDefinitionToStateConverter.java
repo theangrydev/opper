@@ -4,9 +4,9 @@ import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 
 import java.util.List;
 
-public class NonDeterministicFiniteAutonoma {
+public class SymbolDefinitionToStateConverter {
 
-	public NonDeterministicFiniteAutonoma(List<SymbolDefinition> symbolDefinitions) {
+	public State convertDefinitionsToStates(List<SymbolDefinition> symbolDefinitions) {
 		StateFactory stateFactory = new StateFactory();
 		State initial = stateFactory.anonymousState();
 		for (SymbolDefinition symbolDefinition : symbolDefinitions) {
@@ -16,5 +16,6 @@ public class NonDeterministicFiniteAutonoma {
 			initial.addNullTransition(from);
 			symbolDefinition.populate(generator, from, to);
 		}
+		return initial;
 	}
 }

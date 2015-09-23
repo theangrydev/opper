@@ -1,11 +1,11 @@
 package io.github.theangrydev.opper.scanner.definition;
 
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.scanner.autonoma.State;
 import io.github.theangrydev.opper.scanner.autonoma.StateFactory;
-import io.github.theangrydev.opper.scanner.autonoma.SymbolOwnedStateGenerator;
+import io.github.theangrydev.opper.scanner.autonoma.SymbolDefinitionToStateConverter;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import static io.github.theangrydev.opper.scanner.definition.AlternativeExpression.either;
@@ -18,12 +18,12 @@ public class StatesCanBeConstructedUsingExpressionsTest {
 	@Test
 	public void shouldConstructStatesFromAnExpression() {
 		StateFactory stateFactory = new StateFactory();
-		State from = stateFactory.anonymousState();
-		State to = stateFactory.anonymousState();
+		SymbolDefinitionToStateConverter converter = new SymbolDefinitionToStateConverter(stateFactory);
 
 		Expression expression = repeat(either(character('a'), character('b'), concatenate(character('c'), character('d'))));
+		SymbolDefinition symbolDefinition = new SymbolDefinition(new Symbol(1, "symbol"), expression);
 
-		expression.populate(new SymbolOwnedStateGenerator(new Symbol(1, "symbol"), stateFactory), from, to);
+		converter.convertDefinitionsToStates(Collections.singletonList(symbolDefinition));
 
 		System.out.println(stateFactory.states().stream().map(Object::toString).collect(Collectors.joining("\n")));
 	}

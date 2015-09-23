@@ -21,9 +21,6 @@ public class SymbolDefinitionToStateConverter {
 			initial.addNullTransition(from);
 			symbolDefinition.populate(generator, from, accepting);
 		}
-		stateFactory.eliminateEpsilonTransitions();
-		initial.markReachableStates();
-		stateFactory.removeUnreachableStates();
 		return initial;
 	}
 }

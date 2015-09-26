@@ -32,7 +32,7 @@ public class StatesCanBeConstructedUsingExpressionsTest {
 		stateFactory.removeUnreachableStates();
 
 		StateStatistics stateStatistics = new StateStatistics();
-		stateFactory.states().forEach(state -> state.recordStatistics(stateStatistics));
+		stateFactory.states().forEach(stateStatistics::record);
 
 		System.out.println(stateFactory.states().stream().map(Object::toString).collect(Collectors.joining("\n")));
 		System.out.println(stateStatistics);

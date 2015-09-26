@@ -17,7 +17,19 @@ public class StateStatistics {
 		this.stateFrequencies = HashMultiset.create();
 	}
 
-	public void recordCharacter(Character character, int times) {
+	public void record(State state) {
+		state.recordStatistics(this);
+	}
+
+	public ImmutableMultiset<Character> characterFrequencies() {
+		return Multisets.copyHighestCountFirst(characterFrequencies);
+	}
+
+	public ImmutableMultiset<State> stateFrequencies() {
+		return Multisets.copyHighestCountFirst(stateFrequencies);
+	}
+
+	public void recordCharacter(char character, int times) {
 		characterFrequencies.add(character, times);
 	}
 

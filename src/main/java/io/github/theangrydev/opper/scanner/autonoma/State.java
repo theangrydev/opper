@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class State {
 	private final Symbol createdBy;
-	private final int id;
+	private int id;
 	private Char2ObjectMap<List<State>> characterTransitions;
 	private List<State> epsilonTransitions;
 	private boolean isAccepting;
@@ -22,6 +22,22 @@ public class State {
 		this.isAccepting = isAccepting;
 		characterTransitions = new Char2ObjectArrayMap<>();
 		epsilonTransitions = new ArrayList<>();
+	}
+
+	public interface TransitionVisitor {
+		void visit(State from, char via, State to);
+	}
+
+	public int id() {
+		return id;
+	}
+
+	public void visitTransitions(TransitionVisitor transitionVisitor) {
+		characterTransitions.char2ObjectEntrySet().forEach(entry -> {
+			char character = entry.getCharKey();
+			List<State> states = entry.getValue();
+			states.forEach(state -> transitionVisitor.visit(this, character, state));
+		});
 	}
 
 	public void addNullTransition(State state) {
@@ -42,8 +58,8 @@ public class State {
 	}
 
 	public void recordStatistics(StateStatistics stateStatistics) {
-		characterTransitions.entrySet().forEach(entry -> {
-			Character character = entry.getKey();
+		characterTransitions.char2ObjectEntrySet().forEach(entry -> {
+			char character = entry.getCharKey();
 			List<State> states = entry.getValue();
 			int times = states.size();
 			stateStatistics.recordCharacter(character, times);
@@ -63,6 +79,10 @@ public class State {
 		addReachableTransitions(reachableStates);
 		determineIfThisStateIsAccepting(reachableStates);
 		removeEpsilonTransitions();
+	}
+
+	public void label(int id) {
+		this.id = id;
 	}
 
 	private void removeEpsilonTransitions() {

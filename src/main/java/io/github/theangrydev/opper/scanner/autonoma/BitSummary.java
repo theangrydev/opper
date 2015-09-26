@@ -32,6 +32,14 @@ public class BitSummary {
 		return maxCharacterVariable();
 	}
 
+	private int maxFromStateVariable() {
+		return minFromStateVariable() + bitsForStates;
+	}
+
+	private int minFromStateVariable() {
+		return 1;
+	}
+
 	public int bitsForStates() {
 		return bitsForStates;
 	}
@@ -65,11 +73,27 @@ public class BitSummary {
 		return toId << (bitsForStates() + bitsForCharacters());
 	}
 
+	public int unprojectToIdBitPosition(int position) {
+		return position - minToStateVariable();
+	}
+
 	public boolean isCharacter(Variable variable) {
 		return variable.id() >= minCharacterVariable() && variable.id() < maxCharacterVariable();
 	}
 
 	public boolean isToState(Variable variable) {
 		return variable.id() >= minToStateVariable() && variable.id() < maxToStateVariable();
+	}
+
+	public boolean isFromState(Variable variable) {
+		return variable.id() >= minFromStateVariable() && variable.id() < maxFromStateVariable();
+	}
+
+	public boolean isFromStateOrCharacter(Variable variable) {
+		return isFromState(variable) || isCharacter(variable);
+	}
+
+	public boolean isFromOrToState(Variable variable) {
+		return isFromState(variable) || isToState(variable);
 	}
 }

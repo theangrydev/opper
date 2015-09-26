@@ -32,6 +32,10 @@ public class State {
 		return id;
 	}
 
+	public Symbol symbol() {
+		return createdBy;
+	}
+
 	public void visitTransitions(TransitionVisitor transitionVisitor) {
 		characterTransitions.char2ObjectEntrySet().forEach(entry -> {
 			char character = entry.getCharKey();

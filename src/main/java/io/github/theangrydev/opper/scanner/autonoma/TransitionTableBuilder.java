@@ -23,11 +23,6 @@ public class TransitionTableBuilder {
 		return transitions;
 	}
 
-	//TODO: this should result in a transition table encoded with rows as a BitSet with from, to, via
-	//TODO: next step is to implement ID3 to determine which order the bits should be added to the ROBDD to achieve a minimal size
-	//TODO: this will give a permutation of the current order
-	//TODO: the permutation of the current order can be used to compute a new transition table, acceptance table, etc
-	//TODO: at this point we are ready to convert all the bitsets to ROBDDs and implement the NFA-OBDD algorithm
 	private void blastBits(long number, BitSet row) {
 		row.or(BitSet.valueOf(new long[]{number}));
 	}

@@ -92,8 +92,4 @@ public class BitSummary {
 	public boolean isFromStateOrCharacter(Variable variable) {
 		return isFromState(variable) || isCharacter(variable);
 	}
-
-	public boolean isFromOrToState(Variable variable) {
-		return isFromState(variable) || isToState(variable);
-	}
 }

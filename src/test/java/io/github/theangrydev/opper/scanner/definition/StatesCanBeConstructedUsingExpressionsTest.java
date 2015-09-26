@@ -49,6 +49,9 @@ public class StatesCanBeConstructedUsingExpressionsTest {
 		VariableOrderingCalculator variableOrderingCalculator = new VariableOrderingCalculator();
 		IntList variableOrdering = variableOrderingCalculator.determineOrdering(bitSummary.bitsPerRow(), transitionTable);
 
+		BDDTransitionsTable bddTransitionsTable = new BDDTransitionsTable();
+		bddTransitionsTable.compute(variableOrdering, transitionTable);
+
 		System.out.println(stateFactory.states().stream().map(Object::toString).collect(Collectors.joining("\n")));
 		System.out.println("bitsummary=" + bitSummary);
 		System.out.println("characters=" + characterIds);

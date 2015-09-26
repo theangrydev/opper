@@ -67,6 +67,7 @@
 		<junit.version>4.12</junit.version>
 		<guava.version>18.0</guava.version>
 		<fastutil.version>7.0.7</fastutil.version>
+		<jdd.version>105</jdd.version>
 	</properties>
 
 	<build>
@@ -198,6 +199,12 @@
 			<version>${fastutil.version}</version>
 		</dependency>
 
+		<!-- JDD -->
+		<dependency>
+			<groupId>jdd</groupId>
+			<artifactId>jdd</artifactId>
+			<version>${jdd.version}</version>
+		</dependency>
 
 		<!-- Test dependencies -->
 		<!-- JUnit -->

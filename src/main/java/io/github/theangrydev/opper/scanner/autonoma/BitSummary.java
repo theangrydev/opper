@@ -36,4 +36,16 @@ public class BitSummary {
 			", bitsPerRow=" + bitsPerRow +
 			'}';
 	}
+
+	public int projectFromId(int fromId) {
+		return fromId;
+	}
+
+	public int projectCharacterId(int characterId) {
+		return characterId << bitsForStates();
+	}
+
+	public int projectToId(int toId) {
+		return toId << (bitsForStates() + bitsForCharacters());
+	}
 }

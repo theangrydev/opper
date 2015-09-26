@@ -13,9 +13,9 @@ public class TransitionTableBuilder {
 		for (State state : states) {
 			state.visitTransitions((from, via, to) -> {
 				BitSet row = new BitSet(bitSummary.bitsPerRow());
-				blastBits(from.id(), row);
-				blastBits(characterIds.get(via) << bitSummary.bitsForStates(), row);
-				blastBits(to.id() << (bitSummary.bitsForStates() + bitSummary.bitsForCharacters()), row);
+				blastBits(bitSummary.projectFromId(from.id()), row);
+				blastBits(bitSummary.projectCharacterId(characterIds.get(via)), row);
+				blastBits(bitSummary.projectToId(to.id()), row);
 				transitions.add(row);
 			});
 		}

@@ -4,6 +4,7 @@ import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.scanner.autonoma.*;
 import it.unimi.dsi.fastutil.chars.Char2IntMap;
 import it.unimi.dsi.fastutil.ints.IntList;
+import jdd.bdd.BDD;
 import org.junit.Test;
 
 import java.util.BitSet;
@@ -49,8 +50,14 @@ public class StatesCanBeConstructedUsingExpressionsTest {
 		VariableOrderingCalculator variableOrderingCalculator = new VariableOrderingCalculator();
 		IntList variableOrdering = variableOrderingCalculator.determineOrdering(bitSummary.bitsPerRow(), transitionTable);
 
+		BDD bdd = new BDD(1000,100);
+		BDDVariables bddVariables = new BDDVariables(bdd, variableOrdering);
+
 		BDDTransitionsTable bddTransitionsTable = new BDDTransitionsTable();
-		bddTransitionsTable.compute(variableOrdering, transitionTable);
+		bddTransitionsTable.compute(variableOrdering, bdd, bddVariables, transitionTable);
+
+		BDDCharacters bddCharacters = new BDDCharacters();
+		bddCharacters.compute(variableOrdering, characterIds, bitSummary, bdd, bddVariables);
 
 		System.out.println(stateFactory.states().stream().map(Object::toString).collect(Collectors.joining("\n")));
 		System.out.println("bitsummary=" + bitSummary);

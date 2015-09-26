@@ -9,7 +9,7 @@ public class CharacterEncoder {
 
 	public Char2IntMap labelCharactersWithSmallerIdsForMoreFrequentCharacters(ImmutableMultiset<Character> characterFrequencies) {
 		Char2IntMap characterToId = new Char2IntArrayMap();
-		int idSequence = 0;
+		int idSequence = 1;
 		for (Multiset.Entry<Character> entry : characterFrequencies.entrySet()) {
 			characterToId.put((char) entry.getElement(), idSequence++);
 		}

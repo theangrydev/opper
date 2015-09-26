@@ -1,13 +1,14 @@
 package io.github.theangrydev.opper.scanner.definition;
 
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.scanner.autonoma.State;
-import io.github.theangrydev.opper.scanner.autonoma.StateFactory;
-import io.github.theangrydev.opper.scanner.autonoma.StateStatistics;
-import io.github.theangrydev.opper.scanner.autonoma.SymbolDefinitionToStateConverter;
+import io.github.theangrydev.opper.scanner.autonoma.*;
+import it.unimi.dsi.fastutil.chars.Char2IntMap;
+import it.unimi.dsi.fastutil.ints.IntList;
 import org.junit.Test;
 
+import java.util.BitSet;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static io.github.theangrydev.opper.scanner.definition.AlternativeExpression.either;
@@ -34,7 +35,25 @@ public class StatesCanBeConstructedUsingExpressionsTest {
 		StateStatistics stateStatistics = new StateStatistics();
 		stateFactory.states().forEach(stateStatistics::record);
 
+		CharacterEncoder characterEncoder = new CharacterEncoder();
+		Char2IntMap characterIds = characterEncoder.labelCharactersWithSmallerIdsForMoreFrequentCharacters(stateStatistics.characterFrequencies());
+
+		StateEncoder stateEncoder = new StateEncoder();
+		stateEncoder.labelStatesWithSmallerIdsForMoreFrequentStates(stateStatistics.stateFrequencies());
+
+		BitSummary bitSummary = new BitSummary(stateFactory.states().size(), characterIds.size());
+
+		TransitionTableBuilder transitionTableBuilder = new TransitionTableBuilder();
+		List<BitSet> transitionTable = transitionTableBuilder.buildTransitionTable(bitSummary, characterIds, stateFactory.states());
+
+		VariableOrderingCalculator variableOrderingCalculator = new VariableOrderingCalculator();
+		IntList variableOrdering = variableOrderingCalculator.determineOrdering(bitSummary.bitsPerRow(), transitionTable);
+
 		System.out.println(stateFactory.states().stream().map(Object::toString).collect(Collectors.joining("\n")));
+		System.out.println("bitsummary=" + bitSummary);
+		System.out.println("characters=" + characterIds);
+		System.out.println("transitions=\n" +transitionTable.stream().map(Object::toString).collect(Collectors.joining("\n")));
+		System.out.println("ordering=" + variableOrdering);
 		System.out.println(stateStatistics);
 	}
 }

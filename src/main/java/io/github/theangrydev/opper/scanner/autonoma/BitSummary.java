@@ -1,0 +1,39 @@
+package io.github.theangrydev.opper.scanner.autonoma;
+
+import com.google.common.math.IntMath;
+
+import java.math.RoundingMode;
+
+public class BitSummary {
+
+	private final int bitsForStates;
+	private final int bitsForCharacters;
+	private final int bitsPerRow;
+
+	public BitSummary(int numberOfStates, int numberOfCharacters) {
+		bitsForStates = IntMath.log2(numberOfStates, RoundingMode.FLOOR) + 1;
+		bitsForCharacters = IntMath.log2(numberOfCharacters, RoundingMode.FLOOR) + 1;
+		bitsPerRow = bitsForStates * 2 + bitsForCharacters;
+	}
+
+	public int bitsForStates() {
+		return bitsForStates;
+	}
+
+	public int bitsForCharacters() {
+		return bitsForCharacters;
+	}
+
+	public int bitsPerRow() {
+		return bitsPerRow;
+	}
+
+	@Override
+	public String toString() {
+		return "BitSummary{" +
+			"bitsForStates=" + bitsForStates +
+			", bitsForCharacters=" + bitsForCharacters +
+			", bitsPerRow=" + bitsPerRow +
+			'}';
+	}
+}

@@ -16,6 +16,22 @@ public class BitSummary {
 		bitsPerRow = bitsForStates * 2 + bitsForCharacters;
 	}
 
+	public int minCharacterVariable() {
+		return bitsForStates + 1;
+	}
+
+	public int maxCharacterVariable() {
+		return minCharacterVariable() + bitsForCharacters;
+	}
+
+	private int maxToStateVariable() {
+		return minToStateVariable() + bitsForStates;
+	}
+
+	private int minToStateVariable() {
+		return maxCharacterVariable();
+	}
+
 	public int bitsForStates() {
 		return bitsForStates;
 	}
@@ -47,5 +63,13 @@ public class BitSummary {
 
 	public int projectToId(int toId) {
 		return toId << (bitsForStates() + bitsForCharacters());
+	}
+
+	public boolean isCharacter(Variable variable) {
+		return variable.id() >= minCharacterVariable() && variable.id() < maxCharacterVariable();
+	}
+
+	public boolean isToState(Variable variable) {
+		return variable.id() >= minToStateVariable() && variable.id() < maxToStateVariable();
 	}
 }

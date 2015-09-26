@@ -1,7 +1,5 @@
 package io.github.theangrydev.opper.scanner.autonoma;
 
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
@@ -18,20 +16,20 @@ import static java.util.stream.Stream.concat;
 
 public class VariableOrderingCalculator {
 
-	public IntList determineOrdering(int bitsPerRow, List<BitSet> transitionTable) {
-		IntList variableOrdering = new IntArrayList(bitsPerRow);
+	public List<Variable> determineOrdering(int bitsPerRow, List<BitSet> transitionTable) {
+		List<Variable> variables = new ArrayList<>(bitsPerRow);
 		IntSet remainingVariables = allVariables(bitsPerRow);
 		List<List<BitSet>> frontier = singletonList(transitionTable);
 		for (int height = 0; height < bitsPerRow; height++) {
 			int countPerSplit = 1 << (bitsPerRow - height - 1);
 			int nextVariable = determineNext(frontier, remainingVariables, countPerSplit);
 			remainingVariables.remove(nextVariable);
-			variableOrdering.add(nextVariable);
+			variables.add(new Variable(height, nextVariable));
 			frontier = nextFrontier(frontier, nextVariable);
 		}
-		DecisionTree tree = DecisionTree.from(transitionTable, variableOrdering);
+		DecisionTree tree = DecisionTree.from(transitionTable, variables);
 		System.out.println("nodes=" + tree.count());
-		return variableOrdering;
+		return variables;
 	}
 
 	public static class DecisionTree {
@@ -39,18 +37,18 @@ public class VariableOrderingCalculator {
 		private DecisionTree zero;
 		private DecisionTree one;
 
-		public static DecisionTree from(List<BitSet> transitionTable, IntList variableOrdering) {
+		public static DecisionTree from(List<BitSet> transitionTable, List<Variable> variableOrdering) {
 			DecisionTree root = new DecisionTree(transitionTable);
 			List<DecisionTree> trees = new ArrayList<>();
 			trees.add(root);
 			List<DecisionTree> nextTrees = new ArrayList<>();
-			for (int variable : variableOrdering) {
+			for (Variable variable : variableOrdering) {
 				for (DecisionTree tree : trees) {
 					if (tree.examples.isEmpty()) {
 						continue;
 					}
-					DecisionTree one = new DecisionTree(rowsWithVariable(tree.examples, variable));
-					DecisionTree zero = new DecisionTree(rowsWithoutVariable(tree.examples, variable));
+					DecisionTree one = new DecisionTree(rowsWithVariable(tree.examples, variable.id()));
+					DecisionTree zero = new DecisionTree(rowsWithoutVariable(tree.examples, variable.id()));
 					tree.one = one;
 					tree.zero = zero;
 					nextTrees.add(one);

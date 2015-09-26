@@ -4,12 +4,14 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import jdd.bdd.BDD;
 
+import java.util.List;
+
 public class BDDVariables {
 
 	private final IntList bddVariables;
 	private final IntList bddNotVariables;
 
-	public BDDVariables(BDD bdd, IntList variables) {
+	public BDDVariables(BDD bdd, List<Variable> variables) {
 		System.out.println("variable order=" + variables);
 		bddVariables = new IntArrayList(variables.size());
 		for (int i = 0; i < variables.size(); i++) {

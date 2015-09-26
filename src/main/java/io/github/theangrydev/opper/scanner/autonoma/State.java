@@ -93,7 +93,7 @@ public class State {
 		isAccepting = isAccepting || reachableStates.stream().anyMatch(State::isAccepting);
 	}
 
-	private boolean isAccepting() {
+	public boolean isAccepting() {
 		return isAccepting;
 	}
 

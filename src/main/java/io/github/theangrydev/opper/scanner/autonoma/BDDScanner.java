@@ -31,7 +31,7 @@ public class BDDScanner implements Corpus {
 	private final List<State> statesById;
 	private final int existsFromStateAndCharacter;
 	private final Permutation relabelToStateToFromState;
-	private int[] accepted;
+	private int[] acceptedBuffer;
 	private Symbol next;
 	private int index;
 
@@ -78,8 +78,13 @@ public class BDDScanner implements Corpus {
 		System.out.println("characterIds="+characterIds);
 		System.out.println("states=" + stateFactory.states().stream().map(Object::toString).collect(Collectors.joining("\n")));
 		statesById = concat(Stream.of((State) null), stateFactory.states().stream().sorted(comparing(State::id))).collect(toList());
+		System.out.println("characterSets=");
+		characterBddSets.char2IntEntrySet().forEach(entry -> {
+			System.out.print(entry.getCharKey() + ": ");
+			bdd.printSet(entry.getIntValue());
+		});
 
-		accepted = new int[bitSummary.bitsPerRow()];
+		acceptedBuffer = new int[bitSummary.bitsPerRow()];
 		existsFromStateAndCharacter = existsFromStateAndCharacter(variables, bdd, bitSummary);
 		relabelToStateToFromState = relabelToStateToFromState(variables, bdd, bddVariables, bitSummary);
 
@@ -147,42 +152,46 @@ public class BDDScanner implements Corpus {
 			char character = charactersToParse[index++];
 			System.out.println("character=" + character);
 			frontier = bdd.andTo(frontier, transitionBddTable);
-			System.out.println("transitionBddTable=");
+			System.out.println("possible transitions=");
 			bdd.printSet(frontier);
 
 			int characterBddSet = characterBddSets.get(character);
-			System.out.println("characterBddSet=");
+			System.out.println("scanned character=");
 			bdd.printSet(characterBddSet);
 
 			frontier = bdd.andTo(frontier, characterBddSet);
-			System.out.println("character=");
+			System.out.println("possible transitions given scanned character=");
 			bdd.printSet(frontier);
 
 			frontier = existsTo(frontier, existsFromStateAndCharacter, bdd);
-			System.out.println("existsFromStateAndCharacter=");
+			System.out.println("possible to states=");
 			bdd.printSet(frontier);
 
+			System.out.println("accepted to states=");
+			bdd.printSet(acceptanceBddSet);
+
 			int acceptCheck = bdd.ref(bdd.and(acceptanceBddSet, frontier));
-			System.out.println("acceptCheckBddSet=");
+			System.out.println("possible acceptance=");
 			bdd.printSet(acceptCheck);
 
-			if (acceptCheck != bdd.getZero()) {
-				accepted = bdd.oneSat(acceptCheck, accepted);
-				System.out.println("accepted=" + Arrays.toString(accepted));
-				int stateIndex = lookupToState(variables, accepted, bitSummary);
+			boolean accepted = acceptCheck != bdd.getZero();
+			if (accepted) {
+				acceptedBuffer = bdd.oneSat(acceptCheck, acceptedBuffer);
+				System.out.println("accepted=" + Arrays.toString(acceptedBuffer));
+				int stateIndex = lookupToState(variables, acceptedBuffer, bitSummary);
 				State state = statesById.get(stateIndex);
 				System.out.println("state=" + state);
 				next = state.symbol();
-				return true;
 			}
 			bdd.deref(acceptCheck);
 
 			frontier = replaceTo(frontier, relabelToStateToFromState, bdd);
-			System.out.println("relabelToStateToFromState=");
+			System.out.println("next frontier=");
 			bdd.printSet(frontier);
 
-			System.out.println("frontier=");
-			bdd.printSet(frontier);
+			if (accepted) {
+				return true;
+			}
 		}
 		return false;
 	}

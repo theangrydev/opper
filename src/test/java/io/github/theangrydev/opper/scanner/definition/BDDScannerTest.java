@@ -18,7 +18,7 @@ public class BDDScannerTest {
 		SymbolDefinition symbolDefinition = new SymbolDefinition(new Symbol(1, "symbol"), expression);
 
 		//TODO: this is broken for repeated inputs and other stuff
-		BDDScanner bddScanner = new BDDScanner(singletonList(symbolDefinition), 'c', 'd', 'c');
+		BDDScanner bddScanner = new BDDScanner(singletonList(symbolDefinition), 'c', 'd', 'c', 'd');
 		while (bddScanner.hasNextSymbol()) {
 			System.out.println("next=" + bddScanner.nextSymbol());
 		}

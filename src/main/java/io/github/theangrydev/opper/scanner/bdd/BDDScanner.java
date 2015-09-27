@@ -51,10 +51,10 @@ public class BDDScanner implements Corpus {
 		stateFactory.states().forEach(stateStatistics::record);
 
 		CharacterEncoder characterEncoder = new CharacterEncoder();
-		Char2IntMap characterIds = characterEncoder.labelCharactersWithSmallerIdsForMoreFrequentCharacters(stateStatistics.characterFrequencies());
+		Char2IntMap characterIds = characterEncoder.labelCharactersWithSmallerIdsForMoreFrequentCharacters(stateStatistics);
 
 		StateEncoder stateEncoder = new StateEncoder();
-		stateEncoder.labelStatesWithSmallerIdsForMoreFrequentStates(stateStatistics.stateFrequencies());
+		stateEncoder.labelStatesWithSmallerIdsForMoreFrequentStates(stateStatistics);
 
 		bitSummary = new BitSummary(stateFactory.states().size(), characterIds.size());
 

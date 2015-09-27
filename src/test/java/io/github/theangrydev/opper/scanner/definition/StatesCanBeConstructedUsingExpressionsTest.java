@@ -32,7 +32,7 @@ public class StatesCanBeConstructedUsingExpressionsTest {
 		stateFactory.states().forEach(stateStatistics::record);
 
 		StateEncoder stateEncoder = new StateEncoder();
-		stateEncoder.labelStatesWithSmallerIdsForMoreFrequentStates(stateStatistics.stateFrequencies());
+		stateEncoder.labelStatesWithSmallerIdsForMoreFrequentStates(stateStatistics);
 
 		System.out.println(stateFactory.states().stream().map(Object::toString).collect(Collectors.joining("\n")));
 		System.out.println(stateStatistics);

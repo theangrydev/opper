@@ -1,7 +1,7 @@
 package io.github.theangrydev.opper.scanner.definition;
 
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.scanner.autonoma.BDDScanner;
+import io.github.theangrydev.opper.scanner.bdd.BDDScanner;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 

@@ -1,7 +1,8 @@
-package io.github.theangrydev.opper.scanner.autonoma;
+package io.github.theangrydev.opper.scanner.bdd;
 
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Symbol;
+import io.github.theangrydev.opper.scanner.autonoma.*;
 import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 import it.unimi.dsi.fastutil.chars.Char2IntMap;
 import jdd.bdd.BDD;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.github.theangrydev.opper.scanner.autonoma.BDDRowComputer.bddRow;
+import static io.github.theangrydev.opper.scanner.bdd.BDDRowComputer.bddRow;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;

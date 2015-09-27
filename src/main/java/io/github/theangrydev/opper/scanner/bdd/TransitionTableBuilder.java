@@ -1,5 +1,6 @@
-package io.github.theangrydev.opper.scanner.autonoma;
+package io.github.theangrydev.opper.scanner.bdd;
 
+import io.github.theangrydev.opper.scanner.autonoma.State;
 import it.unimi.dsi.fastutil.chars.Char2IntMap;
 
 import java.util.ArrayList;

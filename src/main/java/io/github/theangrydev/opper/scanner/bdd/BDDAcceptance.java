@@ -1,11 +1,11 @@
-package io.github.theangrydev.opper.scanner.autonoma;
+package io.github.theangrydev.opper.scanner.bdd;
 
+import io.github.theangrydev.opper.scanner.autonoma.State;
 import jdd.bdd.BDD;
 
 import java.util.BitSet;
 import java.util.List;
 
-import static io.github.theangrydev.opper.scanner.autonoma.BDDRowComputer.bddRow;
 import static java.util.stream.Collectors.toList;
 
 public class BDDAcceptance {
@@ -19,7 +19,7 @@ public class BDDAcceptance {
 		for (int i = 1; i < acceptanceStates.size(); i++) {
 			int stateId = acceptanceStates.get(i).id();
 			BitSet toState = BitSet.valueOf(new long[]{bitSummary.projectToId(stateId)});
-			int bddRow = bddRow(toStateVariables, bdd, bddVariables, toState);
+			int bddRow = BDDRowComputer.bddRow(toStateVariables, bdd, bddVariables, toState);
 			bddDisjunction = bdd.orTo(bddDisjunction, bddRow);
 		}
 		return bddDisjunction;

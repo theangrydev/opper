@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper.scanner.autonoma;
+package io.github.theangrydev.opper.scanner.bdd;
 
 public class Variable {
 	private final int order;

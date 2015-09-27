@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper.scanner.autonoma;
+package io.github.theangrydev.opper.scanner.bdd;
 
 import jdd.bdd.BDD;
 

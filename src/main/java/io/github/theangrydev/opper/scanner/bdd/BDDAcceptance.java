@@ -14,11 +14,11 @@ public class BDDAcceptance {
 		List<Variable> toStateVariables = variables.stream().filter(bitSummary::isToState).collect(toList());
 		List<State> acceptanceStates = states.stream().filter(State::isAccepting).collect(toList());
 
-		BitSet firstToState = BitSet.valueOf(new long[]{bitSummary.projectToId(acceptanceStates.get(0).id())});
+		BitSet firstToState = BitSet.valueOf(new long[]{bitSummary.projectToId(acceptanceStates.get(0))});
 		int bddDisjunction = BDDRowComputer.bddRow(toStateVariables, bdd, bddVariables, firstToState);
 		for (int i = 1; i < acceptanceStates.size(); i++) {
-			int stateId = acceptanceStates.get(i).id();
-			BitSet toState = BitSet.valueOf(new long[]{bitSummary.projectToId(stateId)});
+			State state = acceptanceStates.get(i);
+			BitSet toState = BitSet.valueOf(new long[]{bitSummary.projectToId(state)});
 			int bddRow = BDDRowComputer.bddRow(toStateVariables, bdd, bddVariables, toState);
 			bddDisjunction = bdd.orTo(bddDisjunction, bddRow);
 		}

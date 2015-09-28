@@ -1,6 +1,8 @@
 package io.github.theangrydev.opper.scanner.bdd;
 
 import com.google.common.math.IntMath;
+import io.github.theangrydev.opper.scanner.autonoma.State;
+import io.github.theangrydev.opper.scanner.autonoma.Transition;
 
 import java.math.RoundingMode;
 
@@ -61,16 +63,16 @@ public class BitSummary {
 			'}';
 	}
 
-	public int projectFromId(int fromId) {
-		return fromId;
+	public int projectFromId(State from) {
+		return from.id();
 	}
 
-	public int projectCharacterId(int characterId) {
-		return characterId << bitsForStates();
+	public int projectCharacterId(Transition transition) {
+		return transition.id() << bitsForStates();
 	}
 
-	public int projectToId(int toId) {
-		return toId << (bitsForStates() + bitsForCharacters());
+	public int projectToId(State to) {
+		return to.id() << (bitsForStates() + bitsForCharacters());
 	}
 
 	public int unprojectToIdBitPosition(int position) {

@@ -44,7 +44,7 @@ public class BDDScanner implements Corpus {
 		nfa.removeUnreachableStates();
 		nfa.relabelAccordingToFrequencies();
 
-		bitSummary = nfa.bitSummary();
+		bitSummary = new BitSummary(nfa.numberOfStates(), nfa.numberOfTransitions());
 
 		List<State> states = nfa.states();
 
@@ -127,7 +127,7 @@ public class BDDScanner implements Corpus {
 
 	private int initialFrontier(List<Variable> variables, BDD bdd, BDDVariables bddVariables, BitSummary bitSummary, State initial) {
 		List<Variable> fromStateVariables = variables.stream().filter(bitSummary::isFromState).collect(toList());
-		BitSet fromState = BitSet.valueOf(new long[]{bitSummary.projectFromId(initial.id())});
+		BitSet fromState = BitSet.valueOf(new long[]{bitSummary.projectFromId(initial)});
 		return bddRow(fromStateVariables, bdd, bddVariables, fromState);
 	}
 

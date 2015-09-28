@@ -16,7 +16,7 @@ public class BDDCharacters {
 		List<Variable> characterVariables = variables.stream().filter(bitSummary::isCharacter).collect(toList());
 		Char2IntMap characterBddSets = new Char2IntArrayMap(characterTransitions.size());
 		for (CharacterTransition characterTransition : characterTransitions) {
-			BitSet character = BitSet.valueOf(new long[]{bitSummary.projectCharacterId(characterTransition.id())});
+			BitSet character = BitSet.valueOf(new long[]{bitSummary.projectCharacterId(characterTransition)});
 			int bddRow = BDDRowComputer.bddRow(characterVariables, bdd, bddVariables, character);
 			characterBddSets.put(characterTransition.character(), bddRow);
 		}

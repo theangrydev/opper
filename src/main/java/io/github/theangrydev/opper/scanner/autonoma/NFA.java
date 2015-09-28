@@ -1,6 +1,8 @@
 package io.github.theangrydev.opper.scanner.autonoma;
 
 import com.google.common.collect.Multiset;
+import io.github.theangrydev.opper.scanner.autonoma.State.TransitionVisitor;
+import io.github.theangrydev.opper.scanner.bdd.BitSummary;
 
 import java.util.List;
 
@@ -34,16 +36,16 @@ public class NFA {
 		return initialState;
 	}
 
-	public int numberOfStates() {
-		return states.size();
-	}
-
-	public int numberOfTransitions() {
-		return characterTransitions.size();
+	public BitSummary bitSummary() {
+		return new BitSummary(states.size(), characterTransitions.size());
 	}
 
 	public List<CharacterTransition> characterTransitions() {
 		return characterTransitions;
+	}
+
+	public void visitTransitions(TransitionVisitor transitionVisitor) {
+		states.forEach(state -> state.visitTransitions(transitionVisitor));
 	}
 
 	public void relabelAccordingToFrequencies() {

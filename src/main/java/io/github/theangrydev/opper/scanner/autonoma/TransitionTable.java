@@ -3,30 +3,20 @@ package io.github.theangrydev.opper.scanner.autonoma;
 import io.github.theangrydev.opper.scanner.bdd.BitSummary;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.List;
 
+import static io.github.theangrydev.opper.scanner.autonoma.SetVariables.transition;
+
 public class TransitionTable {
-	private final List<BitSet> transitions;
+	private final List<SetVariables> transitions;
 
-	public TransitionTable(List<State> states, BitSummary bitSummary) {
+	public TransitionTable(NFA nfa) {
 		transitions = new ArrayList<>();
-		for (State state : states) {
-			state.visitTransitions((from, via, to) -> {
-				BitSet row = new BitSet(bitSummary.bitsPerRow());
-				blastBits(bitSummary.projectFromId(from), row);
-				blastBits(bitSummary.projectCharacterId(via), row);
-				blastBits(bitSummary.projectToId(to), row);
-				transitions.add(row);
-			});
-		}
+		BitSummary bitSummary = nfa.bitSummary();
+		nfa.visitTransitions((from, via, to) -> transitions.add(transition(bitSummary, from, via, to)));
 	}
 
-	private void blastBits(long number, BitSet row) {
-		row.or(BitSet.valueOf(new long[]{number}));
-	}
-
-	public List<BitSet> transitions() {
+	public List<SetVariables> transitions() {
 		return transitions;
 	}
 }

@@ -9,7 +9,6 @@ import jdd.bdd.BDD;
 import jdd.bdd.Permutation;
 
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,11 +43,11 @@ public class BDDScanner implements Corpus {
 		nfa.removeUnreachableStates();
 		nfa.relabelAccordingToFrequencies();
 
-		bitSummary = new BitSummary(nfa.numberOfStates(), nfa.numberOfTransitions());
+		bitSummary = nfa.bitSummary();
 
 		List<State> states = nfa.states();
 
-		TransitionTable transitionTable = new TransitionTable(states, bitSummary);
+		TransitionTable transitionTable = new TransitionTable(nfa);
 
 		VariableOrderingCalculator variableOrderingCalculator = new VariableOrderingCalculator();
 		variables = variableOrderingCalculator.determineOrdering(bitSummary.bitsPerRow(), transitionTable);
@@ -126,7 +125,7 @@ public class BDDScanner implements Corpus {
 
 	private int initialFrontier(List<Variable> variables, BDD bdd, BDDVariables bddVariables, BitSummary bitSummary, State initial) {
 		List<Variable> fromStateVariables = variables.stream().filter(bitSummary::isFromState).collect(toList());
-		BitSet fromState = BitSet.valueOf(new long[]{bitSummary.projectFromId(initial)});
+		SetVariables fromState = SetVariables.fromState(bitSummary, initial);
 		return bddRow(fromStateVariables, bdd, bddVariables, fromState);
 	}
 

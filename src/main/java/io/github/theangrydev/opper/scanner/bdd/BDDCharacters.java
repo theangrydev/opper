@@ -1,11 +1,11 @@
 package io.github.theangrydev.opper.scanner.bdd;
 
 import io.github.theangrydev.opper.scanner.autonoma.CharacterTransition;
+import io.github.theangrydev.opper.scanner.autonoma.SetVariables;
 import it.unimi.dsi.fastutil.chars.Char2IntArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2IntMap;
 import jdd.bdd.BDD;
 
-import java.util.BitSet;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -16,7 +16,7 @@ public class BDDCharacters {
 		List<Variable> characterVariables = variables.stream().filter(bitSummary::isCharacter).collect(toList());
 		Char2IntMap characterBddSets = new Char2IntArrayMap(characterTransitions.size());
 		for (CharacterTransition characterTransition : characterTransitions) {
-			BitSet character = BitSet.valueOf(new long[]{bitSummary.projectCharacterId(characterTransition)});
+			SetVariables character = SetVariables.character(bitSummary, characterTransition);
 			int bddRow = BDDRowComputer.bddRow(characterVariables, bdd, bddVariables, character);
 			characterBddSets.put(characterTransition.character(), bddRow);
 		}

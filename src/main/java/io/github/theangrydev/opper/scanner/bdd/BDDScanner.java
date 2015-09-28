@@ -113,7 +113,7 @@ public class BDDScanner implements Corpus {
 	}
 
 	private int existsFromStateAndCharacter(VariableOrdering variableOrders, BDD bdd, VariableSummary variableSummary) {
-		List<Integer> fromStateOrCharacterVariables = variableOrders.fromStateOrCharacters().map(VariableOrder::order).collect(toList());
+		List<Integer> fromStateOrCharacterVariables = variableOrders.fromStateOrCharacterVariables().map(VariableOrder::order).collect(toList());
 		boolean[] cube = new boolean[variableSummary.bitsPerRow()];
 		for (int present : fromStateOrCharacterVariables) {
 			cube[present] = true;

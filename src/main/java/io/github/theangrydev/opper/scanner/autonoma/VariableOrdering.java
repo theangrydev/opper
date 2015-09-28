@@ -45,7 +45,7 @@ public class VariableOrdering {
 		return variableOrders.get(i).id();
 	}
 
-	public List<VariableOrder> all() {
+	public List<VariableOrder> allVariables() {
 		return variableOrders;
 	}
 
@@ -57,7 +57,7 @@ public class VariableOrdering {
 		return variableOrders.stream().filter(variableSummary::isFromState).sorted(comparing(VariableOrder::id));
 	}
 
-	public Stream<VariableOrder> fromStateOrCharacters() {
+	public Stream<VariableOrder> fromStateOrCharacterVariables() {
 		return variableOrders.stream().filter(variableSummary::isFromStateOrCharacter);
 	}
 

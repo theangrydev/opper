@@ -76,6 +76,7 @@ public class State {
 			transitions.values().forEach(states -> states.forEach(State::markReachableStates));
 		}
 	}
+
 	public void eliminateEpsilonTransitions() {
 		Set<State> reachableStates = reachableByEpsilonTransitions();
 		addReachableTransitions(reachableStates);

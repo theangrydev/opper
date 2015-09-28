@@ -5,8 +5,6 @@ import io.github.theangrydev.opper.grammar.Symbol;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 public class StateFactory {
 
 	private List<State> states;
@@ -36,9 +34,5 @@ public class StateFactory {
 
 	public List<State> states() {
 		return states;
-	}
-
-	public void removeUnreachableStates() {
-		states = states().stream().filter(State::wasReached).collect(toList());
 	}
 }

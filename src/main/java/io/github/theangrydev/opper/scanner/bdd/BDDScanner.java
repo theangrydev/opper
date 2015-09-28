@@ -44,12 +44,13 @@ public class BDDScanner implements Corpus {
 
 		State initial = converter.convertDefinitionsToStates(symbolDefinitions);
 
-		stateFactory.states().forEach(State::eliminateEpsilonTransitions);
+		List<State> states = stateFactory.states();
+		states.forEach(State::eliminateEpsilonTransitions);
 		initial.markReachableStates();
-		stateFactory.removeUnreachableStates();
+		states = states.stream().filter(State::wasReached).collect(toList());
 
 		StateStatistics stateStatistics = new StateStatistics();
-		stateFactory.states().forEach(stateStatistics::record);
+		states.forEach(stateStatistics::record);
 
 		CharacterEncoder characterEncoder = new CharacterEncoder();
 		characterEncoder.labelCharactersWithSmallerIdsForMoreFrequentCharacters(stateStatistics);
@@ -57,10 +58,10 @@ public class BDDScanner implements Corpus {
 		StateEncoder stateEncoder = new StateEncoder();
 		stateEncoder.labelStatesWithSmallerIdsForMoreFrequentStates(stateStatistics);
 
-		bitSummary = new BitSummary(stateFactory.states().size(), transitionFactory.characterTransitions().size());
+		bitSummary = new BitSummary(states.size(), transitionFactory.characterTransitions().size());
 
 		TransitionTableBuilder transitionTableBuilder = new TransitionTableBuilder();
-		List<BitSet> transitionTable = transitionTableBuilder.buildTransitionTable(bitSummary, stateFactory.states());
+		List<BitSet> transitionTable = transitionTableBuilder.buildTransitionTable(bitSummary, states);
 
 		VariableOrderingCalculator variableOrderingCalculator = new VariableOrderingCalculator();
 		variables = variableOrderingCalculator.determineOrdering(bitSummary.bitsPerRow(), transitionTable);
@@ -75,11 +76,11 @@ public class BDDScanner implements Corpus {
 		characterBddSets = bddCharacters.compute(variables, transitionFactory.characterTransitions(), bitSummary, bdd, bddVariables);
 
 		BDDAcceptance bddAcceptance = new BDDAcceptance();
-		acceptanceBddSet = bddAcceptance.compute(variables, stateFactory.states(), bitSummary, bdd, bddVariables);
+		acceptanceBddSet = bddAcceptance.compute(variables, states, bitSummary, bdd, bddVariables);
 
-		System.out.println("characterIds="+transitionFactory.characterTransitions());
-		System.out.println("states=" + stateFactory.states().stream().map(Object::toString).collect(Collectors.joining("\n")));
-		statesById = concat(Stream.of((State) null), stateFactory.states().stream().sorted(comparing(State::id))).collect(toList());
+		System.out.println("characterIds=" + transitionFactory.characterTransitions());
+		System.out.println("states=" + states.stream().map(Object::toString).collect(Collectors.joining("\n")));
+		statesById = concat(Stream.of((State) null), states.stream().sorted(comparing(State::id))).collect(toList());
 		System.out.println("characterSets=");
 		characterBddSets.char2IntEntrySet().forEach(entry -> {
 			System.out.print(entry.getCharKey() + ": ");

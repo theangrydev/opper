@@ -1,8 +1,6 @@
 package io.github.theangrydev.opper.scanner.autonoma;
 
 import io.github.theangrydev.opper.grammar.Symbol;
-import it.unimi.dsi.fastutil.chars.Char2ObjectArrayMap;
-import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -10,7 +8,7 @@ import java.util.stream.Collectors;
 public class State {
 	private final Symbol createdBy;
 	private int id;
-	private Char2ObjectMap<List<State>> characterTransitions;
+	private Map<Transition, List<State>> transitions;
 	private List<State> epsilonTransitions;
 	private boolean isAccepting;
 	private Set<State> reachable;
@@ -20,12 +18,12 @@ public class State {
 		this.createdBy = createdBy;
 		this.id = id;
 		this.isAccepting = isAccepting;
-		characterTransitions = new Char2ObjectArrayMap<>();
+		transitions = new HashMap<>();
 		epsilonTransitions = new ArrayList<>();
 	}
 
 	public interface TransitionVisitor {
-		void visit(State from, char via, State to);
+		void visit(State from, Transition via, State to);
 	}
 
 	public int id() {
@@ -37,10 +35,10 @@ public class State {
 	}
 
 	public void visitTransitions(TransitionVisitor transitionVisitor) {
-		characterTransitions.char2ObjectEntrySet().forEach(entry -> {
-			char character = entry.getCharKey();
+		transitions.entrySet().forEach(entry -> {
+			Transition transition = entry.getKey();
 			List<State> states = entry.getValue();
-			states.forEach(state -> transitionVisitor.visit(this, character, state));
+			states.forEach(state -> transitionVisitor.visit(this, transition, state));
 		});
 	}
 
@@ -48,11 +46,11 @@ public class State {
 		epsilonTransitions.add(state);
 	}
 
-	public void addTransition(char state, State to) {
-		List<State> transitions = characterTransitions.get(state);
+	public void addTransition(Transition via, State to) {
+		List<State> transitions = this.transitions.get(via);
 		if (transitions == null) {
 			transitions = new ArrayList<>();
-			characterTransitions.put(state, transitions);
+			this.transitions.put(via, transitions);
 		}
 		transitions.add(to);
 	}
@@ -62,11 +60,11 @@ public class State {
 	}
 
 	public void recordStatistics(StateStatistics stateStatistics) {
-		characterTransitions.char2ObjectEntrySet().forEach(entry -> {
-			char character = entry.getCharKey();
+		transitions.entrySet().forEach(entry -> {
+			Transition transition = entry.getKey();
 			List<State> states = entry.getValue();
 			int times = states.size();
-			stateStatistics.recordCharacter(character, times);
+			stateStatistics.recordCharacter(transition, times);
 			stateStatistics.recordState(this, times);
 			states.forEach(stateStatistics::recordState);
 		});
@@ -75,7 +73,7 @@ public class State {
 	public void markReachableStates() {
 		if (!reached) {
 			reached = true;
-			characterTransitions.values().forEach(states -> states.forEach(State::markReachableStates));
+			transitions.values().forEach(states -> states.forEach(State::markReachableStates));
 		}
 	}
 	public void eliminateEpsilonTransitions() {
@@ -103,7 +101,7 @@ public class State {
 
 	private void addReachableTransitions(Set<State> reachableStates) {
 		for (State reachableState : reachableStates) {
-			characterTransitions.putAll(reachableState.characterTransitions);
+			transitions.putAll(reachableState.transitions);
 		}
 	}
 
@@ -127,6 +125,6 @@ public class State {
 	}
 
 	private String printCharacterTransitions() {
-		return characterTransitions.entrySet().stream().map(entry -> entry.getKey() + "->" + print(entry.getValue())).collect(Collectors.joining(","));
+		return transitions.entrySet().stream().map(entry -> entry.getKey() + "->" + print(entry.getValue())).collect(Collectors.joining(","));
 	}
 }

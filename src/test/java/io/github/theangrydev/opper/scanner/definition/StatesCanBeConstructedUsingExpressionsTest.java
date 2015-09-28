@@ -20,7 +20,8 @@ public class StatesCanBeConstructedUsingExpressionsTest {
 		SymbolDefinition symbolDefinition = new SymbolDefinition(new Symbol(1, "symbol"), expression);
 
 		StateFactory stateFactory = new StateFactory();
-		SymbolDefinitionToStateConverter converter = new SymbolDefinitionToStateConverter(stateFactory);
+		TransitionFactory transitionFactory = new TransitionFactory();
+		SymbolDefinitionToStateConverter converter = new SymbolDefinitionToStateConverter(stateFactory, transitionFactory);
 
 		State initial = converter.convertDefinitionsToStates(Collections.singletonList(symbolDefinition));
 

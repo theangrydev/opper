@@ -16,7 +16,7 @@ public class CharacterExpression implements Expression {
 
 	@Override
 	public void populate(SymbolOwnedStateGenerator generator, State from, State to) {
-		from.addTransition(character, to);
+		from.addTransition(generator.characterTransition(character), to);
 	}
 
 	@Override

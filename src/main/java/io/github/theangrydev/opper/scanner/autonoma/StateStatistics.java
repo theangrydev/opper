@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 
 public class StateStatistics {
 
-	private Multiset<Character> characterFrequencies;
+	private Multiset<Transition> transitionFrequencies;
 	private Multiset<State> stateFrequencies;
 
 	public StateStatistics() {
-		this.characterFrequencies = HashMultiset.create();
+		this.transitionFrequencies = HashMultiset.create();
 		this.stateFrequencies = HashMultiset.create();
 	}
 
@@ -21,16 +21,16 @@ public class StateStatistics {
 		state.recordStatistics(this);
 	}
 
-	public ImmutableMultiset<Character> characterFrequencies() {
-		return Multisets.copyHighestCountFirst(characterFrequencies);
+	public ImmutableMultiset<Transition> transitionFrequencies() {
+		return Multisets.copyHighestCountFirst(transitionFrequencies);
 	}
 
 	public ImmutableMultiset<State> stateFrequencies() {
 		return Multisets.copyHighestCountFirst(stateFrequencies);
 	}
 
-	public void recordCharacter(char character, int times) {
-		characterFrequencies.add(character, times);
+	public void recordCharacter(Transition transition, int times) {
+		transitionFrequencies.add(transition, times);
 	}
 
 	public void recordState(State state) {
@@ -44,7 +44,7 @@ public class StateStatistics {
 	@Override
 	public String toString() {
 		return "StateStatistics{" +
-			"characterFrequencies=" + print(characterFrequencies) +
+			"transitionFrequencies=" + print(transitionFrequencies) +
 			", stateFrequencies=" + print(stateFrequencies) +
 			'}';
 	}

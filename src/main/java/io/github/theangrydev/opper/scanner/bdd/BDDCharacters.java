@@ -1,5 +1,6 @@
 package io.github.theangrydev.opper.scanner.bdd;
 
+import io.github.theangrydev.opper.scanner.autonoma.CharacterTransition;
 import it.unimi.dsi.fastutil.chars.Char2IntArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2IntMap;
 import jdd.bdd.BDD;
@@ -11,14 +12,13 @@ import static java.util.stream.Collectors.toList;
 
 public class BDDCharacters {
 
-	public Char2IntMap compute(List<Variable> variables, Char2IntMap characterIds, BitSummary bitSummary, BDD bdd, BDDVariables bddVariables) {
+	public Char2IntMap compute(List<Variable> variables, List<CharacterTransition> characterTransitions, BitSummary bitSummary, BDD bdd, BDDVariables bddVariables) {
 		List<Variable> characterVariables = variables.stream().filter(bitSummary::isCharacter).collect(toList());
-		Char2IntMap characterBddSets = new Char2IntArrayMap(characterIds.size());
-		for (Char2IntMap.Entry entry : characterIds.char2IntEntrySet()) {
-			int characterId = characterIds.get(entry.getCharKey());
-			BitSet character = BitSet.valueOf(new long[]{bitSummary.projectCharacterId(characterId)});
+		Char2IntMap characterBddSets = new Char2IntArrayMap(characterTransitions.size());
+		for (CharacterTransition characterTransition : characterTransitions) {
+			BitSet character = BitSet.valueOf(new long[]{bitSummary.projectCharacterId(characterTransition.id())});
 			int bddRow = BDDRowComputer.bddRow(characterVariables, bdd, bddVariables, character);
-			characterBddSets.put(entry.getCharKey(), bddRow);
+			characterBddSets.put(characterTransition.character(), bddRow);
 		}
 		return characterBddSets;
 	}

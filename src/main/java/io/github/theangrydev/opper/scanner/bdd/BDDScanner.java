@@ -28,11 +28,11 @@ public class BDDScanner implements Corpus {
 	private final int transitionBddTable;
 	private final Char2IntMap characterBddSets;
 	private final int acceptanceBddSet;
-	private int frontier;
 	private final List<State> statesById;
 	private final int existsFromStateAndCharacter;
 	private final Permutation relabelToStateToFromState;
 	private int[] acceptedBuffer;
+	private int frontier;
 	private Symbol next;
 	private int index;
 

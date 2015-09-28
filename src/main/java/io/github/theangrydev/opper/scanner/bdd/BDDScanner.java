@@ -44,9 +44,9 @@ public class BDDScanner implements Corpus {
 		nfa.removeUnreachableStates();
 		nfa.relabelAccordingToFrequencies();
 
-		List<State> states = nfa.states();
+		bitSummary = nfa.bitSummary();
 
-		bitSummary = new BitSummary(states.size(), nfa.characterTransitions().size());
+		List<State> states = nfa.states();
 
 		TransitionTableBuilder transitionTableBuilder = new TransitionTableBuilder();
 		List<BitSet> transitionTable = transitionTableBuilder.buildTransitionTable(bitSummary, states);

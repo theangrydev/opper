@@ -1,6 +1,7 @@
 package io.github.theangrydev.opper.scanner.autonoma;
 
 import com.google.common.collect.Multiset;
+import io.github.theangrydev.opper.scanner.bdd.BitSummary;
 
 import java.util.List;
 
@@ -55,5 +56,9 @@ public class NFA {
 		StateStatistics stateStatistics = new StateStatistics();
 		states.forEach(stateStatistics::record);
 		return stateStatistics;
+	}
+
+	public BitSummary bitSummary() {
+		return new BitSummary(states.size(), characterTransitions.size());
 	}
 }

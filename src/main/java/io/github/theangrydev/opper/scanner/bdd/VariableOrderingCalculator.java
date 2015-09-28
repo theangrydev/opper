@@ -1,7 +1,6 @@
 package io.github.theangrydev.opper.scanner.bdd;
 
 import io.github.theangrydev.opper.scanner.autonoma.TransitionTable;
-import io.github.theangrydev.opper.scanner.autonoma.SetVariables;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
@@ -18,10 +17,9 @@ import static java.util.stream.Stream.concat;
 public class VariableOrderingCalculator {
 
 	public List<Variable> determineOrdering(int bitsPerRow, TransitionTable transitionTable) {
-		List<SetVariables> transitions = transitionTable.transitions();
 		List<Variable> variables = new ArrayList<>(bitsPerRow);
 		IntSet remainingVariables = allVariables(bitsPerRow);
-		List<List<SetVariables>> frontier = singletonList(transitions);
+		List<TransitionTable> frontier = singletonList(transitionTable);
 		for (int height = 0; height < bitsPerRow; height++) {
 			int countPerSplit = 1 << (bitsPerRow - height - 1);
 			int nextVariable = determineNext(frontier, remainingVariables, countPerSplit);
@@ -29,17 +27,17 @@ public class VariableOrderingCalculator {
 			variables.add(new Variable(height, nextVariable));
 			frontier = nextFrontier(frontier, nextVariable);
 		}
-		DecisionTree tree = DecisionTree.from(transitions, variables);
+		DecisionTree tree = DecisionTree.from(transitionTable, variables);
 		System.out.println("nodes=" + tree.count());
 		return variables;
 	}
 
 	public static class DecisionTree {
-		private List<SetVariables> examples;
+		private TransitionTable examples;
 		private DecisionTree zero;
 		private DecisionTree one;
 
-		public static DecisionTree from(List<SetVariables> transitionTable, List<Variable> variableOrdering) {
+		public static DecisionTree from(TransitionTable transitionTable, List<Variable> variableOrdering) {
 			DecisionTree root = new DecisionTree(transitionTable);
 			List<DecisionTree> trees = new ArrayList<>();
 			trees.add(root);
@@ -49,8 +47,8 @@ public class VariableOrderingCalculator {
 					if (tree.examples.isEmpty()) {
 						continue;
 					}
-					DecisionTree one = new DecisionTree(rowsWithVariable(tree.examples, variable.id()));
-					DecisionTree zero = new DecisionTree(rowsWithoutVariable(tree.examples, variable.id()));
+					DecisionTree one = new DecisionTree(tree.examples.rowsWithVariable(variable.id()));
+					DecisionTree zero = new DecisionTree(tree.examples.rowsWithoutVariable(variable.id()));
 					tree.one = one;
 					tree.zero = zero;
 					nextTrees.add(one);
@@ -62,7 +60,7 @@ public class VariableOrderingCalculator {
 			return root;
 		}
 
-		private DecisionTree(List<SetVariables> examples) {
+		private DecisionTree(TransitionTable examples) {
 			this.examples = examples;
 		}
 
@@ -78,10 +76,10 @@ public class VariableOrderingCalculator {
 		}
 	}
 
-	private List<List<SetVariables>> nextFrontier(List<List<SetVariables>> frontier, int nextVariable) {
-		Stream<List<SetVariables>> rowsWithVariable = frontier.stream().map(node -> rowsWithVariable(node, nextVariable));
-		Stream<List<SetVariables>> rowsWithoutVariable = frontier.stream().map(node -> rowsWithoutVariable(node, nextVariable));
-		return concat(rowsWithVariable, rowsWithoutVariable).filter(not(List::isEmpty)).collect(toList());
+	private List<TransitionTable> nextFrontier(List<TransitionTable> frontier, int nextVariable) {
+		Stream<TransitionTable> rowsWithVariable = frontier.stream().map(node -> node.rowsWithVariable(nextVariable));
+		Stream<TransitionTable> rowsWithoutVariable = frontier.stream().map(node -> node.rowsWithoutVariable(nextVariable));
+		return concat(rowsWithVariable, rowsWithoutVariable).filter(not(TransitionTable::isEmpty)).collect(toList());
 	}
 
 	private IntSet allVariables(int bitsPerRow) {
@@ -92,7 +90,7 @@ public class VariableOrderingCalculator {
 		return allVariables;
 	}
 
-	private int determineNext(List<List<SetVariables>> frontier, IntSet remainingVariables, int countPerSplit) {
+	private int determineNext(List<TransitionTable> frontier, IntSet remainingVariables, int countPerSplit) {
 		double maxEntropy = -Double.MAX_VALUE;
 		int maxVariable = remainingVariables.iterator().nextInt();
 		for (int variable : remainingVariables) {
@@ -105,12 +103,12 @@ public class VariableOrderingCalculator {
 		return maxVariable;
 	}
 
-	private double frontierEntropy(List<List<SetVariables>> frontier, int variable, int countPerSplit) {
+	private double frontierEntropy(List<TransitionTable> frontier, int variable, int countPerSplit) {
 		return frontier.stream().mapToDouble(node -> nodeEntropy(node, variable, countPerSplit)).sum();
 	}
 
-	private double nodeEntropy(List<SetVariables> node, int variable, int countPerSplit) {
-		int rowsWithVariable = numberOfRowsWithVariable(node, variable);
+	private double nodeEntropy(TransitionTable node, int variable, int countPerSplit) {
+		int rowsWithVariable = node.numberOfRowsWithVariable(variable);
 		int rowsWithoutVariable = node.size() - rowsWithVariable;
 		return entropy(rowsWithVariable, countPerSplit) + entropy(rowsWithoutVariable, countPerSplit);
 	}
@@ -125,15 +123,4 @@ public class VariableOrderingCalculator {
 		return positiveProportion * log2(positiveProportion) + negativeProportion * log2(negativeProportion);
 	}
 
-	private int numberOfRowsWithVariable(List<SetVariables> node, int variable) {
-		return rowsWithVariable(node, variable).size();
-	}
-
-	private static List<SetVariables> rowsWithVariable(List<SetVariables> node, int variable) {
-		return node.stream().filter(row -> row.contains(variable)).collect(toList());
-	}
-
-	private static List<SetVariables> rowsWithoutVariable(List<SetVariables> node, int variable) {
-		return node.stream().filter(row -> !row.contains(variable)).collect(toList());
-	}
 }

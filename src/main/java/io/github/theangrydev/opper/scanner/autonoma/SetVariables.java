@@ -1,7 +1,7 @@
 package io.github.theangrydev.opper.scanner.autonoma;
 
+import io.github.theangrydev.opper.scanner.bdd.VariableOrder;
 import io.github.theangrydev.opper.scanner.bdd.VariableSummary;
-import io.github.theangrydev.opper.scanner.bdd.Variable;
 
 import java.util.BitSet;
 
@@ -37,8 +37,8 @@ public class SetVariables {
 		row.or(BitSet.valueOf(new long[]{number}));
 	}
 
-	public boolean contains(Variable variable) {
-		return contains(variable.id());
+	public boolean contains(VariableOrder variableOrder) {
+		return contains(variableOrder.id());
 	}
 
 	public boolean contains(int variableId) {

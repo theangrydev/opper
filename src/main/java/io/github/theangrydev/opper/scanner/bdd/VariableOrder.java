@@ -1,10 +1,10 @@
 package io.github.theangrydev.opper.scanner.bdd;
 
-public class Variable {
+public class VariableOrder {
 	private final int order;
 	private final int id;
 
-	public Variable(int order, int id) {
+	public VariableOrder(int order, int id) {
 		this.order = order;
 		this.id = id;
 	}

@@ -1,7 +1,6 @@
 package io.github.theangrydev.opper.scanner.bdd;
 
 import io.github.theangrydev.opper.scanner.autonoma.TransitionTable;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
 import java.util.ArrayList;
@@ -16,14 +15,15 @@ import static java.util.stream.Stream.concat;
 
 public class VariableOrderingCalculator {
 
-	public List<Variable> determineOrdering(int bitsPerRow, TransitionTable transitionTable) {
+	public List<Variable> determineOrdering(VariableSummary variableSummary, TransitionTable transitionTable) {
+		int bitsPerRow = variableSummary.bitsPerRow();
+		IntSet remainingVariableIds = variableSummary.allVariableIds();
 		List<Variable> variables = new ArrayList<>(bitsPerRow);
-		IntSet remainingVariables = allVariables(bitsPerRow);
 		List<TransitionTable> frontier = singletonList(transitionTable);
 		for (int height = 0; height < bitsPerRow; height++) {
 			int countPerSplit = 1 << (bitsPerRow - height - 1);
-			int nextVariable = determineNext(frontier, remainingVariables, countPerSplit);
-			remainingVariables.remove(nextVariable);
+			int nextVariable = determineNext(frontier, remainingVariableIds, countPerSplit);
+			remainingVariableIds.remove(nextVariable);
 			variables.add(new Variable(height, nextVariable));
 			frontier = nextFrontier(frontier, nextVariable);
 		}
@@ -82,18 +82,10 @@ public class VariableOrderingCalculator {
 		return concat(rowsWithVariable, rowsWithoutVariable).filter(not(TransitionTable::isEmpty)).collect(toList());
 	}
 
-	private IntSet allVariables(int bitsPerRow) {
-		IntSet allVariables = new IntOpenHashSet(bitsPerRow);
-		for (int i = 1; i <= bitsPerRow; i++) {
-			allVariables.add(i);
-		}
-		return allVariables;
-	}
-
-	private int determineNext(List<TransitionTable> frontier, IntSet remainingVariables, int countPerSplit) {
+	private int determineNext(List<TransitionTable> frontier, IntSet remainingVariableIds, int countPerSplit) {
 		double maxEntropy = -Double.MAX_VALUE;
-		int maxVariable = remainingVariables.iterator().nextInt();
-		for (int variable : remainingVariables) {
+		int maxVariable = remainingVariableIds.iterator().nextInt();
+		for (int variable : remainingVariableIds) {
 			double entropy = frontierEntropy(frontier, variable, countPerSplit);
 			if (entropy > maxEntropy) {
 				maxEntropy = entropy;

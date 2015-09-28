@@ -48,7 +48,7 @@ public class BDDScanner implements Corpus {
 		variableSummary = nfa.variableSummary();
 
 		VariableOrderingCalculator variableOrderingCalculator = new VariableOrderingCalculator();
-		variables = variableOrderingCalculator.determineOrdering(variableSummary.bitsPerRow(), transitionTable);
+		variables = variableOrderingCalculator.determineOrdering(variableSummary, transitionTable);
 
 		bdd = new BDD(1000,100);
 		BDDVariables bddVariables = new BDDVariables(bdd, variables);

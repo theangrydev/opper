@@ -3,6 +3,8 @@ package io.github.theangrydev.opper.scanner.bdd;
 import com.google.common.math.IntMath;
 import io.github.theangrydev.opper.scanner.autonoma.State;
 import io.github.theangrydev.opper.scanner.autonoma.Transition;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 
 import java.math.RoundingMode;
 
@@ -93,5 +95,13 @@ public class VariableSummary {
 
 	public boolean isFromStateOrCharacter(Variable variable) {
 		return isFromState(variable) || isCharacter(variable);
+	}
+
+	public IntSet allVariableIds() {
+		IntSet allVariables = new IntOpenHashSet(bitsPerRow);
+		for (int i = 1; i <= bitsPerRow; i++) {
+			allVariables.add(i);
+		}
+		return allVariables;
 	}
 }

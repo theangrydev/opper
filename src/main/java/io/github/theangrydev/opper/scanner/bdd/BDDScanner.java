@@ -41,11 +41,8 @@ public class BDDScanner implements Corpus {
 		SymbolDefinitionToNFAConverter symbolDefinitionToNfaConverter = new SymbolDefinitionToNFAConverter(new StateFactory(), new TransitionFactory());
 		NFA nfa = symbolDefinitionToNfaConverter.convertToNFA(symbolDefinitions);
 		nfa.removeEpsilionTransitions();
-
-		StateStatistics stateStatistics = nfa.computeStateStatistics();
-		FrequencyBasedEncoder frequencyBasedEncoder = new FrequencyBasedEncoder();
-		frequencyBasedEncoder.relabel(stateStatistics.stateFrequencies());
-		frequencyBasedEncoder.relabel(stateStatistics.transitionFrequencies());
+		nfa.removeUnreachableStates();
+		nfa.relabelAccordingToFrequencies();
 
 		List<State> states = nfa.states();
 

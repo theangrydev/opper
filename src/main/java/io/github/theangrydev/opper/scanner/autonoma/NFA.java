@@ -1,5 +1,7 @@
 package io.github.theangrydev.opper.scanner.autonoma;
 
+import com.google.common.collect.Multiset;
+
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -17,6 +19,9 @@ public class NFA {
 
 	public void removeEpsilionTransitions() {
 		states.forEach(State::eliminateEpsilonTransitions);
+	}
+
+	public void removeUnreachableStates() {
 		initialState.markReachableStates();
 		states = states.stream().filter(State::wasReached).collect(toList());
 	}
@@ -33,7 +38,20 @@ public class NFA {
 		return characterTransitions;
 	}
 
-	public StateStatistics computeStateStatistics() {
+	public void relabelAccordingToFrequencies() {
+		StateStatistics stateStatistics = computeStateStatistics();
+		relabel(stateStatistics.stateFrequencies());
+		relabel(stateStatistics.transitionFrequencies());
+	}
+
+	private void relabel(Multiset<? extends Identifiable> frequencies) {
+		int idSequence = 1;
+		for (Multiset.Entry<? extends Identifiable> entry : frequencies.entrySet()) {
+			entry.getElement().label(idSequence++);
+		}
+	}
+
+	private StateStatistics computeStateStatistics() {
 		StateStatistics stateStatistics = new StateStatistics();
 		states.forEach(stateStatistics::record);
 		return stateStatistics;

@@ -32,4 +32,10 @@ public class NFA {
 	public List<CharacterTransition> characterTransitions() {
 		return characterTransitions;
 	}
+
+	public StateStatistics computeStateStatistics() {
+		StateStatistics stateStatistics = new StateStatistics();
+		states.forEach(stateStatistics::record);
+		return stateStatistics;
+	}
 }

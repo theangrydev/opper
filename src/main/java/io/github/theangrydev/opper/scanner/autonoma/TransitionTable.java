@@ -17,7 +17,7 @@ public class TransitionTable {
 
 	public static TransitionTable fromNFA(NFA nfa) {
 		List<SetVariables> transitions = new ArrayList<>();
-		VariableSummary variableSummary = nfa.bitSummary();
+		VariableSummary variableSummary = nfa.variableSummary();
 		nfa.visitTransitions((from, via, to) -> transitions.add(transition(variableSummary, from, via, to)));
 		return new TransitionTable(transitions);
 	}

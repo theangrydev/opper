@@ -45,7 +45,7 @@ public class BDDScanner implements Corpus {
 
 		TransitionTable transitionTable = TransitionTable.fromNFA(nfa);
 
-		variableSummary = nfa.bitSummary();
+		variableSummary = nfa.variableSummary();
 
 		VariableOrderingCalculator variableOrderingCalculator = new VariableOrderingCalculator();
 		variables = variableOrderingCalculator.determineOrdering(variableSummary.bitsPerRow(), transitionTable);

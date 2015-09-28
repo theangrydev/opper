@@ -51,7 +51,7 @@ public class NFA {
 		return initialState;
 	}
 
-	public VariableSummary bitSummary() {
+	public VariableSummary variableSummary() {
 		return new VariableSummary(states.size(), characterTransitions.size());
 	}
 

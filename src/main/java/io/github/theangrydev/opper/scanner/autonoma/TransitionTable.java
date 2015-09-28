@@ -1,15 +1,16 @@
-package io.github.theangrydev.opper.scanner.bdd;
+package io.github.theangrydev.opper.scanner.autonoma;
 
-import io.github.theangrydev.opper.scanner.autonoma.State;
+import io.github.theangrydev.opper.scanner.bdd.BitSummary;
 
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
-public class TransitionTableBuilder {
+public class TransitionTable {
+	private final List<BitSet> transitions;
 
-	public List<BitSet> buildTransitionTable(BitSummary bitSummary, List<State> states) {
-		List<BitSet> transitions = new ArrayList<>();
+	public TransitionTable(List<State> states, BitSummary bitSummary) {
+		transitions = new ArrayList<>();
 		for (State state : states) {
 			state.visitTransitions((from, via, to) -> {
 				BitSet row = new BitSet(bitSummary.bitsPerRow());
@@ -19,11 +20,13 @@ public class TransitionTableBuilder {
 				transitions.add(row);
 			});
 		}
-
-		return transitions;
 	}
 
 	private void blastBits(long number, BitSet row) {
 		row.or(BitSet.valueOf(new long[]{number}));
+	}
+
+	public List<BitSet> transitions() {
+		return transitions;
 	}
 }

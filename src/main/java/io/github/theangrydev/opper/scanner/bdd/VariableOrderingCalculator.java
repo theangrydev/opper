@@ -1,5 +1,6 @@
 package io.github.theangrydev.opper.scanner.bdd;
 
+import io.github.theangrydev.opper.scanner.autonoma.TransitionTable;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
@@ -16,10 +17,11 @@ import static java.util.stream.Stream.concat;
 
 public class VariableOrderingCalculator {
 
-	public List<Variable> determineOrdering(int bitsPerRow, List<BitSet> transitionTable) {
+	public List<Variable> determineOrdering(int bitsPerRow, TransitionTable transitionTable) {
+		List<BitSet> transitions = transitionTable.transitions();
 		List<Variable> variables = new ArrayList<>(bitsPerRow);
 		IntSet remainingVariables = allVariables(bitsPerRow);
-		List<List<BitSet>> frontier = singletonList(transitionTable);
+		List<List<BitSet>> frontier = singletonList(transitions);
 		for (int height = 0; height < bitsPerRow; height++) {
 			int countPerSplit = 1 << (bitsPerRow - height - 1);
 			int nextVariable = determineNext(frontier, remainingVariables, countPerSplit);
@@ -27,7 +29,7 @@ public class VariableOrderingCalculator {
 			variables.add(new Variable(height, nextVariable));
 			frontier = nextFrontier(frontier, nextVariable);
 		}
-		DecisionTree tree = DecisionTree.from(transitionTable, variables);
+		DecisionTree tree = DecisionTree.from(transitions, variables);
 		System.out.println("nodes=" + tree.count());
 		return variables;
 	}

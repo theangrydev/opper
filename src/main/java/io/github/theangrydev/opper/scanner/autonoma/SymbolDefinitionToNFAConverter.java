@@ -4,17 +4,17 @@ import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 
 import java.util.List;
 
-public class NFABuilder {
+public class SymbolDefinitionToNFAConverter {
 
 	private final StateFactory stateFactory;
 	private final TransitionFactory transitionFactory;
 
-	public NFABuilder(StateFactory stateFactory, TransitionFactory transitionFactory) {
+	public SymbolDefinitionToNFAConverter(StateFactory stateFactory, TransitionFactory transitionFactory) {
 		this.stateFactory = stateFactory;
 		this.transitionFactory = transitionFactory;
 	}
 
-	public NFA build(List<SymbolDefinition> symbolDefinitions) {
+	public NFA convertToNFA(List<SymbolDefinition> symbolDefinitions) {
 		State initial = stateFactory.anonymousState();
 		State accepting = stateFactory.acceptingState();
 		for (SymbolDefinition symbolDefinition : symbolDefinitions) {

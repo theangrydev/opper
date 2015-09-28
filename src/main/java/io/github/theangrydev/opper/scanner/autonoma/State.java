@@ -5,7 +5,7 @@ import io.github.theangrydev.opper.grammar.Symbol;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class State {
+public class State implements Identifiable {
 	private final Symbol createdBy;
 	private int id;
 	private Map<Transition, List<State>> transitions;
@@ -26,6 +26,7 @@ public class State {
 		void visit(State from, Transition via, State to);
 	}
 
+	@Override
 	public int id() {
 		return id;
 	}
@@ -84,6 +85,7 @@ public class State {
 		removeEpsilonTransitions();
 	}
 
+	@Override
 	public void label(int id) {
 		this.id = id;
 	}

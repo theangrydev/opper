@@ -4,12 +4,12 @@ import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 
 import java.util.List;
 
-public class SymbolDefinitionToStateConverter {
+public class NFABuilder {
 
 	private final StateFactory stateFactory;
 	private final TransitionFactory transitionFactory;
 
-	public SymbolDefinitionToStateConverter(StateFactory stateFactory, TransitionFactory transitionFactory) {
+	public NFABuilder(StateFactory stateFactory, TransitionFactory transitionFactory) {
 		this.stateFactory = stateFactory;
 		this.transitionFactory = transitionFactory;
 	}

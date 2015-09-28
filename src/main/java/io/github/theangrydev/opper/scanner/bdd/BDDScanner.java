@@ -38,8 +38,7 @@ public class BDDScanner implements Corpus {
 
 	public BDDScanner(List<SymbolDefinition> symbolDefinitions, char...  charactersToParse) {
 		this.charactersToParse = charactersToParse;
-		TransitionFactory transitionFactory = new TransitionFactory();
-		SymbolDefinitionToStateConverter converter = new SymbolDefinitionToStateConverter(new StateFactory(), transitionFactory);
+		SymbolDefinitionToStateConverter converter = new SymbolDefinitionToStateConverter(new StateFactory(), new TransitionFactory());
 
 		NFA nfa = converter.convertDefinitionsToStates(symbolDefinitions);
 		nfa.removeEpsilionTransitions();
@@ -55,7 +54,7 @@ public class BDDScanner implements Corpus {
 		StateEncoder stateEncoder = new StateEncoder();
 		stateEncoder.labelStatesWithSmallerIdsForMoreFrequentStates(stateStatistics);
 
-		bitSummary = new BitSummary(states.size(), transitionFactory.characterTransitions().size());
+		bitSummary = new BitSummary(states.size(), nfa.characterTransitions().size());
 
 		TransitionTableBuilder transitionTableBuilder = new TransitionTableBuilder();
 		List<BitSet> transitionTable = transitionTableBuilder.buildTransitionTable(bitSummary, states);
@@ -70,12 +69,12 @@ public class BDDScanner implements Corpus {
 		transitionBddTable = bddTransitionsTableComputer.compute(variables, bdd, bddVariables, transitionTable);
 
 		BDDCharacters bddCharacters = new BDDCharacters();
-		characterBddSets = bddCharacters.compute(variables, transitionFactory.characterTransitions(), bitSummary, bdd, bddVariables);
+		characterBddSets = bddCharacters.compute(variables, nfa.characterTransitions(), bitSummary, bdd, bddVariables);
 
 		BDDAcceptance bddAcceptance = new BDDAcceptance();
 		acceptanceBddSet = bddAcceptance.compute(variables, states, bitSummary, bdd, bddVariables);
 
-		System.out.println("characterIds=" + transitionFactory.characterTransitions());
+		System.out.println("characterIds=" + nfa.characterTransitions());
 		System.out.println("states=" + states.stream().map(Object::toString).collect(Collectors.joining("\n")));
 		statesById = concat(Stream.of((State) null), states.stream().sorted(comparing(State::id))).collect(toList());
 		System.out.println("characterSets=");

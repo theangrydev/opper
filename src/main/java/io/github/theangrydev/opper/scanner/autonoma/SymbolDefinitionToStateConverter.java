@@ -23,6 +23,6 @@ public class SymbolDefinitionToStateConverter {
 			initial.addNullTransition(from);
 			symbolDefinition.populate(generator, from, accepting);
 		}
-		return new NFA(initial, stateFactory.states());
+		return new NFA(initial, stateFactory.states(), transitionFactory.characterTransitions());
 	}
 }

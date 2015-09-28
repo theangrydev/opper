@@ -12,11 +12,11 @@ import static java.util.stream.Collectors.toList;
 
 public class BDDCharacters {
 
-	public Char2IntMap compute(List<Variable> variables, List<CharacterTransition> characterTransitions, BitSummary bitSummary, BDD bdd, BDDVariables bddVariables) {
-		List<Variable> characterVariables = variables.stream().filter(bitSummary::isCharacter).collect(toList());
+	public Char2IntMap compute(List<Variable> variables, List<CharacterTransition> characterTransitions, VariableSummary variableSummary, BDD bdd, BDDVariables bddVariables) {
+		List<Variable> characterVariables = variables.stream().filter(variableSummary::isCharacter).collect(toList());
 		Char2IntMap characterBddSets = new Char2IntArrayMap(characterTransitions.size());
 		for (CharacterTransition characterTransition : characterTransitions) {
-			SetVariables character = SetVariables.character(bitSummary, characterTransition);
+			SetVariables character = SetVariables.character(variableSummary, characterTransition);
 			int bddRow = BDDRowComputer.bddRow(characterVariables, bdd, bddVariables, character);
 			characterBddSets.put(characterTransition.character(), bddRow);
 		}

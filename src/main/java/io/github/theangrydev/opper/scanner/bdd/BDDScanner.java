@@ -23,7 +23,7 @@ public class BDDScanner implements Corpus {
 	private final char[] charactersToParse;
 	private final BDD bdd;
 	private final List<Variable> variables;
-	private final BitSummary bitSummary;
+	private final VariableSummary variableSummary;
 	private final int transitionBddTable;
 	private final Char2IntMap characterBddSets;
 	private final int acceptanceBddSet;
@@ -37,20 +37,18 @@ public class BDDScanner implements Corpus {
 
 	public BDDScanner(List<SymbolDefinition> symbolDefinitions, char...  charactersToParse) {
 		this.charactersToParse = charactersToParse;
-		SymbolDefinitionToNFAConverter symbolDefinitionToNfaConverter = new SymbolDefinitionToNFAConverter();
-		NFA nfa = symbolDefinitionToNfaConverter.convertToNFA(symbolDefinitions);
+
+		NFA nfa = NFA.convertToNFA(symbolDefinitions);
 		nfa.removeEpsilionTransitions();
 		nfa.removeUnreachableStates();
 		nfa.relabelAccordingToFrequencies();
 
-		bitSummary = nfa.bitSummary();
-
-		List<State> states = nfa.states();
-
 		TransitionTable transitionTable = TransitionTable.fromNFA(nfa);
 
+		variableSummary = nfa.bitSummary();
+
 		VariableOrderingCalculator variableOrderingCalculator = new VariableOrderingCalculator();
-		variables = variableOrderingCalculator.determineOrdering(bitSummary.bitsPerRow(), transitionTable);
+		variables = variableOrderingCalculator.determineOrdering(variableSummary.bitsPerRow(), transitionTable);
 
 		bdd = new BDD(1000,100);
 		BDDVariables bddVariables = new BDDVariables(bdd, variables);
@@ -59,10 +57,11 @@ public class BDDScanner implements Corpus {
 		transitionBddTable = bddTransitionsTableComputer.compute(variables, bdd, bddVariables, transitionTable);
 
 		BDDCharacters bddCharacters = new BDDCharacters();
-		characterBddSets = bddCharacters.compute(variables, nfa.characterTransitions(), bitSummary, bdd, bddVariables);
+		characterBddSets = bddCharacters.compute(variables, nfa.characterTransitions(), variableSummary, bdd, bddVariables);
 
+		List<State> states = nfa.states();
 		BDDAcceptance bddAcceptance = new BDDAcceptance();
-		acceptanceBddSet = bddAcceptance.compute(variables, states, bitSummary, bdd, bddVariables);
+		acceptanceBddSet = bddAcceptance.compute(variables, states, variableSummary, bdd, bddVariables);
 
 		System.out.println("characterIds=" + nfa.characterTransitions());
 		System.out.println("states=" + states.stream().map(Object::toString).collect(Collectors.joining("\n")));
@@ -73,32 +72,32 @@ public class BDDScanner implements Corpus {
 			bdd.printSet(entry.getIntValue());
 		});
 
-		acceptedBuffer = new int[bitSummary.bitsPerRow()];
-		existsFromStateAndCharacter = existsFromStateAndCharacter(variables, bdd, bitSummary);
-		relabelToStateToFromState = relabelToStateToFromState(variables, bdd, bddVariables, bitSummary);
+		acceptedBuffer = new int[variableSummary.bitsPerRow()];
+		existsFromStateAndCharacter = existsFromStateAndCharacter(variables, bdd, variableSummary);
+		relabelToStateToFromState = relabelToStateToFromState(variables, bdd, bddVariables, variableSummary);
 
-		frontier = initialFrontier(variables, bdd, bddVariables, bitSummary, nfa.initialState());
+		frontier = initialFrontier(variables, bdd, bddVariables, variableSummary, nfa.initialState());
 		System.out.println("initial frontier=");
 		bdd.printSet(frontier);
 
 	}
 
-	private int lookupToState(List<Variable> variables, int[] accepted, BitSummary bitSummary) {
+	private int lookupToState(List<Variable> variables, int[] accepted, VariableSummary variableSummary) {
 		int stateIndex = 0;
 		for (int i = 0; i < accepted.length; i++) {
 			int value = accepted[i];
 			if (value == 1) {
 				int id = variables.get(i).id();
-				int bitPosition = bitSummary.unprojectToIdBitPosition(id);
+				int bitPosition = variableSummary.unprojectToIdBitPosition(id);
 				stateIndex |= (1 << bitPosition);
 			}
 		}
 		return stateIndex;
 	}
 
-	private Permutation relabelToStateToFromState(List<Variable> variables, BDD bdd, BDDVariables bddVariables, BitSummary bitSummary) {
-		int[] toVariables = variables.stream().filter(bitSummary::isToState).sorted(comparing(Variable::id)).mapToInt(Variable::order).map(bddVariables::variable).toArray();
-		int[] fromVariables = variables.stream().filter(bitSummary::isFromState).sorted(comparing(Variable::id)).mapToInt(Variable::order).map(bddVariables::variable).toArray();
+	private Permutation relabelToStateToFromState(List<Variable> variables, BDD bdd, BDDVariables bddVariables, VariableSummary variableSummary) {
+		int[] toVariables = variables.stream().filter(variableSummary::isToState).sorted(comparing(Variable::id)).mapToInt(Variable::order).map(bddVariables::variable).toArray();
+		int[] fromVariables = variables.stream().filter(variableSummary::isFromState).sorted(comparing(Variable::id)).mapToInt(Variable::order).map(bddVariables::variable).toArray();
 		return bdd.createPermutation(toVariables, fromVariables);
 	}
 
@@ -114,18 +113,18 @@ public class BDDScanner implements Corpus {
 		return result;
 	}
 
-	private int existsFromStateAndCharacter(List<Variable> variables, BDD bdd, BitSummary bitSummary) {
-		List<Integer> fromStateOrCharacterVariables = variables.stream().filter(bitSummary::isFromStateOrCharacter).map(Variable::order).collect(toList());
-		boolean[] cube = new boolean[bitSummary.bitsPerRow()];
+	private int existsFromStateAndCharacter(List<Variable> variables, BDD bdd, VariableSummary variableSummary) {
+		List<Integer> fromStateOrCharacterVariables = variables.stream().filter(variableSummary::isFromStateOrCharacter).map(Variable::order).collect(toList());
+		boolean[] cube = new boolean[variableSummary.bitsPerRow()];
 		for (int present : fromStateOrCharacterVariables) {
 			cube[present] = true;
 		}
 		return bdd.cube(cube);
 	}
 
-	private int initialFrontier(List<Variable> variables, BDD bdd, BDDVariables bddVariables, BitSummary bitSummary, State initial) {
-		List<Variable> fromStateVariables = variables.stream().filter(bitSummary::isFromState).collect(toList());
-		SetVariables fromState = SetVariables.fromState(bitSummary, initial);
+	private int initialFrontier(List<Variable> variables, BDD bdd, BDDVariables bddVariables, VariableSummary variableSummary, State initial) {
+		List<Variable> fromStateVariables = variables.stream().filter(variableSummary::isFromState).collect(toList());
+		SetVariables fromState = SetVariables.fromState(variableSummary, initial);
 		return bddRow(fromStateVariables, bdd, bddVariables, fromState);
 	}
 
@@ -167,7 +166,7 @@ public class BDDScanner implements Corpus {
 			if (accepted) {
 				acceptedBuffer = bdd.oneSat(acceptCheck, acceptedBuffer);
 				System.out.println("accepted=" + Arrays.toString(acceptedBuffer));
-				int stateIndex = lookupToState(variables, acceptedBuffer, bitSummary);
+				int stateIndex = lookupToState(variables, acceptedBuffer, variableSummary);
 				State state = statesById.get(stateIndex);
 				System.out.println("state=" + state);
 				next = state.symbol();

@@ -6,13 +6,13 @@ import io.github.theangrydev.opper.scanner.autonoma.Transition;
 
 import java.math.RoundingMode;
 
-public class BitSummary {
+public class VariableSummary {
 
 	private final int bitsForStates;
 	private final int bitsForCharacters;
 	private final int bitsPerRow;
 
-	public BitSummary(int numberOfStates, int numberOfCharacters) {
+	public VariableSummary(int numberOfStates, int numberOfCharacters) {
 		bitsForStates = IntMath.log2(numberOfStates, RoundingMode.FLOOR) + 1;
 		bitsForCharacters = IntMath.log2(numberOfCharacters, RoundingMode.FLOOR) + 1;
 		bitsPerRow = bitsForStates * 2 + bitsForCharacters;

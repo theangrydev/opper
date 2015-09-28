@@ -10,15 +10,15 @@ import static java.util.stream.Collectors.toList;
 
 public class BDDAcceptance {
 
-	public int compute(List<Variable> variables, List<State> states, BitSummary bitSummary, BDD bdd, BDDVariables bddVariables) {
-		List<Variable> toStateVariables = variables.stream().filter(bitSummary::isToState).collect(toList());
+	public int compute(List<Variable> variables, List<State> states, VariableSummary variableSummary, BDD bdd, BDDVariables bddVariables) {
+		List<Variable> toStateVariables = variables.stream().filter(variableSummary::isToState).collect(toList());
 		List<State> acceptanceStates = states.stream().filter(State::isAccepting).collect(toList());
 
-		SetVariables firstToState = SetVariables.toState(bitSummary, acceptanceStates.get(0));
+		SetVariables firstToState = SetVariables.toState(variableSummary, acceptanceStates.get(0));
 		int bddDisjunction = BDDRowComputer.bddRow(toStateVariables, bdd, bddVariables, firstToState);
 		for (int i = 1; i < acceptanceStates.size(); i++) {
 			State state = acceptanceStates.get(i);
-			SetVariables toState = SetVariables.toState(bitSummary, state);
+			SetVariables toState = SetVariables.toState(variableSummary, state);
 			int bddRow = BDDRowComputer.bddRow(toStateVariables, bdd, bddVariables, toState);
 			bddDisjunction = bdd.orTo(bddDisjunction, bddRow);
 		}

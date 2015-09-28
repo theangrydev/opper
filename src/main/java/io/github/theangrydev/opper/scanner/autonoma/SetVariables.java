@@ -1,6 +1,6 @@
 package io.github.theangrydev.opper.scanner.autonoma;
 
-import io.github.theangrydev.opper.scanner.bdd.BitSummary;
+import io.github.theangrydev.opper.scanner.bdd.VariableSummary;
 import io.github.theangrydev.opper.scanner.bdd.Variable;
 
 import java.util.BitSet;
@@ -13,24 +13,24 @@ public class SetVariables {
 		this.setVariables = setVariables;
 	}
 
-	public static SetVariables transition(BitSummary bitSummary, State from, Transition via, State to) {
-		BitSet setVariables = new BitSet(bitSummary.bitsPerRow());
-		blastBits(bitSummary.projectFromId(from), setVariables);
-		blastBits(bitSummary.projectCharacterId(via), setVariables);
-		blastBits(bitSummary.projectToId(to), setVariables);
+	public static SetVariables transition(VariableSummary variableSummary, State from, Transition via, State to) {
+		BitSet setVariables = new BitSet(variableSummary.bitsPerRow());
+		blastBits(variableSummary.projectFromId(from), setVariables);
+		blastBits(variableSummary.projectCharacterId(via), setVariables);
+		blastBits(variableSummary.projectToId(to), setVariables);
 		return new SetVariables(setVariables);
 	}
 
-	public static SetVariables toState(BitSummary bitSummary, State state) {
-		return new SetVariables(BitSet.valueOf(new long[]{bitSummary.projectToId(state)}));
+	public static SetVariables toState(VariableSummary variableSummary, State state) {
+		return new SetVariables(BitSet.valueOf(new long[]{variableSummary.projectToId(state)}));
 	}
 
-	public static SetVariables fromState(BitSummary bitSummary, State state) {
-		return new SetVariables(BitSet.valueOf(new long[]{bitSummary.projectFromId(state)}));
+	public static SetVariables fromState(VariableSummary variableSummary, State state) {
+		return new SetVariables(BitSet.valueOf(new long[]{variableSummary.projectFromId(state)}));
 	}
 
-	public static SetVariables character(BitSummary bitSummary, CharacterTransition characterTransition) {
-		return new SetVariables(BitSet.valueOf(new long[]{bitSummary.projectCharacterId(characterTransition)}));
+	public static SetVariables character(VariableSummary variableSummary, CharacterTransition characterTransition) {
+		return new SetVariables(BitSet.valueOf(new long[]{variableSummary.projectCharacterId(characterTransition)}));
 	}
 
 	private static void blastBits(long number, BitSet row) {

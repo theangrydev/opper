@@ -1,6 +1,6 @@
 package io.github.theangrydev.opper.scanner.autonoma;
 
-import io.github.theangrydev.opper.scanner.bdd.BitSummary;
+import io.github.theangrydev.opper.scanner.bdd.VariableSummary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +17,8 @@ public class TransitionTable {
 
 	public static TransitionTable fromNFA(NFA nfa) {
 		List<SetVariables> transitions = new ArrayList<>();
-		BitSummary bitSummary = nfa.bitSummary();
-		nfa.visitTransitions((from, via, to) -> transitions.add(transition(bitSummary, from, via, to)));
+		VariableSummary variableSummary = nfa.bitSummary();
+		nfa.visitTransitions((from, via, to) -> transitions.add(transition(variableSummary, from, via, to)));
 		return new TransitionTable(transitions);
 	}
 

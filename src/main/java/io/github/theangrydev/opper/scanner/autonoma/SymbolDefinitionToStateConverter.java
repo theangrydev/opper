@@ -14,7 +14,7 @@ public class SymbolDefinitionToStateConverter {
 		this.transitionFactory = transitionFactory;
 	}
 
-	public State convertDefinitionsToStates(List<SymbolDefinition> symbolDefinitions) {
+	public NFA convertDefinitionsToStates(List<SymbolDefinition> symbolDefinitions) {
 		State initial = stateFactory.anonymousState();
 		State accepting = stateFactory.acceptingState();
 		for (SymbolDefinition symbolDefinition : symbolDefinitions) {
@@ -23,6 +23,6 @@ public class SymbolDefinitionToStateConverter {
 			initial.addNullTransition(from);
 			symbolDefinition.populate(generator, from, accepting);
 		}
-		return initial;
+		return new NFA(initial, stateFactory.states());
 	}
 }

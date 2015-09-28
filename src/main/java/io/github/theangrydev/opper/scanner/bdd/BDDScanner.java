@@ -38,16 +38,13 @@ public class BDDScanner implements Corpus {
 
 	public BDDScanner(List<SymbolDefinition> symbolDefinitions, char...  charactersToParse) {
 		this.charactersToParse = charactersToParse;
-		StateFactory stateFactory = new StateFactory();
 		TransitionFactory transitionFactory = new TransitionFactory();
-		SymbolDefinitionToStateConverter converter = new SymbolDefinitionToStateConverter(stateFactory, transitionFactory);
+		SymbolDefinitionToStateConverter converter = new SymbolDefinitionToStateConverter(new StateFactory(), transitionFactory);
 
-		State initial = converter.convertDefinitionsToStates(symbolDefinitions);
+		NFA nfa = converter.convertDefinitionsToStates(symbolDefinitions);
+		nfa.removeEpsilionTransitions();
 
-		List<State> states = stateFactory.states();
-		states.forEach(State::eliminateEpsilonTransitions);
-		initial.markReachableStates();
-		states = states.stream().filter(State::wasReached).collect(toList());
+		List<State> states = nfa.states();
 
 		StateStatistics stateStatistics = new StateStatistics();
 		states.forEach(stateStatistics::record);
@@ -91,7 +88,7 @@ public class BDDScanner implements Corpus {
 		existsFromStateAndCharacter = existsFromStateAndCharacter(variables, bdd, bitSummary);
 		relabelToStateToFromState = relabelToStateToFromState(variables, bdd, bddVariables, bitSummary);
 
-		frontier = initialFrontier(variables, bdd, bddVariables, bitSummary, initial);
+		frontier = initialFrontier(variables, bdd, bddVariables, bitSummary, nfa.initialState());
 		System.out.println("initial frontier=");
 		bdd.printSet(frontier);
 

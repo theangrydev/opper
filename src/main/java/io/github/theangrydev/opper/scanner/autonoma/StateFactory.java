@@ -41,8 +41,4 @@ public class StateFactory {
 	public void removeUnreachableStates() {
 		states = states().stream().filter(State::wasReached).collect(toList());
 	}
-
-	public void eliminateEpsilonTransitions() {
-		states().forEach(State::eliminateEpsilonTransitions);
-	}
 }

@@ -44,7 +44,7 @@ public class BDDScanner implements Corpus {
 
 		State initial = converter.convertDefinitionsToStates(symbolDefinitions);
 
-		stateFactory.eliminateEpsilonTransitions();
+		stateFactory.states().forEach(State::eliminateEpsilonTransitions);
 		initial.markReachableStates();
 		stateFactory.removeUnreachableStates();
 

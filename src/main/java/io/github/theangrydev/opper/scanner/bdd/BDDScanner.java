@@ -38,7 +38,7 @@ public class BDDScanner implements Corpus {
 
 	public BDDScanner(List<SymbolDefinition> symbolDefinitions, char...  charactersToParse) {
 		this.charactersToParse = charactersToParse;
-		SymbolDefinitionToNFAConverter symbolDefinitionToNfaConverter = new SymbolDefinitionToNFAConverter(new StateFactory(), new TransitionFactory());
+		SymbolDefinitionToNFAConverter symbolDefinitionToNfaConverter = new SymbolDefinitionToNFAConverter();
 		NFA nfa = symbolDefinitionToNfaConverter.convertToNFA(symbolDefinitions);
 		nfa.removeEpsilionTransitions();
 		nfa.removeUnreachableStates();

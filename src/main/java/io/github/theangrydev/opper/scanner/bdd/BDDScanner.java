@@ -40,7 +40,7 @@ public class BDDScanner implements Corpus {
 		this.charactersToParse = charactersToParse;
 		NFABuilder nfaBuilder = new NFABuilder(new StateFactory(), new TransitionFactory());
 
-		NFA nfa = nfaBuilder.convertDefinitionsToStates(symbolDefinitions);
+		NFA nfa = nfaBuilder.build(symbolDefinitions);
 		nfa.removeEpsilionTransitions();
 
 		List<State> states = nfa.states();

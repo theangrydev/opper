@@ -14,7 +14,7 @@ public class NFABuilder {
 		this.transitionFactory = transitionFactory;
 	}
 
-	public NFA convertDefinitionsToStates(List<SymbolDefinition> symbolDefinitions) {
+	public NFA build(List<SymbolDefinition> symbolDefinitions) {
 		State initial = stateFactory.anonymousState();
 		State accepting = stateFactory.acceptingState();
 		for (SymbolDefinition symbolDefinition : symbolDefinitions) {

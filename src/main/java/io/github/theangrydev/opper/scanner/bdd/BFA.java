@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.github.theangrydev.opper.scanner.bdd.BDDRowComputer.bddRow;
 import static java.util.stream.Collectors.toList;
 
 public class BFA {
@@ -35,11 +34,8 @@ public class BFA {
 		BDDVariableFactory bddVariableFactory = new BDDVariableFactory();
 		BDDVariables bddVariables = new BDDVariables(variableOrdering, bddVariableFactory);
 
-		BDDTransitionsTableComputer bddTransitionsTableComputer = new BDDTransitionsTableComputer();
-		transitionBddTable = bddTransitionsTableComputer.compute(variableOrdering, bddVariables, transitionTable);
-
+		transitionBddTable = computeTransitionTable(variableOrdering, bddVariables, transitionTable);
 		characterBddSets = computeCharacterBddSets(variableOrdering, nfa.characterTransitions(), variableSummary, bddVariables);
-
 		acceptanceBddSet = computeAcceptanceSet(variableOrdering, nfa, variableSummary, bddVariables);
 
 		System.out.println("characterIds=" + nfa.characterTransitions());
@@ -57,6 +53,33 @@ public class BFA {
 		frontier = initialFrontier(variableOrdering, bddVariables, variableSummary, nfa.initialState());
 		System.out.println("initial frontier=");
 		frontier.printSet();
+	}
+
+	private BDDVariable computeTransitionTable(VariableOrdering variableOrders, BDDVariables bddVariables, TransitionTable transitionTable) {
+		List<SetVariables> transitions = transitionTable.transitions();
+		BDDVariable bddDisjunction = BFA.bddRow(variableOrders.allVariables(), bddVariables, transitions.get(0));
+		for (int i = 1; i < transitions.size(); i++) {
+			BDDVariable bddRow = BFA.bddRow(variableOrders.allVariables(), bddVariables, transitions.get(i));
+			bddDisjunction = bddDisjunction.orTo(bddRow);
+		}
+		return bddDisjunction;
+	}
+
+	private static BDDVariable bddRow(List<VariableOrder> variableOrders, BDDVariables bddVariables, SetVariables setVariables) {
+		BDDVariable bddRow = setVariable(bddVariables, setVariables, variableOrders.get(0));
+		for (int i = 1; i < variableOrders.size(); i++) {
+			BDDVariable bddVariable = setVariable(bddVariables, setVariables, variableOrders.get(i));
+			bddRow = bddRow.andTo(bddVariable);
+		}
+		return bddRow;
+	}
+
+	private static BDDVariable setVariable(BDDVariables bddVariables, SetVariables setVariables, VariableOrder variableOrder) {
+		if (setVariables.contains(variableOrder)) {
+			return bddVariables.variable(variableOrder.order());
+		} else {
+			return bddVariables.notVariable(variableOrder.order());
+		}
 	}
 
 	public Optional<Symbol> something(char character) {
@@ -141,7 +164,7 @@ public class BFA {
 		Char2ObjectMap<BDDVariable> characterBddSets = new Char2ObjectArrayMap<>(characterTransitions.size());
 		for (CharacterTransition characterTransition : characterTransitions) {
 			SetVariables character = SetVariables.character(variableSummary, characterTransition);
-			BDDVariable bddRow = BDDRowComputer.bddRow(characterVariableOrders, bddVariables, character);
+			BDDVariable bddRow = bddRow(characterVariableOrders, bddVariables, character);
 			characterBddSets.put(characterTransition.character(), bddRow);
 		}
 		return characterBddSets;
@@ -152,11 +175,11 @@ public class BFA {
 		List<VariableOrder> toStateVariableOrders = variableOrdering.toStateVariables().collect(toList());
 
 		SetVariables firstToState = SetVariables.toState(variableSummary, acceptanceStates.get(0));
-		BDDVariable bddDisjunction = BDDRowComputer.bddRow(toStateVariableOrders, bddVariables, firstToState);
+		BDDVariable bddDisjunction = bddRow(toStateVariableOrders, bddVariables, firstToState);
 		for (int i = 1; i < acceptanceStates.size(); i++) {
 			State state = acceptanceStates.get(i);
 			SetVariables toState = SetVariables.toState(variableSummary, state);
-			BDDVariable bddRow = BDDRowComputer.bddRow(toStateVariableOrders, bddVariables, toState);
+			BDDVariable bddRow = bddRow(toStateVariableOrders, bddVariables, toState);
 			bddDisjunction = bddDisjunction.orTo(bddRow);
 		}
 		return bddDisjunction;

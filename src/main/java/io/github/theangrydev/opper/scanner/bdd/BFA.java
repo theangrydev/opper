@@ -51,10 +51,10 @@ public class BFA {
 		System.out.println("states=" + states.stream().map(Object::toString).collect(Collectors.joining("\n")));
 		statesById = concat(Stream.of((State) null), states.stream().sorted(comparing(State::id))).collect(toList());
 		System.out.println("characterSets=");
-//		characterBddSets.char2IntEntrySet().forEach(entry -> {
-//			System.out.print(entry.getCharKey() + ": ");
-//			bdd.printSet(entry.getIntValue());
-//		});
+		characterBddSets.entrySet().forEach(entry -> {
+			System.out.print(entry.getKey() + ": ");
+			entry.getValue().printSet();
+		});
 
 		acceptedBuffer = new int[variableSummary.bitsPerRow()];
 		existsFromStateAndCharacter = existsFromStateAndCharacter(variableOrdering, bddVariableFactory, variableSummary);

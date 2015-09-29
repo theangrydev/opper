@@ -37,20 +37,19 @@ public class BFA {
 		transitionBddTable = computeTransitionTable(variableOrdering, bddVariables, transitionTable);
 		characterBddSets = computeCharacterBddSets(variableOrdering, nfa.characterTransitions(), variableSummary, bddVariables);
 		acceptanceBddSet = computeAcceptanceSet(variableOrdering, nfa, variableSummary, bddVariables);
+		existsFromStateAndCharacter = existsFromStateAndCharacter(variableOrdering, bddVariableFactory, variableSummary);
+		relabelToStateToFromState = relabelToStateToFromState(variableOrdering, bddVariableFactory, bddVariables);
+		frontier = initialFrontier(variableOrdering, bddVariables, variableSummary, nfa.initialState());
+		statesById = nfa.statesById();
 
 		System.out.println("characterIds=" + nfa.characterTransitions());
 		System.out.println("states=" + nfa.states().stream().map(Object::toString).collect(Collectors.joining("\n")));
-		statesById = nfa.statesById();
 		System.out.println("characterSets=");
 		characterBddSets.entrySet().forEach(entry -> {
 			System.out.print(entry.getKey() + ": ");
 			entry.getValue().printSet();
 		});
 
-		existsFromStateAndCharacter = existsFromStateAndCharacter(variableOrdering, bddVariableFactory, variableSummary);
-		relabelToStateToFromState = relabelToStateToFromState(variableOrdering, bddVariableFactory, bddVariables);
-
-		frontier = initialFrontier(variableOrdering, bddVariables, variableSummary, nfa.initialState());
 		System.out.println("initial frontier=");
 		frontier.printSet();
 	}

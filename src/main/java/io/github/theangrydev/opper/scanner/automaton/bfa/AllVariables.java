@@ -23,8 +23,8 @@ public class AllVariables {
 		}
 	}
 
-	public BinaryDecisionDiagram variable(VariableOrder variableOrder) {
-		return variable(variableOrder.order());
+	public BinaryDecisionDiagram variable(Variable variable) {
+		return variable(variable.order());
 	}
 
 	public BinaryDecisionDiagram variable(int variableIndex) {

@@ -1,10 +1,10 @@
 package io.github.theangrydev.opper.scanner.automaton.bfa;
 
-public class VariableOrder {
+public class Variable {
 	private final int order;
 	private final int id;
 
-	public VariableOrder(int order, int id) {
+	public Variable(int order, int id) {
 		this.order = order;
 		this.id = id;
 	}

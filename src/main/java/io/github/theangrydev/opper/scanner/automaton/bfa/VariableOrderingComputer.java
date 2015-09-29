@@ -17,16 +17,16 @@ public class VariableOrderingComputer {
 	public static VariableOrdering determineOrdering(VariableSummary variableSummary, TransitionTable transitionTable) {
 		int bitsPerRow = variableSummary.bitsPerRow();
 		IntSet remainingVariableIds = variableSummary.allVariableIds();
-		List<VariableOrder> variableOrders = new ArrayList<>(bitsPerRow);
+		List<Variable> variablesWithOrder = new ArrayList<>(bitsPerRow);
 		List<TransitionTable> frontier = singletonList(transitionTable);
 		for (int height = 0; height < bitsPerRow; height++) {
 			int countPerSplit = countPerSplit(bitsPerRow, height);
 			int nextVariable = determineNext(frontier, remainingVariableIds, countPerSplit);
 			remainingVariableIds.remove(nextVariable);
-			variableOrders.add(new VariableOrder(height, nextVariable));
+			variablesWithOrder.add(new Variable(height, nextVariable));
 			frontier = nextFrontier(frontier, nextVariable);
 		}
-		return new VariableOrdering(variableSummary, variableOrders);
+		return new VariableOrdering(variableSummary, variablesWithOrder);
 	}
 
 	private static int countPerSplit(int bitsPerRow, int height) {

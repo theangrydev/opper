@@ -82,20 +82,20 @@ public class VariableSummary {
 		return position - minToStateVariable();
 	}
 
-	public boolean isCharacter(VariableOrder variableOrder) {
-		return variableOrder.id() >= minCharacterVariable() && variableOrder.id() < maxCharacterVariable();
+	public boolean isCharacter(Variable variable) {
+		return variable.id() >= minCharacterVariable() && variable.id() < maxCharacterVariable();
 	}
 
-	public boolean isToState(VariableOrder variableOrder) {
-		return variableOrder.id() >= minToStateVariable() && variableOrder.id() < maxToStateVariable();
+	public boolean isToState(Variable variable) {
+		return variable.id() >= minToStateVariable() && variable.id() < maxToStateVariable();
 	}
 
-	public boolean isFromState(VariableOrder variableOrder) {
-		return variableOrder.id() >= minFromStateVariable() && variableOrder.id() < maxFromStateVariable();
+	public boolean isFromState(Variable variable) {
+		return variable.id() >= minFromStateVariable() && variable.id() < maxFromStateVariable();
 	}
 
-	public boolean isFromStateOrCharacter(VariableOrder variableOrder) {
-		return isFromState(variableOrder) || isCharacter(variableOrder);
+	public boolean isFromStateOrCharacter(Variable variable) {
+		return isFromState(variable) || isCharacter(variable);
 	}
 
 	public IntSet allVariableIds() {

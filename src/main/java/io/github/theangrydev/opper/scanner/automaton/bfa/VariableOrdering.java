@@ -7,46 +7,46 @@ import static java.util.Comparator.comparing;
 
 public class VariableOrdering {
 	private final VariableSummary variableSummary;
-	private final List<VariableOrder> variableOrders;
+	private final List<Variable> variablesWithOrder;
 
-	public VariableOrdering(VariableSummary variableSummary, List<VariableOrder> variableOrders) {
+	public VariableOrdering(VariableSummary variableSummary, List<Variable> variablesWithOrder) {
 		this.variableSummary = variableSummary;
-		this.variableOrders = variableOrders;
+		this.variablesWithOrder = variablesWithOrder;
 	}
 
 	public int variableId(int order) {
-		return variableOrders.get(order).id();
+		return variablesWithOrder.get(order).id();
 	}
 
-	public List<VariableOrder> allVariables() {
-		return variableOrders;
+	public List<Variable> allVariables() {
+		return variablesWithOrder;
 	}
 
-	public Stream<VariableOrder> toStateVariablesInOriginalOrder() {
-		return variableOrders.stream().filter(variableSummary::isToState).sorted(comparing(VariableOrder::id));
+	public Stream<Variable> toStateVariablesInOriginalOrder() {
+		return variablesWithOrder.stream().filter(variableSummary::isToState).sorted(comparing(Variable::id));
 	}
 
-	public Stream<VariableOrder> fromStateVariablesInOriginalOrder() {
-		return variableOrders.stream().filter(variableSummary::isFromState).sorted(comparing(VariableOrder::id));
+	public Stream<Variable> fromStateVariablesInOriginalOrder() {
+		return variablesWithOrder.stream().filter(variableSummary::isFromState).sorted(comparing(Variable::id));
 	}
 
-	public Stream<VariableOrder> fromStateOrCharacterVariables() {
-		return variableOrders.stream().filter(variableSummary::isFromStateOrCharacter);
+	public Stream<Variable> fromStateOrCharacterVariables() {
+		return variablesWithOrder.stream().filter(variableSummary::isFromStateOrCharacter);
 	}
 
-	public Stream<VariableOrder> fromStateVariables() {
-		return variableOrders.stream().filter(variableSummary::isFromState);
+	public Stream<Variable> fromStateVariables() {
+		return variablesWithOrder.stream().filter(variableSummary::isFromState);
 	}
 
 	public int numberOfVariables() {
-		return variableOrders.size();
+		return variablesWithOrder.size();
 	}
 
-	public Stream<VariableOrder> toStateVariables() {
-		return variableOrders.stream().filter(variableSummary::isToState);
+	public Stream<Variable> toStateVariables() {
+		return variablesWithOrder.stream().filter(variableSummary::isToState);
 	}
 
-	public Stream<VariableOrder> characterVariables() {
-		return variableOrders.stream().filter(variableSummary::isCharacter);
+	public Stream<Variable> characterVariables() {
+		return variablesWithOrder.stream().filter(variableSummary::isCharacter);
 	}
 }

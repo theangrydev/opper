@@ -38,8 +38,8 @@ public class SetVariables {
 		row.or(BitSet.valueOf(new long[]{number}));
 	}
 
-	public boolean contains(VariableOrder variableOrder) {
-		return contains(variableOrder.id());
+	public boolean contains(Variable variable) {
+		return contains(variable.id());
 	}
 
 	public boolean contains(int variableId) {

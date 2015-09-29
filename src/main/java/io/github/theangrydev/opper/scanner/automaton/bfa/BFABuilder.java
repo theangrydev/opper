@@ -45,7 +45,7 @@ public class BFABuilder {
 	}
 
 	private static Char2ObjectMap<BinaryDecisionDiagram> characterPresence(VariableOrdering variableOrders, List<CharacterTransition> characterTransitions, VariableSummary variableSummary, AllVariables allVariables) {
-		List<VariableOrder> characterVariables = variableOrders.characterVariables().collect(toList());
+		List<Variable> characterVariables = variableOrders.characterVariables().collect(toList());
 		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = new Char2ObjectArrayMap<>(characterTransitions.size());
 		for (CharacterTransition characterTransition : characterTransitions) {
 			SetVariables character = SetVariables.character(variableSummary, characterTransition);
@@ -57,7 +57,7 @@ public class BFABuilder {
 
 	private static BinaryDecisionDiagram acceptingStates(VariableOrdering variableOrdering, NFA nfa, VariableSummary variableSummary, AllVariables allVariables) {
 		List<State> acceptanceStates = nfa.acceptanceStates();
-		List<VariableOrder> toStateVariables = variableOrdering.toStateVariables().collect(toList());
+		List<Variable> toStateVariables = variableOrdering.toStateVariables().collect(toList());
 
 		SetVariables firstAcceptanceState = SetVariables.toState(variableSummary, acceptanceStates.get(0));
 		BinaryDecisionDiagram acceptingStates = specifyVariables(toStateVariables, allVariables, firstAcceptanceState);
@@ -69,7 +69,7 @@ public class BFABuilder {
 		return acceptingStates;
 	}
 
-	private static BinaryDecisionDiagram specifyVariables(List<VariableOrder> variablesToSpecify, AllVariables allVariables, SetVariables setVariables) {
+	private static BinaryDecisionDiagram specifyVariables(List<Variable> variablesToSpecify, AllVariables allVariables, SetVariables setVariables) {
 		BinaryDecisionDiagram specifiedVariables = specifiyVariable(allVariables, setVariables, variablesToSpecify.get(0));
 		for (int i = 1; i < variablesToSpecify.size(); i++) {
 			BinaryDecisionDiagram specifiedVariable = specifiyVariable(allVariables, setVariables, variablesToSpecify.get(i));
@@ -78,16 +78,16 @@ public class BFABuilder {
 		return specifiedVariables;
 	}
 
-	private static BinaryDecisionDiagram specifiyVariable(AllVariables allVariables, SetVariables setVariables, VariableOrder variableOrder) {
-		if (setVariables.contains(variableOrder)) {
-			return allVariables.variable(variableOrder.order());
+	private static BinaryDecisionDiagram specifiyVariable(AllVariables allVariables, SetVariables setVariables, Variable variable) {
+		if (setVariables.contains(variable)) {
+			return allVariables.variable(variable.order());
 		} else {
-			return allVariables.notVariable(variableOrder.order());
+			return allVariables.notVariable(variable.order());
 		}
 	}
 
 	private static BinaryDecisionDiagram fromState(VariableOrdering variableOrdering, VariableSummary variableSummary, AllVariables allVariables, State state) {
-		List<VariableOrder> fromStateVariables = variableOrdering.fromStateVariables().collect(toList());
+		List<Variable> fromStateVariables = variableOrdering.fromStateVariables().collect(toList());
 		SetVariables fromState = SetVariables.fromState(variableSummary, state);
 		return specifyVariables(fromStateVariables, allVariables, fromState);
 	}
@@ -99,7 +99,7 @@ public class BFABuilder {
 	}
 
 	private static BinaryDecisionDiagram existsFromStateAndCharacter(VariableOrdering variableOrdering, VariableSummary variableSummary, BinaryDecisionDiagramFactory variableFactory) {
-		List<Integer> fromStateOrCharacterVariables = variableOrdering.fromStateOrCharacterVariables().map(VariableOrder::order).collect(toList());
+		List<Integer> fromStateOrCharacterVariables = variableOrdering.fromStateOrCharacterVariables().map(Variable::order).collect(toList());
 		boolean[] presentVariables = variableSummary.presentVariables(fromStateOrCharacterVariables);
 		return variableFactory.newCube(presentVariables);
 	}

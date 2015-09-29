@@ -103,6 +103,12 @@ public class BFA {
 		return bddDisjunction;
 	}
 
+	private static BDDVariable fromState(VariableOrdering variableOrdering, VariableSummary variableSummary, BDDVariables bddVariables, State state) {
+		List<VariableOrder> fromStateVariableOrders = variableOrdering.fromStateVariables().collect(toList());
+		SetVariables fromState = SetVariables.fromState(variableSummary, state);
+		return BFA.bddRow(fromStateVariableOrders, bddVariables, fromState);
+	}
+
 	public BDDVariable transitionBddTable() {
 		return transitionBddTable;
 	}
@@ -132,12 +138,6 @@ public class BFA {
 		Stream<BDDVariable> toVariables = variableOrdering.toStateVariablesInOriginalOrder().map(VariableOrder::order).map(bddVariables::variable);
 		Stream<BDDVariable> fromVariables = variableOrdering.fromStateVariablesInOriginalOrder().map(VariableOrder::order).map(bddVariables::variable);
 		return bddVariableFactory.createPermutation(toVariables, fromVariables);
-	}
-
-	private static BDDVariable fromState(VariableOrdering variableOrdering, VariableSummary variableSummary, BDDVariables bddVariables, State state) {
-		List<VariableOrder> fromStateVariableOrders = variableOrdering.fromStateVariables().collect(toList());
-		SetVariables fromState = SetVariables.fromState(variableSummary, state);
-		return BFA.bddRow(fromStateVariableOrders, bddVariables, fromState);
 	}
 
 	public BDDVariable startState() {

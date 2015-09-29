@@ -45,7 +45,7 @@ public class BDDVariable {
 		return new BDDVariable(bdd, bdd.and(id, bddVariable.id));
 	}
 
-	public boolean isZero() {
+	public boolean isNotZero() {
 		return id != bdd.getZero();
 	}
 

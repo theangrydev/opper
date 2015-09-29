@@ -62,15 +62,15 @@ public class Scanner implements Corpus {
 		BDDVariable acceptCheck = bfa.acceptanceBddSet().and(frontier);
 		frontier = frontier.replaceTo(relabelToStateToFromState);
 
-		boolean accepted = acceptCheck.isZero();
+		Optional<Symbol> next = Optional.empty();
+		boolean accepted = acceptCheck.isNotZero();
 		if (accepted) {
 			BDDVariableAssignment assignment = acceptCheck.oneSatisfyingAssignment();
-			acceptCheck.discard();
 			int stateIndex = bfa.lookupToState(assignment);
 			Symbol acceptedSymbol = bfa.symbolForStateIndex(stateIndex);
-			return Optional.of(acceptedSymbol);
+			next = Optional.of(acceptedSymbol);
 		}
 		acceptCheck.discard();
-		return Optional.empty();
+		return next;
 	}
 }

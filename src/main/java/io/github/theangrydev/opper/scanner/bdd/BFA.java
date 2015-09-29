@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
 import jdd.bdd.Permutation;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -134,12 +135,8 @@ public class BFA {
 		return characterBddSets.get(character);
 	}
 
-	public BDDVariable existsFromStateAndCharacter() {
-		return existsFromStateAndCharacter;
-	}
-
-	public Permutation relabelToStateToFromState() {
-		return relabelToStateToFromState;
+	public BDDVariable relabelToStateToFromState(BDDVariable frontier) {
+		return frontier.replaceTo(relabelToStateToFromState);
 	}
 
 	public BDDVariable initialState() {
@@ -158,8 +155,17 @@ public class BFA {
 			.reduce(0, (a, b) -> a | b);
 	}
 
-	public BDDVariable checkAcceptance(BDDVariable frontier) {
-		return acceptanceBddSet.and(frontier);
+	public Optional<Symbol> checkAcceptance(BDDVariable frontier) {
+		BDDVariable acceptCheck = acceptanceBddSet.and(frontier);
+		boolean accepted = acceptCheck.isNotZero();
+		if (!accepted) {
+			acceptCheck.discard();
+			return Optional.empty();
+		}
+		acceptCheck.discard();
+		BDDVariableAssignment satisfyingAssignment = acceptCheck.oneSatisfyingAssignment();
+		Symbol acceptedSymbol = symbolForAssignment(satisfyingAssignment);
+		return Optional.of(acceptedSymbol);
 	}
 
 	public BDDVariable transition(BDDVariable frontier, char character) {

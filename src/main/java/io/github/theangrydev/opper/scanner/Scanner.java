@@ -29,8 +29,7 @@ public class Scanner implements Corpus {
 		nfa.removeUnreachableStates();
 		nfa.relabelAccordingToFrequencies();
 
-		bfa = new BFA(nfa);
-
+		bfa = BFA.convertToBFA(nfa);
 		existsFromStateAndCharacter = bfa.existsFromStateAndCharacter();
 		relabelToStateToFromState = bfa.relabelToStateToFromState();
 		frontier = bfa.startState();

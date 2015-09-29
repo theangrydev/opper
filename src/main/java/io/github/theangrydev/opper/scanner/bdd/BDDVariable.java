@@ -49,8 +49,8 @@ public class BDDVariable {
 		return id != bdd.getZero();
 	}
 
-	public int[] oneSatisfyingAssignment() {
-		return bdd.oneSat(id, null);
+	public BDDVariableAssignment oneSatisfyingAssignment() {
+		return new BDDVariableAssignment(bdd.oneSat(id, null));
 	}
 
 	public void discard() {

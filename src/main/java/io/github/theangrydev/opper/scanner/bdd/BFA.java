@@ -6,7 +6,6 @@ import it.unimi.dsi.fastutil.chars.Char2ObjectArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
 import jdd.bdd.Permutation;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -112,9 +111,9 @@ public class BFA {
 
 		boolean accepted = acceptCheck.isZero();
 		if (accepted) {
-			int[] assignment = acceptCheck.oneSatisfyingAssignment();
+			BDDVariableAssignment assignment = acceptCheck.oneSatisfyingAssignment();
 			acceptCheck.discard();
-			System.out.println("accepted=" + Arrays.toString(assignment));
+			System.out.println("accepted=" + assignment);
 			int stateIndex = lookupToState(variableOrdering, assignment, variableSummary);
 			Symbol acceptedSymbol = symbolsByStateId.get(stateIndex);
 			return Optional.of(acceptedSymbol);
@@ -123,17 +122,8 @@ public class BFA {
 		return Optional.empty();
 	}
 
-	private int lookupToState(VariableOrdering variableOrdering, int[] accepted, VariableSummary variableSummary) {
-		int stateIndex = 0;
-		for (int i = 0; i < accepted.length; i++) {
-			int value = accepted[i];
-			if (value == 1) {
-				int id = variableOrdering.id(i);
-				int bitPosition = variableSummary.unprojectToIdBitPosition(id);
-				stateIndex |= (1 << bitPosition);
-			}
-		}
-		return stateIndex;
+	private int lookupToState(VariableOrdering variableOrdering, BDDVariableAssignment accepted, VariableSummary variableSummary) {
+		return accepted.assignedIndexes().map(variableOrdering::id).map(variableSummary::unprojectToIdBitPosition).map(bitPosition -> 1 << bitPosition).reduce(0, (a, b) -> a | b);
 	}
 
 	private Permutation relabelToStateToFromState(VariableOrdering variableOrdering, BDDVariableFactory bdd, BDDVariables bddVariables) {

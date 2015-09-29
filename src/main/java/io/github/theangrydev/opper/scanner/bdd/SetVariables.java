@@ -1,7 +1,8 @@
-package io.github.theangrydev.opper.scanner.automaton;
+package io.github.theangrydev.opper.scanner.bdd;
 
-import io.github.theangrydev.opper.scanner.bdd.VariableOrder;
-import io.github.theangrydev.opper.scanner.bdd.VariableSummary;
+import io.github.theangrydev.opper.scanner.automaton.CharacterTransition;
+import io.github.theangrydev.opper.scanner.automaton.State;
+import io.github.theangrydev.opper.scanner.automaton.Transition;
 
 import java.util.BitSet;
 

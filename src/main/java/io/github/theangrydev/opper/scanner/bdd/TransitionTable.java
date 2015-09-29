@@ -1,11 +1,11 @@
-package io.github.theangrydev.opper.scanner.automaton;
+package io.github.theangrydev.opper.scanner.bdd;
 
-import io.github.theangrydev.opper.scanner.bdd.VariableSummary;
+import io.github.theangrydev.opper.scanner.automaton.NFA;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.github.theangrydev.opper.scanner.automaton.SetVariables.transition;
+import static io.github.theangrydev.opper.scanner.bdd.SetVariables.transition;
 import static java.util.stream.Collectors.toList;
 
 public class TransitionTable {

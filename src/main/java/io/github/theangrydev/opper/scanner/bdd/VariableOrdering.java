@@ -1,7 +1,5 @@
-package io.github.theangrydev.opper.scanner.automaton;
+package io.github.theangrydev.opper.scanner.bdd;
 
-import io.github.theangrydev.opper.scanner.bdd.VariableOrder;
-import io.github.theangrydev.opper.scanner.bdd.VariableSummary;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
 import java.util.ArrayList;

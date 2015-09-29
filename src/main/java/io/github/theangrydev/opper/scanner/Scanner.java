@@ -59,10 +59,9 @@ public class Scanner implements Corpus {
 		frontier = frontier.andTo(bfa.transitionBddTable());
 		frontier = frontier.andTo(bfa.characterBddSet(character));
 		frontier = frontier.existsTo(existsFromStateAndCharacter);
-		BDDVariable acceptCheck = bfa.acceptanceBddSet().and(frontier);
-		frontier = frontier.replaceTo(relabelToStateToFromState);
 
 		Optional<Symbol> next = Optional.empty();
+		BDDVariable acceptCheck = bfa.acceptanceBddSet().and(frontier);
 		boolean accepted = acceptCheck.isNotZero();
 		if (accepted) {
 			BDDVariableAssignment assignment = acceptCheck.oneSatisfyingAssignment();
@@ -71,6 +70,7 @@ public class Scanner implements Corpus {
 			next = Optional.of(acceptedSymbol);
 		}
 		acceptCheck.discard();
+		frontier = frontier.replaceTo(relabelToStateToFromState);
 		return next;
 	}
 }

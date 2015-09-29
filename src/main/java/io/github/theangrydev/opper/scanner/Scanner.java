@@ -55,7 +55,7 @@ public class Scanner implements Corpus {
 		return false;
 	}
 
-	public Optional<Symbol> scan(char character) {
+	private Optional<Symbol> scan(char character) {
 		frontier = frontier.andTo(bfa.transitionBddTable());
 		frontier = frontier.andTo(bfa.characterBddSet(character));
 		frontier = frontier.existsTo(existsFromStateAndCharacter);

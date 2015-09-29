@@ -7,7 +7,6 @@ import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
 import jdd.bdd.Permutation;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -17,28 +16,26 @@ public class BFA {
 	private final BDDVariable transitionBddTable;
 	private final Char2ObjectMap<BDDVariable> characterBddSets;
 	private final BDDVariable acceptanceBddSet;
-	private final List<Symbol> symbolsByStateId;
-	private final BDDVariable existsFromStateAndCharacter;
-	private final Permutation relabelToStateToFromState;
+	private final BDDVariable startingFrom;
 	private final VariableOrdering variableOrdering;
 	private final VariableSummary variableSummary;
-	private BDDVariable frontier;
+	private final BDDVariableFactory bddVariableFactory;
+	private final BDDVariables bddVariables;
+	private final List<Symbol> symbolsByStateId;
 
 	public BFA(NFA nfa) {
 		TransitionTable transitionTable = TransitionTable.fromNFA(nfa);
 		this.variableSummary = nfa.variableSummary();
 		this.variableOrdering = VariableOrdering.determineOrdering(variableSummary, transitionTable);
 
-		BDDVariableFactory bddVariableFactory = new BDDVariableFactory();
-		BDDVariables bddVariables = new BDDVariables(variableOrdering, bddVariableFactory);
+		bddVariableFactory = new BDDVariableFactory();
+		bddVariables = new BDDVariables(variableOrdering, bddVariableFactory);
 
+		symbolsByStateId = nfa.symbolsByStateId();
+		startingFrom = fromState(nfa.initialState());
 		transitionBddTable = computeTransitionTable(variableOrdering, bddVariables, transitionTable);
 		characterBddSets = computeCharacterBddSets(variableOrdering, nfa.characterTransitions(), variableSummary, bddVariables);
 		acceptanceBddSet = computeAcceptanceSet(variableOrdering, nfa, variableSummary, bddVariables);
-		existsFromStateAndCharacter = existsFromStateAndCharacter(variableOrdering, bddVariableFactory, variableSummary);
-		relabelToStateToFromState = relabelToStateToFromState(variableOrdering, bddVariableFactory, bddVariables);
-		frontier = initialFrontier(variableOrdering, bddVariables, variableSummary, nfa.initialState());
-		symbolsByStateId = nfa.symbolsByStateId();
 	}
 
 	private BDDVariable computeTransitionTable(VariableOrdering variableOrders, BDDVariables bddVariables, TransitionTable transitionTable) {
@@ -51,7 +48,7 @@ public class BFA {
 		return bddDisjunction;
 	}
 
-	private static BDDVariable bddRow(List<VariableOrder> variableOrders, BDDVariables bddVariables, SetVariables setVariables) {
+	public static BDDVariable bddRow(List<VariableOrder> variableOrders, BDDVariables bddVariables, SetVariables setVariables) {
 		BDDVariable bddRow = setVariable(bddVariables, setVariables, variableOrders.get(0));
 		for (int i = 1; i < variableOrders.size(); i++) {
 			BDDVariable bddVariable = setVariable(bddVariables, setVariables, variableOrders.get(i));
@@ -66,50 +63,6 @@ public class BFA {
 		} else {
 			return bddVariables.notVariable(variableOrder.order());
 		}
-	}
-
-	public Optional<Symbol> scan(char character) {
-		frontier = frontier.andTo(transitionBddTable);
-		frontier = frontier.andTo(characterBddSets.get(character));
-		frontier = frontier.existsTo(existsFromStateAndCharacter);
-		BDDVariable acceptCheck = acceptanceBddSet.and(frontier);
-		frontier = frontier.replaceTo(relabelToStateToFromState);
-
-		boolean accepted = acceptCheck.isZero();
-		if (accepted) {
-			BDDVariableAssignment assignment = acceptCheck.oneSatisfyingAssignment();
-			acceptCheck.discard();
-			int stateIndex = lookupToState(variableOrdering, assignment, variableSummary);
-			Symbol acceptedSymbol = symbolsByStateId.get(stateIndex);
-			return Optional.of(acceptedSymbol);
-		}
-		acceptCheck.discard();
-		return Optional.empty();
-	}
-
-	private int lookupToState(VariableOrdering variableOrdering, BDDVariableAssignment accepted, VariableSummary variableSummary) {
-		return accepted.assignedIndexes().map(variableOrdering::id).map(variableSummary::unprojectToIdBitPosition).map(bitPosition -> 1 << bitPosition).reduce(0, (a, b) -> a | b);
-	}
-
-	private Permutation relabelToStateToFromState(VariableOrdering variableOrdering, BDDVariableFactory bdd, BDDVariables bddVariables) {
-		Stream<BDDVariable> toVariables = variableOrdering.toStateVariablesInOriginalOrder().map(VariableOrder::order).map(bddVariables::variable);
-		Stream<BDDVariable> fromVariables = variableOrdering.fromStateVariablesInOriginalOrder().map(VariableOrder::order).map(bddVariables::variable);
-		return bdd.createPermutation(toVariables, fromVariables);
-	}
-
-	private BDDVariable existsFromStateAndCharacter(VariableOrdering variableOrders, BDDVariableFactory bdd, VariableSummary variableSummary) {
-		List<Integer> fromStateOrCharacterVariables = variableOrders.fromStateOrCharacterVariables().map(VariableOrder::order).collect(toList());
-		boolean[] setVariables = new boolean[variableSummary.bitsPerRow()];
-		for (int present : fromStateOrCharacterVariables) {
-			setVariables[present] = true;
-		}
-		return bdd.newCube(setVariables);
-	}
-
-	private BDDVariable initialFrontier(VariableOrdering variableOrders, BDDVariables bddVariables, VariableSummary variableSummary, State initial) {
-		List<VariableOrder> fromStateVariableOrders = variableOrders.fromStateVariables().collect(toList());
-		SetVariables fromState = SetVariables.fromState(variableSummary, initial);
-		return bddRow(fromStateVariableOrders, bddVariables, fromState);
 	}
 
 	private Char2ObjectMap<BDDVariable> computeCharacterBddSets(VariableOrdering variableOrders, List<CharacterTransition> characterTransitions, VariableSummary variableSummary, BDDVariables bddVariables) {
@@ -136,5 +89,51 @@ public class BFA {
 			bddDisjunction = bddDisjunction.orTo(bddRow);
 		}
 		return bddDisjunction;
+	}
+
+	public BDDVariable transitionBddTable() {
+		return transitionBddTable;
+	}
+
+	public BDDVariable characterBddSet(char character) {
+		return characterBddSets.get(character);
+	}
+
+	public BDDVariable acceptanceBddSet() {
+		return acceptanceBddSet;
+	}
+
+
+	public int lookupToState(BDDVariableAssignment accepted) {
+		return accepted.assignedIndexes().map(variableOrdering::id).map(variableSummary::unprojectToIdBitPosition).map(bitPosition -> 1 << bitPosition).reduce(0, (a, b) -> a | b);
+	}
+
+	public BDDVariable existsFromStateAndCharacter() {
+		List<Integer> fromStateOrCharacterVariables = variableOrdering.fromStateOrCharacterVariables().map(VariableOrder::order).collect(toList());
+		boolean[] setVariables = new boolean[variableSummary.bitsPerRow()];
+		for (int present : fromStateOrCharacterVariables) {
+			setVariables[present] = true;
+		}
+		return bddVariableFactory.newCube(setVariables);
+	}
+
+	public Permutation relabelToStateToFromState() {
+		Stream<BDDVariable> toVariables = variableOrdering.toStateVariablesInOriginalOrder().map(VariableOrder::order).map(bddVariables::variable);
+		Stream<BDDVariable> fromVariables = variableOrdering.fromStateVariablesInOriginalOrder().map(VariableOrder::order).map(bddVariables::variable);
+		return bddVariableFactory.createPermutation(toVariables, fromVariables);
+	}
+
+	private BDDVariable fromState(State state) {
+		List<VariableOrder> fromStateVariableOrders = variableOrdering.fromStateVariables().collect(toList());
+		SetVariables fromState = SetVariables.fromState(variableSummary, state);
+		return BFA.bddRow(fromStateVariableOrders, bddVariables, fromState);
+	}
+
+	public BDDVariable startState() {
+		return startingFrom;
+	}
+
+	public Symbol symbolForStateIndex(int stateIndex) {
+		return symbolsByStateId.get(stateIndex);
 	}
 }

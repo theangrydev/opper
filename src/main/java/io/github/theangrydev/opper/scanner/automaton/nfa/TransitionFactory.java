@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper.scanner.automaton;
+package io.github.theangrydev.opper.scanner.automaton.nfa;
 
 import it.unimi.dsi.fastutil.chars.Char2ObjectArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2ObjectMap;

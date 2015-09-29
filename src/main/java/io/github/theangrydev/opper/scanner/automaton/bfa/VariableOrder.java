@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper.scanner.bdd;
+package io.github.theangrydev.opper.scanner.automaton.bfa;
 
 public class VariableOrder {
 	private final int order;

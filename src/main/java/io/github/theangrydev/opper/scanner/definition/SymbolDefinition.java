@@ -1,10 +1,10 @@
 package io.github.theangrydev.opper.scanner.definition;
 
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.scanner.automaton.State;
-import io.github.theangrydev.opper.scanner.automaton.StateFactory;
-import io.github.theangrydev.opper.scanner.automaton.SymbolOwnedStateGenerator;
-import io.github.theangrydev.opper.scanner.automaton.TransitionFactory;
+import io.github.theangrydev.opper.scanner.automaton.nfa.State;
+import io.github.theangrydev.opper.scanner.automaton.nfa.StateFactory;
+import io.github.theangrydev.opper.scanner.automaton.nfa.SymbolOwnedStateGenerator;
+import io.github.theangrydev.opper.scanner.automaton.nfa.TransitionFactory;
 
 public class SymbolDefinition {
 	private final Symbol symbol;

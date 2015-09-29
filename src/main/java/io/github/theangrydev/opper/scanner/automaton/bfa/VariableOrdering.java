@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper.scanner.bdd;
+package io.github.theangrydev.opper.scanner.automaton.bfa;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
 

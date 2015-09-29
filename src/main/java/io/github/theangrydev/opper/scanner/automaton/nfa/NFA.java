@@ -1,9 +1,8 @@
-package io.github.theangrydev.opper.scanner.automaton;
+package io.github.theangrydev.opper.scanner.automaton.nfa;
 
 import com.google.common.collect.Multiset;
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.scanner.automaton.State.TransitionVisitor;
-import io.github.theangrydev.opper.scanner.bdd.VariableSummary;
+import io.github.theangrydev.opper.scanner.automaton.bfa.VariableSummary;
 import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 
 import java.util.List;
@@ -63,7 +62,7 @@ public class NFA {
 		return characterTransitions;
 	}
 
-	public void visitTransitions(TransitionVisitor transitionVisitor) {
+	public void visitTransitions(State.TransitionVisitor transitionVisitor) {
 		states.forEach(state -> state.visitTransitions(transitionVisitor));
 	}
 

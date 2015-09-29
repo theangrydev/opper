@@ -1,7 +1,7 @@
 package io.github.theangrydev.opper.scanner.definition;
 
-import io.github.theangrydev.opper.scanner.automaton.State;
-import io.github.theangrydev.opper.scanner.automaton.SymbolOwnedStateGenerator;
+import io.github.theangrydev.opper.scanner.automaton.nfa.State;
+import io.github.theangrydev.opper.scanner.automaton.nfa.SymbolOwnedStateGenerator;
 
 import java.util.Arrays;
 import java.util.List;

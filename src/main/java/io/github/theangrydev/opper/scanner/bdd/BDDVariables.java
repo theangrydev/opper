@@ -8,14 +8,14 @@ public class BDDVariables {
 	private final List<BDDVariable> bddVariables;
 	private final List<BDDVariable> bddNotVariables;
 
-	public BDDVariables(VariableOrdering variableOrdering, BDDVariableFactory bddVariableFactory) {
-		bddVariables = new ArrayList<>(variableOrdering.numberOfVariables());
-		for (int i = 0; i < variableOrdering.numberOfVariables(); i++) {
+	public BDDVariables(int numberOfVariables, BDDVariableFactory bddVariableFactory) {
+		bddVariables = new ArrayList<>(numberOfVariables);
+		for (int i = 0; i < numberOfVariables; i++) {
 			bddVariables.add(bddVariableFactory.newVariable());
 		}
 
-		bddNotVariables = new ArrayList<>(variableOrdering.numberOfVariables());
-		for (int i = 0; i < variableOrdering.numberOfVariables(); i++) {
+		bddNotVariables = new ArrayList<>(numberOfVariables);
+		for (int i = 0; i < numberOfVariables; i++) {
 			bddNotVariables.add(bddVariables.get(i).not());
 		}
 	}

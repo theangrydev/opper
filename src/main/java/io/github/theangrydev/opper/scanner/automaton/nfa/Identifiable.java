@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper.scanner.automaton;
+package io.github.theangrydev.opper.scanner.automaton.nfa;
 
 public interface Identifiable {
 	int id();

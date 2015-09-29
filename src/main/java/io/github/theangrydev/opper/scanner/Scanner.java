@@ -2,9 +2,9 @@ package io.github.theangrydev.opper.scanner;
 
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.scanner.automaton.NFA;
+import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
 import io.github.theangrydev.opper.scanner.bdd.BDDVariable;
-import io.github.theangrydev.opper.scanner.bdd.BFA;
+import io.github.theangrydev.opper.scanner.automaton.bfa.BFA;
 import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 
 import java.util.List;

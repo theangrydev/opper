@@ -1,7 +1,13 @@
-package io.github.theangrydev.opper.scanner.bdd;
+package io.github.theangrydev.opper.scanner.automaton.bfa;
 
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.scanner.automaton.*;
+import io.github.theangrydev.opper.scanner.automaton.nfa.CharacterTransition;
+import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
+import io.github.theangrydev.opper.scanner.automaton.nfa.State;
+import io.github.theangrydev.opper.scanner.bdd.BDDVariable;
+import io.github.theangrydev.opper.scanner.bdd.BDDVariableAssignment;
+import io.github.theangrydev.opper.scanner.bdd.BDDVariableFactory;
+import io.github.theangrydev.opper.scanner.bdd.BDDVariables;
 import it.unimi.dsi.fastutil.chars.Char2ObjectArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
 import jdd.bdd.Permutation;
@@ -30,7 +36,7 @@ public class BFA {
 		VariableOrdering variableOrdering = VariableOrdering.determineOrdering(variableSummary, transitionTable);
 
 		BDDVariableFactory bddVariableFactory = new BDDVariableFactory();
-		BDDVariables bddVariables = new BDDVariables(variableOrdering, bddVariableFactory);
+		BDDVariables bddVariables = new BDDVariables(variableOrdering.numberOfVariables(), bddVariableFactory);
 		List<Symbol> symbolsByStateId = nfa.symbolsByStateId();
 		BDDVariable startingFrom = fromState(variableOrdering, variableSummary, bddVariables, nfa.initialState());
 		BDDVariable transitionBddTable = computeTransitionTable(variableOrdering, bddVariables, transitionTable);

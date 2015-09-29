@@ -1,8 +1,8 @@
-package io.github.theangrydev.opper.scanner.bdd;
+package io.github.theangrydev.opper.scanner.automaton.bfa;
 
-import io.github.theangrydev.opper.scanner.automaton.CharacterTransition;
-import io.github.theangrydev.opper.scanner.automaton.State;
-import io.github.theangrydev.opper.scanner.automaton.Transition;
+import io.github.theangrydev.opper.scanner.automaton.nfa.CharacterTransition;
+import io.github.theangrydev.opper.scanner.automaton.nfa.State;
+import io.github.theangrydev.opper.scanner.automaton.nfa.Transition;
 
 import java.util.BitSet;
 

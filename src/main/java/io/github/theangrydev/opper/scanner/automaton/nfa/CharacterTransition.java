@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper.scanner.automaton;
+package io.github.theangrydev.opper.scanner.automaton.nfa;
 
 public class CharacterTransition implements Transition {
 

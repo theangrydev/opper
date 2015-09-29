@@ -37,13 +37,13 @@ public class BFA {
 
 		BDDVariableFactory bddVariableFactory = new BDDVariableFactory();
 		BDDVariables bddVariables = new BDDVariables(variableOrdering.numberOfVariables(), bddVariableFactory);
-		List<Symbol> symbolsByStateId = nfa.symbolsByStateId();
 		BDDVariable startingFrom = fromState(variableOrdering, variableSummary, bddVariables, nfa.initialState());
 		BDDVariable transitionBddTable = computeTransitionTable(variableOrdering, bddVariables, transitionTable);
 		Char2ObjectMap<BDDVariable>  characterBddSets = computeCharacterBddSets(variableOrdering, nfa.characterTransitions(), variableSummary, bddVariables);
 		BDDVariable acceptanceBddSet = computeAcceptanceSet(variableOrdering, nfa, variableSummary, bddVariables);
 		Permutation relabelToStateToFromState = relabelToStateToFromState(variableOrdering, bddVariables, bddVariableFactory);
 		BDDVariable existsFromStateAndCharacter = existsFromStateAndCharacter(variableOrdering, variableSummary, bddVariableFactory);
+		List<Symbol> symbolsByStateId = nfa.symbolsByStateId();
 		return new BFA(transitionBddTable, characterBddSets, acceptanceBddSet, startingFrom, variableOrdering, variableSummary, symbolsByStateId, relabelToStateToFromState, existsFromStateAndCharacter);
 	}
 

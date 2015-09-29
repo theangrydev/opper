@@ -21,7 +21,7 @@ public class BFABuilder {
 	public static BFA convertToBFA(NFA nfa) {
 		TransitionTable transitionTable = TransitionTable.fromNFA(nfa);
 		VariableSummary variableSummary = nfa.variableSummary();
-		VariableOrdering variableOrdering = VariableOrdering.determineOrdering(variableSummary, transitionTable);
+		VariableOrdering variableOrdering = VariableOrderingComputer.determineOrdering(variableSummary, transitionTable);
 
 		BDDVariableFactory bddVariableFactory = new BDDVariableFactory();
 		BDDVariables bddVariables = new BDDVariables(variableOrdering.numberOfVariables(), bddVariableFactory);

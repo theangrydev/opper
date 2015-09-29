@@ -7,12 +7,14 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
 import java.math.RoundingMode;
+import java.util.List;
 
 public class VariableSummary {
 
 	private final int bitsForStates;
 	private final int bitsForCharacters;
 	private final int bitsPerRow;
+	private List<Integer> variables;
 
 	public VariableSummary(int numberOfStates, int numberOfCharacters) {
 		bitsForStates = IntMath.log2(numberOfStates, RoundingMode.FLOOR) + 1;
@@ -103,5 +105,13 @@ public class VariableSummary {
 			allVariables.add(i);
 		}
 		return allVariables;
+	}
+
+	public boolean[] presentVariables(List<Integer> presentVariableIndexes) {
+		boolean[] presentVariables = new boolean[bitsPerRow()];
+		for (int presentVariableIndex : presentVariableIndexes) {
+			presentVariables[presentVariableIndex] = true;
+		}
+		return presentVariables;
 	}
 }

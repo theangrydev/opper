@@ -32,7 +32,7 @@ public class Scanner implements Corpus {
 		bfa = BFA.convertToBFA(nfa);
 		existsFromStateAndCharacter = bfa.existsFromStateAndCharacter();
 		relabelToStateToFromState = bfa.relabelToStateToFromState();
-		frontier = bfa.startState();
+		frontier = bfa.initialState();
 	}
 
 	@Override

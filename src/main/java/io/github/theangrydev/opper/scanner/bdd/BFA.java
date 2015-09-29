@@ -16,7 +16,7 @@ public class BFA {
 	private final BDDVariable transitionBddTable;
 	private final Char2ObjectMap<BDDVariable> characterBddSets;
 	private final BDDVariable acceptanceBddSet;
-	private final BDDVariable startingFrom;
+	private final BDDVariable initialState;
 	private final VariableOrdering variableOrdering;
 	private final VariableSummary variableSummary;
 	private final BDDVariableFactory bddVariableFactory;
@@ -38,11 +38,11 @@ public class BFA {
 		return new BFA(transitionBddTable, characterBddSets, acceptanceBddSet, startingFrom, variableOrdering, variableSummary, bddVariableFactory, bddVariables, symbolsByStateId);
 	}
 
-	private BFA(BDDVariable transitionBddTable, Char2ObjectMap<BDDVariable> characterBddSets, BDDVariable acceptanceBddSet, BDDVariable startingFrom, VariableOrdering variableOrdering, VariableSummary variableSummary, BDDVariableFactory bddVariableFactory, BDDVariables bddVariables, List<Symbol> symbolsByStateId) {
+	private BFA(BDDVariable transitionBddTable, Char2ObjectMap<BDDVariable> characterBddSets, BDDVariable acceptanceBddSet, BDDVariable initialState, VariableOrdering variableOrdering, VariableSummary variableSummary, BDDVariableFactory bddVariableFactory, BDDVariables bddVariables, List<Symbol> symbolsByStateId) {
 		this.transitionBddTable = transitionBddTable;
 		this.characterBddSets = characterBddSets;
 		this.acceptanceBddSet = acceptanceBddSet;
-		this.startingFrom = startingFrom;
+		this.initialState = initialState;
 		this.variableOrdering = variableOrdering;
 		this.variableSummary = variableSummary;
 		this.bddVariableFactory = bddVariableFactory;
@@ -140,8 +140,8 @@ public class BFA {
 		return bddVariableFactory.createPermutation(toVariables, fromVariables);
 	}
 
-	public BDDVariable startState() {
-		return startingFrom;
+	public BDDVariable initialState() {
+		return initialState;
 	}
 
 	public Symbol symbolForStateIndex(int stateIndex) {

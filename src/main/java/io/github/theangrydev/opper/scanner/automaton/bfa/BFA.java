@@ -133,14 +133,6 @@ public class BFA {
 		return variableFactory.newCube(setVariables);
 	}
 
-	public BDDVariable transitionBddTable() {
-		return transitionBddTable;
-	}
-
-	public BDDVariable characterBddSet(char character) {
-		return characterBddSets.get(character);
-	}
-
 	public BDDVariable relabelToStateToFromState(BDDVariable frontier) {
 		return frontier.replaceTo(relabelToStateToFromState);
 	}
@@ -149,7 +141,7 @@ public class BFA {
 		return initialState;
 	}
 
-	public Symbol symbolForAssignment(BDDVariableAssignment assignment) {
+	private Symbol symbolForAssignment(BDDVariableAssignment assignment) {
 		return symbolsByStateId.get(lookupToState(assignment));
 	}
 
@@ -175,8 +167,8 @@ public class BFA {
 	}
 
 	public BDDVariable transition(BDDVariable frontier, char character) {
-		frontier = frontier.andTo(transitionBddTable());
-		frontier = frontier.andTo(characterBddSet(character));
+		frontier = frontier.andTo(transitionBddTable);
+		frontier = frontier.andTo(characterBddSets.get(character));
 		return frontier.existsTo(existsFromStateAndCharacter);
 	}
 }

@@ -82,7 +82,7 @@ public class BFA {
 		}
 	}
 
-	public Optional<Symbol> something(char character) {
+	public Optional<Symbol> scan(char character) {
 		System.out.println("character=" + character);
 		frontier = frontier.andTo(transitionBddTable);
 		System.out.println("possible transitions=");

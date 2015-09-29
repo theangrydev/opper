@@ -36,7 +36,7 @@ public class BDDScanner implements Corpus {
 			System.out.println("index=" + index);
 			char character = charactersToParse[index++];
 
-			Optional<Symbol> next = bfa.something(character);
+			Optional<Symbol> next = bfa.scan(character);
 			if (next.isPresent()) {
 				this.next = next.get();
 				return true;

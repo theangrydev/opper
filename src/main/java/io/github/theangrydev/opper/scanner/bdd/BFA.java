@@ -134,14 +134,6 @@ public class BFA {
 		return characterBddSets.get(character);
 	}
 
-	public BDDVariable acceptanceBddSet() {
-		return acceptanceBddSet;
-	}
-
-	public int lookupToState(BDDVariableAssignment accepted) {
-		return accepted.assignedIndexes().map(variableOrdering::id).map(variableSummary::unprojectToIdBitPosition).map(bitPosition -> 1 << bitPosition).reduce(0, (a, b) -> a | b);
-	}
-
 	public BDDVariable existsFromStateAndCharacter() {
 		return existsFromStateAndCharacter;
 	}
@@ -154,7 +146,25 @@ public class BFA {
 		return initialState;
 	}
 
-	public Symbol symbolForStateIndex(int stateIndex) {
-		return symbolsByStateId.get(stateIndex);
+	public Symbol symbolForAssignment(BDDVariableAssignment assignment) {
+		return symbolsByStateId.get(lookupToState(assignment));
+	}
+
+	private int lookupToState(BDDVariableAssignment assignment) {
+		return assignment.assignedIndexes()
+			.map(variableOrdering::id)
+			.map(variableSummary::unprojectToIdBitPosition)
+			.map(bitPosition -> 1 << bitPosition)
+			.reduce(0, (a, b) -> a | b);
+	}
+
+	public BDDVariable checkAcceptance(BDDVariable frontier) {
+		return acceptanceBddSet.and(frontier);
+	}
+
+	public BDDVariable transition(BDDVariable frontier, char character) {
+		frontier = frontier.andTo(transitionBddTable());
+		frontier = frontier.andTo(characterBddSet(character));
+		return frontier.existsTo(existsFromStateAndCharacter);
 	}
 }

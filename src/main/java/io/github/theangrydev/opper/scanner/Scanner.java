@@ -1,15 +1,18 @@
-package io.github.theangrydev.opper.scanner.bdd;
+package io.github.theangrydev.opper.scanner;
 
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.scanner.automaton.NFA;
+import io.github.theangrydev.opper.scanner.bdd.BDDVariable;
+import io.github.theangrydev.opper.scanner.bdd.BDDVariableAssignment;
+import io.github.theangrydev.opper.scanner.bdd.BFA;
 import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 import jdd.bdd.Permutation;
 
 import java.util.List;
 import java.util.Optional;
 
-public class BDDScanner implements Corpus {
+public class Scanner implements Corpus {
 
 	private final char[] charactersToParse;
 	private final BFA bfa;
@@ -19,7 +22,7 @@ public class BDDScanner implements Corpus {
 	private Symbol next;
 	private int index;
 
-	public BDDScanner(List<SymbolDefinition> symbolDefinitions, char... charactersToParse) {
+	public Scanner(List<SymbolDefinition> symbolDefinitions, char... charactersToParse) {
 		this.charactersToParse = charactersToParse;
 		NFA nfa = NFA.convertToNFA(symbolDefinitions);
 		nfa.removeEpsilionTransitions();

@@ -1,7 +1,8 @@
-package io.github.theangrydev.opper.scanner.definition;
+package io.github.theangrydev.opper.scanner;
 
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.scanner.bdd.BDDScanner;
+import io.github.theangrydev.opper.scanner.definition.Expression;
+import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ import static io.github.theangrydev.opper.scanner.definition.ConcatenateExpressi
 import static io.github.theangrydev.opper.scanner.definition.RepeatExpression.repeat;
 import static java.util.Collections.singletonList;
 
-public class BDDScannerTest implements WithAssertions {
+public class ScannerTest implements WithAssertions {
 
 	@Test
 	public void shouldScanASimpleExpression() {
@@ -22,15 +23,15 @@ public class BDDScannerTest implements WithAssertions {
 		Symbol symbol = new Symbol(1, "symbol");
 		SymbolDefinition symbolDefinition = new SymbolDefinition(symbol, expression);
 
-		BDDScanner bddScanner = new BDDScanner(singletonList(symbolDefinition), 'c', 'd', 'c', 'd', 'a', 'b');
+		Scanner scanner = new Scanner(singletonList(symbolDefinition), 'c', 'd', 'c', 'd', 'a', 'b');
 
-		assertThat(allSymbolsThatCanBeScanned(bddScanner)).containsOnly(symbol).hasSize(4);
+		assertThat(allSymbolsThatCanBeScanned(scanner)).containsOnly(symbol).hasSize(4);
 	}
 
-	private List<Symbol> allSymbolsThatCanBeScanned(BDDScanner bddScanner) {
+	private List<Symbol> allSymbolsThatCanBeScanned(Scanner scanner) {
 		List<Symbol> accepted = new ArrayList<>();
-		while (bddScanner.hasNextSymbol()) {
-			accepted.add(bddScanner.nextSymbol());
+		while (scanner.hasNextSymbol()) {
+			accepted.add(scanner.nextSymbol());
 		}
 		return accepted;
 	}

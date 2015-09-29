@@ -43,9 +43,7 @@ public class Scanner implements Corpus {
 	@Override
 	public boolean hasNextSymbol() {
 		while (index < charactersToParse.length) {
-			System.out.println("index=" + index);
 			char character = charactersToParse[index++];
-
 			Optional<Symbol> next = scan(character);
 			if (next.isPresent()) {
 				this.next = next.get();

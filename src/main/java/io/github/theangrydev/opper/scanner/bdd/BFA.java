@@ -8,7 +8,6 @@ import jdd.bdd.Permutation;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -40,17 +39,6 @@ public class BFA {
 		relabelToStateToFromState = relabelToStateToFromState(variableOrdering, bddVariableFactory, bddVariables);
 		frontier = initialFrontier(variableOrdering, bddVariables, variableSummary, nfa.initialState());
 		symbolsByStateId = nfa.symbolsByStateId();
-
-		System.out.println("characterIds=" + nfa.characterTransitions());
-		System.out.println("states=" + nfa.states().stream().map(Object::toString).collect(Collectors.joining("\n")));
-		System.out.println("characterSets=");
-		characterBddSets.entrySet().forEach(entry -> {
-			System.out.print(entry.getKey() + ": ");
-			entry.getValue().printSet();
-		});
-
-		System.out.println("initial frontier=");
-		frontier.printSet();
 	}
 
 	private BDDVariable computeTransitionTable(VariableOrdering variableOrders, BDDVariables bddVariables, TransitionTable transitionTable) {
@@ -81,39 +69,16 @@ public class BFA {
 	}
 
 	public Optional<Symbol> scan(char character) {
-		System.out.println("character=" + character);
 		frontier = frontier.andTo(transitionBddTable);
-		System.out.println("possible transitions=");
-		frontier.printSet();
-
-		BDDVariable characterBddSet = characterBddSets.get(character);
-		System.out.println("scanned character=");
-		characterBddSet.printSet();
-
-		frontier = frontier.andTo(characterBddSet);
-		System.out.println("possible transitions given scanned character=");
-		frontier.printSet();
-
+		frontier = frontier.andTo(characterBddSets.get(character));
 		frontier = frontier.existsTo(existsFromStateAndCharacter);
-		System.out.println("possible to states=");
-		frontier.printSet();
-
-		System.out.println("accepted to states=");
-		acceptanceBddSet.printSet();
-
 		BDDVariable acceptCheck = acceptanceBddSet.and(frontier);
-		System.out.println("possible acceptance=");
-		acceptCheck.printSet();
-
 		frontier = frontier.replaceTo(relabelToStateToFromState);
-		System.out.println("next frontier=");
-		frontier.printSet();
 
 		boolean accepted = acceptCheck.isZero();
 		if (accepted) {
 			BDDVariableAssignment assignment = acceptCheck.oneSatisfyingAssignment();
 			acceptCheck.discard();
-			System.out.println("accepted=" + assignment);
 			int stateIndex = lookupToState(variableOrdering, assignment, variableSummary);
 			Symbol acceptedSymbol = symbolsByStateId.get(stateIndex);
 			return Optional.of(acceptedSymbol);

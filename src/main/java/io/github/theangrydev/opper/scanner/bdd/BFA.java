@@ -60,7 +60,7 @@ public class BFA {
 		return bddDisjunction;
 	}
 
-	public static BDDVariable bddRow(List<VariableOrder> variableOrders, BDDVariables bddVariables, SetVariables setVariables) {
+	private static BDDVariable bddRow(List<VariableOrder> variableOrders, BDDVariables bddVariables, SetVariables setVariables) {
 		BDDVariable bddRow = setVariable(bddVariables, setVariables, variableOrders.get(0));
 		for (int i = 1; i < variableOrders.size(); i++) {
 			BDDVariable bddVariable = setVariable(bddVariables, setVariables, variableOrders.get(i));

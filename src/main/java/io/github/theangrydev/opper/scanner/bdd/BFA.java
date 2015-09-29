@@ -102,7 +102,7 @@ public class BFA {
 		System.out.println("accepted to states=");
 		acceptanceBddSet.printSet();
 
-		BDDVariable acceptCheck = acceptanceBddSet.and(frontier); //bdd.ref(bdd.and(acceptanceBddSet, frontier));
+		BDDVariable acceptCheck = acceptanceBddSet.and(frontier);
 		System.out.println("possible acceptance=");
 		acceptCheck.printSet();
 

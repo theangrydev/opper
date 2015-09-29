@@ -38,8 +38,8 @@ public class BFABuilder {
 		List<SetVariables> transitions = transitionTable.transitions();
 		BinaryDecisionDiagram allTransitions = specifyVariables(variableOrders.allVariables(), allVariables, transitions.get(0));
 		for (int i = 1; i < transitions.size(); i++) {
-			BinaryDecisionDiagram bddRow = specifyVariables(variableOrders.allVariables(), allVariables, transitions.get(i));
-			allTransitions = allTransitions.orTo(bddRow);
+			BinaryDecisionDiagram transition = specifyVariables(variableOrders.allVariables(), allVariables, transitions.get(i));
+			allTransitions = allTransitions.orTo(transition);
 		}
 		return allTransitions;
 	}
@@ -59,22 +59,21 @@ public class BFABuilder {
 		List<State> acceptanceStates = nfa.acceptanceStates();
 		List<VariableOrder> toStateVariables = variableOrdering.toStateVariables().collect(toList());
 
-		SetVariables firstToState = SetVariables.toState(variableSummary, acceptanceStates.get(0));
-		BinaryDecisionDiagram acceptanceSet = specifyVariables(toStateVariables, allVariables, firstToState);
+		SetVariables firstAcceptanceState = SetVariables.toState(variableSummary, acceptanceStates.get(0));
+		BinaryDecisionDiagram acceptingStates = specifyVariables(toStateVariables, allVariables, firstAcceptanceState);
 		for (int i = 1; i < acceptanceStates.size(); i++) {
 			State state = acceptanceStates.get(i);
-			SetVariables toState = SetVariables.toState(variableSummary, state);
-			BinaryDecisionDiagram acceptingState = specifyVariables(toStateVariables, allVariables, toState);
-			acceptanceSet = acceptanceSet.orTo(acceptingState);
+			BinaryDecisionDiagram acceptingState = specifyVariables(toStateVariables, allVariables, SetVariables.toState(variableSummary, state));
+			acceptingStates = acceptingStates.orTo(acceptingState);
 		}
-		return acceptanceSet;
+		return acceptingStates;
 	}
 
 	private static BinaryDecisionDiagram specifyVariables(List<VariableOrder> variablesToSpecify, AllVariables allVariables, SetVariables setVariables) {
 		BinaryDecisionDiagram specifiedVariables = specifiyVariable(allVariables, setVariables, variablesToSpecify.get(0));
 		for (int i = 1; i < variablesToSpecify.size(); i++) {
-			BinaryDecisionDiagram binaryDecisionDiagram = specifiyVariable(allVariables, setVariables, variablesToSpecify.get(i));
-			specifiedVariables = specifiedVariables.andTo(binaryDecisionDiagram);
+			BinaryDecisionDiagram specifiedVariable = specifiyVariable(allVariables, setVariables, variablesToSpecify.get(i));
+			specifiedVariables = specifiedVariables.andTo(specifiedVariable);
 		}
 		return specifiedVariables;
 	}

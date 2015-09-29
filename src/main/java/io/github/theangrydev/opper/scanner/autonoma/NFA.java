@@ -6,8 +6,11 @@ import io.github.theangrydev.opper.scanner.bdd.VariableSummary;
 import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 
 import java.util.List;
+import java.util.stream.Stream;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
 
 public class NFA {
 	private final State initialState;
@@ -80,5 +83,13 @@ public class NFA {
 		StateStatistics stateStatistics = new StateStatistics();
 		states.forEach(stateStatistics::record);
 		return stateStatistics;
+	}
+
+	public List<State> acceptanceStates() {
+		return states.stream().filter(State::isAccepting).collect(toList());
+	}
+
+	public List<State> statesById() {
+		return concat(Stream.of((State) null), states().stream().sorted(comparing(State::id))).collect(toList());
 	}
 }

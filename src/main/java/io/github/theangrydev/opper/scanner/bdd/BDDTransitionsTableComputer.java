@@ -1,19 +1,18 @@
 package io.github.theangrydev.opper.scanner.bdd;
 
-import io.github.theangrydev.opper.scanner.autonoma.TransitionTable;
 import io.github.theangrydev.opper.scanner.autonoma.SetVariables;
+import io.github.theangrydev.opper.scanner.autonoma.TransitionTable;
 import io.github.theangrydev.opper.scanner.autonoma.VariableOrdering;
-import jdd.bdd.BDD;
 
 import java.util.List;
 
 public class BDDTransitionsTableComputer {
-	public int compute(VariableOrdering variableOrders, BDD bdd, BDDVariables bddVariables, TransitionTable transitionTable) {
+	public BDDVariable compute(VariableOrdering variableOrders, BDDVariables bddVariables, TransitionTable transitionTable) {
 		List<SetVariables> transitions = transitionTable.transitions();
-		int bddDisjunction = BDDRowComputer.bddRow(variableOrders.allVariables(), bdd, bddVariables, transitions.get(0));
+		BDDVariable bddDisjunction = BDDRowComputer.bddRow(variableOrders.allVariables(), bddVariables, transitions.get(0));
 		for (int i = 1; i < transitions.size(); i++) {
-			int bddRow = BDDRowComputer.bddRow(variableOrders.allVariables(), bdd, bddVariables, transitions.get(i));
-			bddDisjunction = bdd.orTo(bddDisjunction, bddRow);
+			BDDVariable bddRow = BDDRowComputer.bddRow(variableOrders.allVariables(), bddVariables, transitions.get(i));
+			bddDisjunction = bddDisjunction.orTo(bddRow);
 		}
 		return bddDisjunction;
 	}

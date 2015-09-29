@@ -1,35 +1,35 @@
 package io.github.theangrydev.opper.scanner.bdd;
 
 import io.github.theangrydev.opper.scanner.autonoma.VariableOrdering;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
-import jdd.bdd.BDD;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BDDVariables {
 
-	private final IntList bddVariables;
-	private final IntList bddNotVariables;
+	private final List<BDDVariable> bddVariables;
+	private final List<BDDVariable> bddNotVariables;
 
-	public BDDVariables(BDD bdd, VariableOrdering variableOrdering) {
+	public BDDVariables(VariableOrdering variableOrdering, BDDVariableFactory bddVariableFactory) {
 		System.out.println("variable order=" + variableOrdering);
-		bddVariables = new IntArrayList(variableOrdering.numberOfVariables());
+		bddVariables = new ArrayList<>(variableOrdering.numberOfVariables());
 		for (int i = 0; i < variableOrdering.numberOfVariables(); i++) {
-			bddVariables.add(bdd.createVar());
+			bddVariables.add(bddVariableFactory.newVariable());
 		}
 		System.out.println("bddVariables=" + bddVariables);
 
-		bddNotVariables = new IntArrayList(variableOrdering.numberOfVariables());
+		bddNotVariables = new ArrayList<>(variableOrdering.numberOfVariables());
 		for (int i = 0; i < variableOrdering.numberOfVariables(); i++) {
-			bddNotVariables.add(bdd.not(bddVariables.getInt(i)));
+			bddNotVariables.add(bddVariables.get(i).not());
 		}
 		System.out.println("bddNotVariables=" + bddNotVariables);
 	}
 
-	public int variable(int variableIndex) {
-		return bddVariables.getInt(variableIndex);
+	public BDDVariable variable(int variableIndex) {
+		return bddVariables.get(variableIndex);
 	}
 
-	public int notVariable(int variableIndex) {
-		return bddNotVariables.getInt(variableIndex);
+	public BDDVariable notVariable(int variableIndex) {
+		return bddNotVariables.get(variableIndex);
 	}
 }

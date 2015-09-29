@@ -23,79 +23,79 @@ public class BFABuilder {
 		VariableOrdering variableOrdering = VariableOrderingComputer.determineOrdering(variableSummary, transitionTable);
 
 		BinaryDecisionDiagramFactory binaryDecisionDiagramFactory = new BinaryDecisionDiagramFactory();
-		BinaryDecisionDiagramVariables binaryDecisionDiagramVariables = new BinaryDecisionDiagramVariables(variableOrdering.numberOfVariables(), binaryDecisionDiagramFactory);
-		BinaryDecisionDiagram startingFrom = fromState(variableOrdering, variableSummary, binaryDecisionDiagramVariables, nfa.initialState());
-		BinaryDecisionDiagram transitionBddTable = computeTransitionTable(variableOrdering, binaryDecisionDiagramVariables, transitionTable);
-		Char2ObjectMap<BinaryDecisionDiagram> characterBddSets = computeCharacterBddSets(variableOrdering, nfa.characterTransitions(), variableSummary, binaryDecisionDiagramVariables);
-		BinaryDecisionDiagram acceptanceBddSet = computeAcceptanceSet(variableOrdering, nfa, variableSummary, binaryDecisionDiagramVariables);
-		Permutation relabelToStateToFromState = relabelToStateToFromState(variableOrdering, binaryDecisionDiagramVariables, binaryDecisionDiagramFactory);
+		AllVariables allVariables = new AllVariables(variableOrdering.numberOfVariables(), binaryDecisionDiagramFactory);
+		BinaryDecisionDiagram startingFrom = fromState(variableOrdering, variableSummary, allVariables, nfa.initialState());
+		BinaryDecisionDiagram transitionBddTable = computeTransitionTable(variableOrdering, allVariables, transitionTable);
+		Char2ObjectMap<BinaryDecisionDiagram> characterBddSets = computeCharacterSets(variableOrdering, nfa.characterTransitions(), variableSummary, allVariables);
+		BinaryDecisionDiagram acceptanceBddSet = computeAcceptanceSet(variableOrdering, nfa, variableSummary, allVariables);
+		Permutation relabelToStateToFromState = relabelToStateToFromState(variableOrdering, allVariables, binaryDecisionDiagramFactory);
 		BinaryDecisionDiagram existsFromStateAndCharacter = existsFromStateAndCharacter(variableOrdering, variableSummary, binaryDecisionDiagramFactory);
 		List<Symbol> symbolsByStateId = nfa.symbolsByStateId();
 		return new BFA(transitionBddTable, characterBddSets, acceptanceBddSet, startingFrom, variableOrdering, variableSummary, symbolsByStateId, relabelToStateToFromState, existsFromStateAndCharacter);
 	}
 
-	private static BinaryDecisionDiagram computeTransitionTable(VariableOrdering variableOrders, BinaryDecisionDiagramVariables binaryDecisionDiagramVariables, TransitionTable transitionTable) {
+	private static BinaryDecisionDiagram computeTransitionTable(VariableOrdering variableOrders, AllVariables allVariables, TransitionTable transitionTable) {
 		List<SetVariables> transitions = transitionTable.transitions();
-		BinaryDecisionDiagram bddDisjunction = bddRow(variableOrders.allVariables(), binaryDecisionDiagramVariables, transitions.get(0));
+		BinaryDecisionDiagram allTransitions = specifyVariables(variableOrders.allVariables(), allVariables, transitions.get(0));
 		for (int i = 1; i < transitions.size(); i++) {
-			BinaryDecisionDiagram bddRow = bddRow(variableOrders.allVariables(), binaryDecisionDiagramVariables, transitions.get(i));
-			bddDisjunction = bddDisjunction.orTo(bddRow);
+			BinaryDecisionDiagram bddRow = specifyVariables(variableOrders.allVariables(), allVariables, transitions.get(i));
+			allTransitions = allTransitions.orTo(bddRow);
 		}
-		return bddDisjunction;
+		return allTransitions;
 	}
 
-	private static BinaryDecisionDiagram bddRow(List<VariableOrder> variableOrders, BinaryDecisionDiagramVariables binaryDecisionDiagramVariables, SetVariables setVariables) {
-		BinaryDecisionDiagram bddRow = setVariable(binaryDecisionDiagramVariables, setVariables, variableOrders.get(0));
-		for (int i = 1; i < variableOrders.size(); i++) {
-			BinaryDecisionDiagram binaryDecisionDiagram = setVariable(binaryDecisionDiagramVariables, setVariables, variableOrders.get(i));
-			bddRow = bddRow.andTo(binaryDecisionDiagram);
-		}
-		return bddRow;
-	}
-
-	private static BinaryDecisionDiagram setVariable(BinaryDecisionDiagramVariables binaryDecisionDiagramVariables, SetVariables setVariables, VariableOrder variableOrder) {
-		if (setVariables.contains(variableOrder)) {
-			return binaryDecisionDiagramVariables.variable(variableOrder.order());
-		} else {
-			return binaryDecisionDiagramVariables.notVariable(variableOrder.order());
-		}
-	}
-
-	private static Char2ObjectMap<BinaryDecisionDiagram> computeCharacterBddSets(VariableOrdering variableOrders, List<CharacterTransition> characterTransitions, VariableSummary variableSummary, BinaryDecisionDiagramVariables binaryDecisionDiagramVariables) {
-		List<VariableOrder> characterVariableOrders = variableOrders.characterVariables().collect(toList());
+	private static Char2ObjectMap<BinaryDecisionDiagram> computeCharacterSets(VariableOrdering variableOrders, List<CharacterTransition> characterTransitions, VariableSummary variableSummary, AllVariables allVariables) {
+		List<VariableOrder> characterVariables = variableOrders.characterVariables().collect(toList());
 		Char2ObjectMap<BinaryDecisionDiagram> characterBddSets = new Char2ObjectArrayMap<>(characterTransitions.size());
 		for (CharacterTransition characterTransition : characterTransitions) {
 			SetVariables character = SetVariables.character(variableSummary, characterTransition);
-			BinaryDecisionDiagram bddRow = bddRow(characterVariableOrders, binaryDecisionDiagramVariables, character);
-			characterBddSets.put(characterTransition.character(), bddRow);
+			BinaryDecisionDiagram characterSet = specifyVariables(characterVariables, allVariables, character);
+			characterBddSets.put(characterTransition.character(), characterSet);
 		}
 		return characterBddSets;
 	}
 
-	private static BinaryDecisionDiagram computeAcceptanceSet(VariableOrdering variableOrdering, NFA nfa, VariableSummary variableSummary, BinaryDecisionDiagramVariables binaryDecisionDiagramVariables) {
+	private static BinaryDecisionDiagram computeAcceptanceSet(VariableOrdering variableOrdering, NFA nfa, VariableSummary variableSummary, AllVariables allVariables) {
 		List<State> acceptanceStates = nfa.acceptanceStates();
-		List<VariableOrder> toStateVariableOrders = variableOrdering.toStateVariables().collect(toList());
+		List<VariableOrder> toStateVariables = variableOrdering.toStateVariables().collect(toList());
 
 		SetVariables firstToState = SetVariables.toState(variableSummary, acceptanceStates.get(0));
-		BinaryDecisionDiagram bddDisjunction = bddRow(toStateVariableOrders, binaryDecisionDiagramVariables, firstToState);
+		BinaryDecisionDiagram acceptanceSet = specifyVariables(toStateVariables, allVariables, firstToState);
 		for (int i = 1; i < acceptanceStates.size(); i++) {
 			State state = acceptanceStates.get(i);
 			SetVariables toState = SetVariables.toState(variableSummary, state);
-			BinaryDecisionDiagram bddRow = bddRow(toStateVariableOrders, binaryDecisionDiagramVariables, toState);
-			bddDisjunction = bddDisjunction.orTo(bddRow);
+			BinaryDecisionDiagram acceptingState = specifyVariables(toStateVariables, allVariables, toState);
+			acceptanceSet = acceptanceSet.orTo(acceptingState);
 		}
-		return bddDisjunction;
+		return acceptanceSet;
 	}
 
-	private static BinaryDecisionDiagram fromState(VariableOrdering variableOrdering, VariableSummary variableSummary, BinaryDecisionDiagramVariables binaryDecisionDiagramVariables, State state) {
-		List<VariableOrder> fromStateVariableOrders = variableOrdering.fromStateVariables().collect(toList());
+	private static BinaryDecisionDiagram specifyVariables(List<VariableOrder> variablesToSpecify, AllVariables allVariables, SetVariables setVariables) {
+		BinaryDecisionDiagram specifiedVariables = specifiyVariable(allVariables, setVariables, variablesToSpecify.get(0));
+		for (int i = 1; i < variablesToSpecify.size(); i++) {
+			BinaryDecisionDiagram binaryDecisionDiagram = specifiyVariable(allVariables, setVariables, variablesToSpecify.get(i));
+			specifiedVariables = specifiedVariables.andTo(binaryDecisionDiagram);
+		}
+		return specifiedVariables;
+	}
+
+	private static BinaryDecisionDiagram specifiyVariable(AllVariables allVariables, SetVariables setVariables, VariableOrder variableOrder) {
+		if (setVariables.contains(variableOrder)) {
+			return allVariables.variable(variableOrder.order());
+		} else {
+			return allVariables.notVariable(variableOrder.order());
+		}
+	}
+
+	private static BinaryDecisionDiagram fromState(VariableOrdering variableOrdering, VariableSummary variableSummary, AllVariables allVariables, State state) {
+		List<VariableOrder> fromStateVariables = variableOrdering.fromStateVariables().collect(toList());
 		SetVariables fromState = SetVariables.fromState(variableSummary, state);
-		return bddRow(fromStateVariableOrders, binaryDecisionDiagramVariables, fromState);
+		return specifyVariables(fromStateVariables, allVariables, fromState);
 	}
 
-	private static Permutation relabelToStateToFromState(VariableOrdering variableOrdering, BinaryDecisionDiagramVariables binaryDecisionDiagramVariables, BinaryDecisionDiagramFactory binaryDecisionDiagramFactory) {
-		Stream<BinaryDecisionDiagram> toVariables = variableOrdering.toStateVariablesInOriginalOrder().map(binaryDecisionDiagramVariables::variable);
-		Stream<BinaryDecisionDiagram> fromVariables = variableOrdering.fromStateVariablesInOriginalOrder().map(binaryDecisionDiagramVariables::variable);
+	private static Permutation relabelToStateToFromState(VariableOrdering variableOrdering, AllVariables allVariables, BinaryDecisionDiagramFactory binaryDecisionDiagramFactory) {
+		Stream<BinaryDecisionDiagram> toVariables = variableOrdering.toStateVariablesInOriginalOrder().map(allVariables::variable);
+		Stream<BinaryDecisionDiagram> fromVariables = variableOrdering.fromStateVariablesInOriginalOrder().map(allVariables::variable);
 		return binaryDecisionDiagramFactory.createPermutation(toVariables, fromVariables);
 	}
 

@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public class BFA {
 
-	private final BinaryDecisionDiagram transitionBddTable;
-	private final Char2ObjectMap<BinaryDecisionDiagram> characterBddSets;
+	private final BinaryDecisionDiagram allTransitions;
+	private final Char2ObjectMap<BinaryDecisionDiagram> characterSets;
 	private final BinaryDecisionDiagram acceptanceBddSet;
 	private final BinaryDecisionDiagram initialState;
 	private final VariableOrdering variableOrdering;
@@ -21,9 +21,9 @@ public class BFA {
 	private final Permutation relabelToStateToFromState;
 	private final BinaryDecisionDiagram existsFromStateAndCharacter;
 
-	public BFA(BinaryDecisionDiagram transitionBddTable, Char2ObjectMap<BinaryDecisionDiagram> characterBddSets, BinaryDecisionDiagram acceptanceBddSet, BinaryDecisionDiagram initialState, VariableOrdering variableOrdering, VariableSummary variableSummary, List<Symbol> symbolsByStateId, Permutation relabelToStateToFromState, BinaryDecisionDiagram existsFromStateAndCharacter) {
-		this.transitionBddTable = transitionBddTable;
-		this.characterBddSets = characterBddSets;
+	public BFA(BinaryDecisionDiagram allTransitions, Char2ObjectMap<BinaryDecisionDiagram> characterSets, BinaryDecisionDiagram acceptanceBddSet, BinaryDecisionDiagram initialState, VariableOrdering variableOrdering, VariableSummary variableSummary, List<Symbol> symbolsByStateId, Permutation relabelToStateToFromState, BinaryDecisionDiagram existsFromStateAndCharacter) {
+		this.allTransitions = allTransitions;
+		this.characterSets = characterSets;
 		this.acceptanceBddSet = acceptanceBddSet;
 		this.initialState = initialState;
 		this.variableOrdering = variableOrdering;
@@ -67,8 +67,8 @@ public class BFA {
 	}
 
 	public BinaryDecisionDiagram transition(BinaryDecisionDiagram frontier, char character) {
-		frontier = frontier.andTo(transitionBddTable);
-		frontier = frontier.andTo(characterBddSets.get(character));
+		frontier = frontier.andTo(allTransitions);
+		frontier = frontier.andTo(characterSets.get(character));
 		return frontier.existsTo(existsFromStateAndCharacter);
 	}
 }

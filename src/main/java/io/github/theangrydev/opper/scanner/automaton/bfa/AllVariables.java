@@ -6,12 +6,12 @@ import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BinaryDecisionDiagramVariables {
+public class AllVariables {
 
 	private final List<BinaryDecisionDiagram> binaryDecisionDiagrams;
 	private final List<BinaryDecisionDiagram> bddNotVariables;
 
-	public BinaryDecisionDiagramVariables(int numberOfVariables, BinaryDecisionDiagramFactory binaryDecisionDiagramFactory) {
+	public AllVariables(int numberOfVariables, BinaryDecisionDiagramFactory binaryDecisionDiagramFactory) {
 		binaryDecisionDiagrams = new ArrayList<>(numberOfVariables);
 		for (int i = 0; i < numberOfVariables; i++) {
 			binaryDecisionDiagrams.add(binaryDecisionDiagramFactory.newVariable());

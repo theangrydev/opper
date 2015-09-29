@@ -38,19 +38,14 @@ public class Scanner implements Corpus {
 	public boolean hasNextSymbol() {
 		while (index < charactersToParse.length) {
 			char character = charactersToParse[index++];
-			Optional<Symbol> next = scan(character);
-			if (next.isPresent()) {
-				this.next = next.get();
+			frontier = bfa.transition(frontier, character);
+			Optional<Symbol> acceptedSymbol = bfa.checkAcceptance(frontier);
+			frontier = bfa.relabelToStateToFromState(frontier);
+			if (acceptedSymbol.isPresent()) {
+				this.next = acceptedSymbol.get();
 				return true;
 			}
 		}
 		return false;
-	}
-
-	private Optional<Symbol> scan(char character) {
-		frontier = bfa.transition(frontier, character);
-		Optional<Symbol> next = bfa.checkAcceptance(frontier);
-		frontier = bfa.relabelToStateToFromState(frontier);
-		return next;
 	}
 }

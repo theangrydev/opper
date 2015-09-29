@@ -3,7 +3,6 @@ package io.github.theangrydev.opper.scanner.automaton.nfa;
 import com.google.common.collect.Multiset;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.scanner.automaton.bfa.VariableSummary;
-import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -17,24 +16,10 @@ public class NFA {
 	private final List<CharacterTransition> characterTransitions;
 	private List<State> states;
 
-	private NFA(State initialState, List<State> states, List<CharacterTransition> characterTransitions) {
+	public NFA(State initialState, List<State> states, List<CharacterTransition> characterTransitions) {
 		this.initialState = initialState;
 		this.states = states;
 		this.characterTransitions = characterTransitions;
-	}
-
-	public static NFA convertToNFA(List<SymbolDefinition> symbolDefinitions) {
-		StateFactory stateFactory = new StateFactory();
-		TransitionFactory transitionFactory = new TransitionFactory();
-		State initial = stateFactory.anonymousState();
-		State accepting = stateFactory.acceptingState();
-		for (SymbolDefinition symbolDefinition : symbolDefinitions) {
-			SymbolOwnedStateGenerator generator = symbolDefinition.stateGenerator(stateFactory, transitionFactory);
-			State from = generator.newState();
-			initial.addNullTransition(from);
-			symbolDefinition.populate(generator, from, accepting);
-		}
-		return new NFA(initial, stateFactory.states(), transitionFactory.characterTransitions());
 	}
 
 	public void removeEpsilionTransitions() {

@@ -2,9 +2,11 @@ package io.github.theangrydev.opper.scanner;
 
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
-import io.github.theangrydev.opper.scanner.bdd.BDDVariable;
 import io.github.theangrydev.opper.scanner.automaton.bfa.BFA;
+import io.github.theangrydev.opper.scanner.automaton.bfa.BFABuilder;
+import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
+import io.github.theangrydev.opper.scanner.automaton.nfa.NFABuilder;
+import io.github.theangrydev.opper.scanner.bdd.BDDVariable;
 import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 
 import java.util.List;
@@ -20,12 +22,12 @@ public class Scanner implements Corpus {
 
 	public Scanner(List<SymbolDefinition> symbolDefinitions, char... charactersToParse) {
 		this.charactersToParse = charactersToParse;
-		NFA nfa = NFA.convertToNFA(symbolDefinitions);
+		NFA nfa = NFABuilder.convertToNFA(symbolDefinitions);
 		nfa.removeEpsilionTransitions();
 		nfa.removeUnreachableStates();
 		nfa.relabelAccordingToFrequencies();
 
-		bfa = BFA.convertToBFA(nfa);
+		bfa = BFABuilder.convertToBFA(nfa);
 		frontier = bfa.initialState();
 	}
 

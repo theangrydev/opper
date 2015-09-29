@@ -49,8 +49,8 @@ public class BDDVariable {
 		return id != bdd.getZero();
 	}
 
-	public int[] oneSatisfyingAssignment(int[] acceptedBuffer) {
-		return bdd.oneSat(id, acceptedBuffer);
+	public int[] oneSatisfyingAssignment() {
+		return bdd.oneSat(id, null);
 	}
 
 	public void discard() {

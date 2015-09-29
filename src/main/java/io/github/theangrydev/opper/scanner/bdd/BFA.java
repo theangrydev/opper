@@ -26,7 +26,6 @@ public class BFA {
 	private final Permutation relabelToStateToFromState;
 	private final VariableOrdering variableOrdering;
 	private final VariableSummary variableSummary;
-	private int[] acceptedBuffer;
 	private BDDVariable frontier;
 
 	public BFA(NFA nfa) {
@@ -56,7 +55,6 @@ public class BFA {
 			entry.getValue().printSet();
 		});
 
-		acceptedBuffer = new int[variableSummary.bitsPerRow()];
 		existsFromStateAndCharacter = existsFromStateAndCharacter(variableOrdering, bddVariableFactory, variableSummary);
 		relabelToStateToFromState = relabelToStateToFromState(variableOrdering, bddVariableFactory, bddVariables);
 
@@ -96,10 +94,10 @@ public class BFA {
 
 		boolean accepted = acceptCheck.isZero();
 		if (accepted) {
-			acceptedBuffer = acceptCheck.oneSatisfyingAssignment(acceptedBuffer);
+			int[] assignment = acceptCheck.oneSatisfyingAssignment();
 			acceptCheck.discard();
-			System.out.println("accepted=" + Arrays.toString(acceptedBuffer));
-			int stateIndex = lookupToState(variableOrdering, acceptedBuffer, variableSummary);
+			System.out.println("accepted=" + Arrays.toString(assignment));
+			int stateIndex = lookupToState(variableOrdering, assignment, variableSummary);
 			State state = statesById.get(stateIndex);
 			System.out.println("state=" + state);
 			return Optional.of(state.symbol());

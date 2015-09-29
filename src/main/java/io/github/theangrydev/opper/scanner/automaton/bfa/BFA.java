@@ -11,9 +11,9 @@ import java.util.Optional;
 
 public class BFA {
 
-	private final BinaryDecisionDiagram allTransitions;
-	private final Char2ObjectMap<BinaryDecisionDiagram> characterSets;
-	private final BinaryDecisionDiagram acceptanceBddSet;
+	private final BinaryDecisionDiagram transitions;
+	private final Char2ObjectMap<BinaryDecisionDiagram> characterPresence;
+	private final BinaryDecisionDiagram acceptanceingStates;
 	private final BinaryDecisionDiagram initialState;
 	private final VariableOrdering variableOrdering;
 	private final VariableSummary variableSummary;
@@ -21,10 +21,10 @@ public class BFA {
 	private final Permutation relabelToStateToFromState;
 	private final BinaryDecisionDiagram existsFromStateAndCharacter;
 
-	public BFA(BinaryDecisionDiagram allTransitions, Char2ObjectMap<BinaryDecisionDiagram> characterSets, BinaryDecisionDiagram acceptanceBddSet, BinaryDecisionDiagram initialState, VariableOrdering variableOrdering, VariableSummary variableSummary, List<Symbol> symbolsByStateId, Permutation relabelToStateToFromState, BinaryDecisionDiagram existsFromStateAndCharacter) {
-		this.allTransitions = allTransitions;
-		this.characterSets = characterSets;
-		this.acceptanceBddSet = acceptanceBddSet;
+	public BFA(BinaryDecisionDiagram transitions, Char2ObjectMap<BinaryDecisionDiagram> characterPresence, BinaryDecisionDiagram acceptanceingStates, BinaryDecisionDiagram initialState, VariableOrdering variableOrdering, VariableSummary variableSummary, List<Symbol> symbolsByStateId, Permutation relabelToStateToFromState, BinaryDecisionDiagram existsFromStateAndCharacter) {
+		this.transitions = transitions;
+		this.characterPresence = characterPresence;
+		this.acceptanceingStates = acceptanceingStates;
 		this.initialState = initialState;
 		this.variableOrdering = variableOrdering;
 		this.variableSummary = variableSummary;
@@ -54,7 +54,7 @@ public class BFA {
 	}
 
 	public Optional<Symbol> checkAcceptance(BinaryDecisionDiagram frontier) {
-		BinaryDecisionDiagram acceptCheck = acceptanceBddSet.and(frontier);
+		BinaryDecisionDiagram acceptCheck = acceptanceingStates.and(frontier);
 		boolean accepted = acceptCheck.isNotZero();
 		if (!accepted) {
 			acceptCheck.discard();
@@ -67,8 +67,8 @@ public class BFA {
 	}
 
 	public BinaryDecisionDiagram transition(BinaryDecisionDiagram frontier, char character) {
-		frontier = frontier.andTo(allTransitions);
-		frontier = frontier.andTo(characterSets.get(character));
+		frontier = frontier.andTo(transitions);
+		frontier = frontier.andTo(characterPresence.get(character));
 		return frontier.existsTo(existsFromStateAndCharacter);
 	}
 }

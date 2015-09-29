@@ -94,8 +94,8 @@ public class BFABuilder {
 	}
 
 	private static Permutation relabelToStateToFromState(VariableOrdering variableOrdering, BinaryDecisionDiagramVariables binaryDecisionDiagramVariables, BinaryDecisionDiagramFactory binaryDecisionDiagramFactory) {
-		Stream<BinaryDecisionDiagram> toVariables = variableOrdering.toStateVariablesInOriginalOrder().map(VariableOrder::order).map(binaryDecisionDiagramVariables::variable);
-		Stream<BinaryDecisionDiagram> fromVariables = variableOrdering.fromStateVariablesInOriginalOrder().map(VariableOrder::order).map(binaryDecisionDiagramVariables::variable);
+		Stream<BinaryDecisionDiagram> toVariables = variableOrdering.toStateVariablesInOriginalOrder().map(binaryDecisionDiagramVariables::variable);
+		Stream<BinaryDecisionDiagram> fromVariables = variableOrdering.fromStateVariablesInOriginalOrder().map(binaryDecisionDiagramVariables::variable);
 		return binaryDecisionDiagramFactory.createPermutation(toVariables, fromVariables);
 	}
 

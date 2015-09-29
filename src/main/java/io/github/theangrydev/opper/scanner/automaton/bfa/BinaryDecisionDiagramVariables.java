@@ -23,6 +23,10 @@ public class BinaryDecisionDiagramVariables {
 		}
 	}
 
+	public BinaryDecisionDiagram variable(VariableOrder variableOrder) {
+		return variable(variableOrder.order());
+	}
+
 	public BinaryDecisionDiagram variable(int variableIndex) {
 		return binaryDecisionDiagrams.get(variableIndex);
 	}

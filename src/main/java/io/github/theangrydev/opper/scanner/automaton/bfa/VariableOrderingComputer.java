@@ -70,7 +70,7 @@ public class VariableOrderingComputer {
 		return positiveProportion * log2(positiveProportion) + negativeProportion * log2(negativeProportion);
 	}
 
-	public static class DecisionTree {
+	private static class DecisionTree {
 		private TransitionTable examples;
 		private DecisionTree zero;
 		private DecisionTree one;

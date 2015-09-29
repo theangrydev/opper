@@ -47,7 +47,7 @@ public class BFA {
 
 	private int lookupToState(BDDVariableAssignment assignment) {
 		return assignment.assignedIndexes()
-			.map(variableOrdering::id)
+			.map(variableOrdering::variableId)
 			.map(variableSummary::unprojectToIdBitPosition)
 			.map(bitPosition -> 1 << bitPosition)
 			.reduce(0, (a, b) -> a | b);

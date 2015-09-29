@@ -14,8 +14,8 @@ public class VariableOrdering {
 		this.variableOrders = variableOrders;
 	}
 
-	public int id(int i) {
-		return variableOrders.get(i).id();
+	public int variableId(int order) {
+		return variableOrders.get(order).id();
 	}
 
 	public List<VariableOrder> allVariables() {

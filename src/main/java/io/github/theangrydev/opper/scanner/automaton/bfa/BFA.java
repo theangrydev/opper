@@ -12,7 +12,7 @@ import java.util.Optional;
 public class BFA {
 
 	private final BinaryDecisionDiagram transitions;
-	private final Char2ObjectMap<BinaryDecisionDiagram> characterPresence;
+	private final Char2ObjectMap<BinaryDecisionDiagram> characterPresences;
 	private final BinaryDecisionDiagram acceptanceingStates;
 	private final BinaryDecisionDiagram initialState;
 	private final VariableOrdering variableOrdering;
@@ -21,9 +21,9 @@ public class BFA {
 	private final Permutation relabelToStateToFromState;
 	private final BinaryDecisionDiagram existsFromStateAndCharacter;
 
-	public BFA(BinaryDecisionDiagram transitions, Char2ObjectMap<BinaryDecisionDiagram> characterPresence, BinaryDecisionDiagram acceptanceingStates, BinaryDecisionDiagram initialState, VariableOrdering variableOrdering, VariableSummary variableSummary, List<Symbol> symbolsByStateId, Permutation relabelToStateToFromState, BinaryDecisionDiagram existsFromStateAndCharacter) {
+	public BFA(BinaryDecisionDiagram transitions, Char2ObjectMap<BinaryDecisionDiagram> characterPresences, BinaryDecisionDiagram acceptanceingStates, BinaryDecisionDiagram initialState, VariableOrdering variableOrdering, VariableSummary variableSummary, List<Symbol> symbolsByStateId, Permutation relabelToStateToFromState, BinaryDecisionDiagram existsFromStateAndCharacter) {
 		this.transitions = transitions;
-		this.characterPresence = characterPresence;
+		this.characterPresences = characterPresences;
 		this.acceptanceingStates = acceptanceingStates;
 		this.initialState = initialState;
 		this.variableOrdering = variableOrdering;
@@ -68,7 +68,7 @@ public class BFA {
 
 	public BinaryDecisionDiagram transition(BinaryDecisionDiagram frontier, char character) {
 		frontier = frontier.andTo(transitions);
-		frontier = frontier.andTo(characterPresence.get(character));
+		frontier = frontier.andTo(characterPresences.get(character));
 		return frontier.existsTo(existsFromStateAndCharacter);
 	}
 }

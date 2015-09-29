@@ -46,13 +46,13 @@ public class BFABuilder {
 
 	private static Char2ObjectMap<BinaryDecisionDiagram> characterPresence(VariableOrdering variableOrders, List<CharacterTransition> characterTransitions, VariableSummary variableSummary, AllVariables allVariables) {
 		List<VariableOrder> characterVariables = variableOrders.characterVariables().collect(toList());
-		Char2ObjectMap<BinaryDecisionDiagram> characterBddSets = new Char2ObjectArrayMap<>(characterTransitions.size());
+		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = new Char2ObjectArrayMap<>(characterTransitions.size());
 		for (CharacterTransition characterTransition : characterTransitions) {
 			SetVariables character = SetVariables.character(variableSummary, characterTransition);
-			BinaryDecisionDiagram characterSet = specifyVariables(characterVariables, allVariables, character);
-			characterBddSets.put(characterTransition.character(), characterSet);
+			BinaryDecisionDiagram characterPresence = specifyVariables(characterVariables, allVariables, character);
+			characterPresences.put(characterTransition.character(), characterPresence);
 		}
-		return characterBddSets;
+		return characterPresences;
 	}
 
 	private static BinaryDecisionDiagram acceptingStates(VariableOrdering variableOrdering, NFA nfa, VariableSummary variableSummary, AllVariables allVariables) {

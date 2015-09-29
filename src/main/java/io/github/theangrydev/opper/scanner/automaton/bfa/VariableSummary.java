@@ -14,7 +14,6 @@ public class VariableSummary {
 	private final int bitsForStates;
 	private final int bitsForCharacters;
 	private final int bitsPerRow;
-	private List<Integer> variables;
 
 	public VariableSummary(int numberOfStates, int numberOfCharacters) {
 		bitsForStates = IntMath.log2(numberOfStates, RoundingMode.FLOOR) + 1;

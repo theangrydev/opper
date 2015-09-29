@@ -1,6 +1,6 @@
 package io.github.theangrydev.opper.scanner.bdd;
 
-import io.github.theangrydev.opper.scanner.autonoma.VariableOrdering;
+import io.github.theangrydev.opper.scanner.automaton.VariableOrdering;
 
 import java.util.ArrayList;
 import java.util.List;

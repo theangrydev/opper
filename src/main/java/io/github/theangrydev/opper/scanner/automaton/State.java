@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper.scanner.autonoma;
+package io.github.theangrydev.opper.scanner.automaton;
 
 import io.github.theangrydev.opper.grammar.Symbol;
 

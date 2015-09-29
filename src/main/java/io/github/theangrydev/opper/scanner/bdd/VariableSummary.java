@@ -1,8 +1,8 @@
 package io.github.theangrydev.opper.scanner.bdd;
 
 import com.google.common.math.IntMath;
-import io.github.theangrydev.opper.scanner.autonoma.State;
-import io.github.theangrydev.opper.scanner.autonoma.Transition;
+import io.github.theangrydev.opper.scanner.automaton.State;
+import io.github.theangrydev.opper.scanner.automaton.Transition;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 

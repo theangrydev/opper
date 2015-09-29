@@ -1,8 +1,8 @@
-package io.github.theangrydev.opper.scanner.autonoma;
+package io.github.theangrydev.opper.scanner.automaton;
 
 import com.google.common.collect.Multiset;
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.scanner.autonoma.State.TransitionVisitor;
+import io.github.theangrydev.opper.scanner.automaton.State.TransitionVisitor;
 import io.github.theangrydev.opper.scanner.bdd.VariableSummary;
 import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 

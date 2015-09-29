@@ -1,7 +1,7 @@
 package io.github.theangrydev.opper.scanner.bdd;
 
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.scanner.autonoma.*;
+import io.github.theangrydev.opper.scanner.automaton.*;
 import it.unimi.dsi.fastutil.chars.Char2ObjectArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
 import jdd.bdd.Permutation;

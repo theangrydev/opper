@@ -2,7 +2,7 @@ package io.github.theangrydev.opper.scanner.bdd;
 
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.scanner.autonoma.NFA;
+import io.github.theangrydev.opper.scanner.automaton.NFA;
 import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 import jdd.bdd.Permutation;
 

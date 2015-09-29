@@ -17,7 +17,7 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 
-public class BDDStuff {
+public class BFA {
 
 	private final BDD bdd;
 	private final int transitionBddTable;
@@ -31,10 +31,12 @@ public class BDDStuff {
 	private int[] acceptedBuffer;
 	private int frontier;
 
-	public BDDStuff(NFA nfa, TransitionTable transitionTable, VariableOrdering variableOrdering, VariableSummary variableSummary) {
-		this.variableSummary = variableSummary;
-		this.variableOrdering = variableOrdering;
+	public BFA(NFA nfa) {
+		TransitionTable transitionTable = TransitionTable.fromNFA(nfa);
+		this.variableSummary = nfa.variableSummary();
+		this.variableOrdering = VariableOrdering.determineOrdering(variableSummary, transitionTable);
 		bdd = new BDD(1000,100);
+
 		BDDVariables bddVariables = new BDDVariables(bdd, variableOrdering);
 
 		BDDTransitionsTableComputer bddTransitionsTableComputer = new BDDTransitionsTableComputer();

@@ -19,7 +19,7 @@ public class BFA {
 	private final BDDVariable transitionBddTable;
 	private final Char2ObjectMap<BDDVariable> characterBddSets;
 	private final BDDVariable acceptanceBddSet;
-	private final List<State> statesById;
+	private final List<Symbol> symbolsByStateId;
 	private final BDDVariable existsFromStateAndCharacter;
 	private final Permutation relabelToStateToFromState;
 	private final VariableOrdering variableOrdering;
@@ -40,7 +40,7 @@ public class BFA {
 		existsFromStateAndCharacter = existsFromStateAndCharacter(variableOrdering, bddVariableFactory, variableSummary);
 		relabelToStateToFromState = relabelToStateToFromState(variableOrdering, bddVariableFactory, bddVariables);
 		frontier = initialFrontier(variableOrdering, bddVariables, variableSummary, nfa.initialState());
-		statesById = nfa.statesById();
+		symbolsByStateId = nfa.symbolsByStateId();
 
 		System.out.println("characterIds=" + nfa.characterTransitions());
 		System.out.println("states=" + nfa.states().stream().map(Object::toString).collect(Collectors.joining("\n")));
@@ -116,9 +116,8 @@ public class BFA {
 			acceptCheck.discard();
 			System.out.println("accepted=" + Arrays.toString(assignment));
 			int stateIndex = lookupToState(variableOrdering, assignment, variableSummary);
-			State state = statesById.get(stateIndex);
-			System.out.println("state=" + state);
-			return Optional.of(state.symbol());
+			Symbol acceptedSymbol = symbolsByStateId.get(stateIndex);
+			return Optional.of(acceptedSymbol);
 		}
 		acceptCheck.discard();
 		return Optional.empty();

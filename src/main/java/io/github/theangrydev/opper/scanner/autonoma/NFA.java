@@ -1,6 +1,7 @@
 package io.github.theangrydev.opper.scanner.autonoma;
 
 import com.google.common.collect.Multiset;
+import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.scanner.autonoma.State.TransitionVisitor;
 import io.github.theangrydev.opper.scanner.bdd.VariableSummary;
 import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
@@ -89,7 +90,7 @@ public class NFA {
 		return states.stream().filter(State::isAccepting).collect(toList());
 	}
 
-	public List<State> statesById() {
-		return concat(Stream.of((State) null), states().stream().sorted(comparing(State::id))).collect(toList());
+	public List<Symbol> symbolsByStateId() {
+		return concat(Stream.of((Symbol) null), states().stream().sorted(comparing(State::id)).map(State::symbol)).collect(toList());
 	}
 }

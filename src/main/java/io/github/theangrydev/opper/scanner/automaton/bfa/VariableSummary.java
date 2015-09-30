@@ -106,11 +106,11 @@ public class VariableSummary {
 		return allVariables;
 	}
 
-	public boolean[] presentVariables(List<Integer> presentVariableIndexes) {
-		boolean[] presentVariables = new boolean[bitsPerRow()];
-		for (int presentVariableIndex : presentVariableIndexes) {
-			presentVariables[presentVariableIndex] = true;
+	public boolean[] presentVariables(List<Variable> presentVariables) {
+		boolean[] variables = new boolean[bitsPerRow()];
+		for (Variable presentVariable : presentVariables) {
+			variables[presentVariable.order()] = true;
 		}
-		return presentVariables;
+		return variables;
 	}
 }

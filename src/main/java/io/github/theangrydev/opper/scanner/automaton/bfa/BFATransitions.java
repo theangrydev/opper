@@ -8,8 +8,6 @@ import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 public class BFATransitions {
 	private final BinaryDecisionDiagram transitions;
 	private final Char2ObjectMap<BinaryDecisionDiagram> characterPresences;
@@ -51,7 +49,7 @@ public class BFATransitions {
 	}
 
 	private static BinaryDecisionDiagram existsFromStateAndCharacter(VariableOrdering variableOrdering, VariableSummary variableSummary, AllVariables allVariables) {
-		List<Integer> fromStateOrCharacterVariables = variableOrdering.fromStateOrCharacterVariables().map(Variable::order).collect(toList());
+		List<Variable> fromStateOrCharacterVariables = variableOrdering.fromStateOrCharacterVariables();
 		boolean[] presentVariables = variableSummary.presentVariables(fromStateOrCharacterVariables);
 		return allVariables.newCube(presentVariables);
 	}

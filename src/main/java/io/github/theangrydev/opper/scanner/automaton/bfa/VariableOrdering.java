@@ -31,8 +31,8 @@ public class VariableOrdering {
 		return variablesWithOrder.stream().filter(variableSummary::isFromState).sorted(comparing(Variable::id));
 	}
 
-	public Stream<Variable> fromStateOrCharacterVariables() {
-		return variablesWithOrder.stream().filter(variableSummary::isFromStateOrCharacter);
+	public List<Variable> fromStateOrCharacterVariables() {
+		return variablesWithOrder.stream().filter(variableSummary::isFromStateOrCharacter).collect(toList());
 	}
 
 	public List<Variable> fromStateVariables() {

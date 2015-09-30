@@ -28,9 +28,9 @@ public class BFATransitions {
 	}
 
 	private static BinaryDecisionDiagram transitions(VariableOrdering variableOrdering, AllVariables allVariables, TransitionTable transitionTable) {
-		List<SetVariables> specifiedTransitions = transitionTable.transitions();
+		List<VariablesSet> specifiedTransitions = transitionTable.transitions();
 		BinaryDecisionDiagram allTransitions = allVariables.nothing();
-		for (SetVariables specifiedTransition : specifiedTransitions) {
+		for (VariablesSet specifiedTransition : specifiedTransitions) {
 			BinaryDecisionDiagram transition = allVariables.specifyVariables(variableOrdering.allVariables(), specifiedTransition);
 			allTransitions = allTransitions.orTo(transition);
 		}
@@ -41,7 +41,7 @@ public class BFATransitions {
 		List<Variable> characterVariables = variableOrdering.characterVariables();
 		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = new Char2ObjectArrayMap<>(characterTransitions.size());
 		for (CharacterTransition characterTransition : characterTransitions) {
-			SetVariables character = variableSummary.character(characterTransition);
+			VariablesSet character = variableSummary.variablesSetForCharacter(characterTransition);
 			BinaryDecisionDiagram characterPresence = allVariables.specifyVariables(characterVariables, character);
 			characterPresences.put(characterTransition.character(), characterPresence);
 		}

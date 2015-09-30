@@ -8,20 +8,20 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 public class TransitionTable {
-	private final List<SetVariables> transitions;
+	private final List<VariablesSet> transitions;
 
-	private TransitionTable(List<SetVariables> transitions) {
+	private TransitionTable(List<VariablesSet> transitions) {
 		this.transitions = transitions;
 	}
 
 	public static TransitionTable fromNFA(NFA nfa) {
-		List<SetVariables> transitions = new ArrayList<>();
+		List<VariablesSet> transitions = new ArrayList<>();
 		VariableSummary variableSummary = nfa.variableSummary();
-		nfa.visitTransitions((from, via, to) -> transitions.add(variableSummary.transition(from, via, to)));
+		nfa.visitTransitions((from, via, to) -> transitions.add(variableSummary.variablesSetInTransition(from, via, to)));
 		return new TransitionTable(transitions);
 	}
 
-	public List<SetVariables> transitions() {
+	public List<VariablesSet> transitions() {
 		return transitions;
 	}
 

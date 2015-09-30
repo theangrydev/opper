@@ -44,17 +44,17 @@ public class AllVariables {
 		return binaryDecisionDiagramFactory.anything();
 	}
 
-	public BinaryDecisionDiagram specifyVariables(List<Variable> variablesToSpecify, SetVariables setVariables) {
+	public BinaryDecisionDiagram specifyVariables(List<Variable> variablesToSpecify, VariablesSet variablesSet) {
 		BinaryDecisionDiagram specifiedVariables = anything();
 		for (Variable specified : variablesToSpecify) {
-			BinaryDecisionDiagram specifiedVariable = specifyVariable(specified, setVariables);
+			BinaryDecisionDiagram specifiedVariable = specifyVariable(specified, variablesSet);
 			specifiedVariables = specifiedVariables.andTo(specifiedVariable);
 		}
 		return specifiedVariables;
 	}
 
-	private BinaryDecisionDiagram specifyVariable(Variable variable, SetVariables setVariables) {
-		if (setVariables.contains(variable)) {
+	private BinaryDecisionDiagram specifyVariable(Variable variable, VariablesSet variablesSet) {
+		if (variablesSet.contains(variable)) {
 			return variable(variable.order());
 		} else {
 			return notVariable(variable.order());

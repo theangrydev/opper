@@ -35,7 +35,7 @@ public class BFAAcceptance {
 
 		BinaryDecisionDiagram acceptingStates = allVariables.nothing();
 		for (State specifiedAcceptingState : specifiedAcceptingStates) {
-			BinaryDecisionDiagram acceptingState = allVariables.specifyVariables(toStateVariables, variableSummary.toState(specifiedAcceptingState));
+			BinaryDecisionDiagram acceptingState = allVariables.specifyVariables(toStateVariables, variableSummary.variablesSetForToState(specifiedAcceptingState));
 			acceptingStates = acceptingStates.orTo(acceptingState);
 		}
 		return acceptingStates;

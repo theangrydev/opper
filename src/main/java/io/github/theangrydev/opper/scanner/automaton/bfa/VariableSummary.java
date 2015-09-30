@@ -23,24 +23,24 @@ public class VariableSummary {
 		bitsPerRow = bitsForStates * 2 + bitsForCharacters;
 	}
 
-	public SetVariables transition(State from, Transition via, State to) {
+	public VariablesSet variablesSetInTransition(State from, Transition via, State to) {
 		BitSet setVariables = new BitSet(bitsPerRow());
 		blastBits(projectFromId(from), setVariables);
 		blastBits(projectCharacterId(via), setVariables);
 		blastBits(projectToId(to), setVariables);
-		return new SetVariables(setVariables);
+		return new VariablesSet(setVariables);
 	}
 
-	public SetVariables toState(State state) {
-		return new SetVariables(BitSet.valueOf(new long[]{projectToId(state)}));
+	public VariablesSet variablesSetForToState(State state) {
+		return new VariablesSet(BitSet.valueOf(new long[]{projectToId(state)}));
 	}
 
-	public SetVariables fromState(State state) {
-		return new SetVariables(BitSet.valueOf(new long[]{projectFromId(state)}));
+	public VariablesSet variablesSetForFromState(State state) {
+		return new VariablesSet(BitSet.valueOf(new long[]{projectFromId(state)}));
 	}
 
-	public SetVariables character(CharacterTransition characterTransition) {
-		return new SetVariables(BitSet.valueOf(new long[]{projectCharacterId(characterTransition)}));
+	public VariablesSet variablesSetForCharacter(CharacterTransition characterTransition) {
+		return new VariablesSet(BitSet.valueOf(new long[]{projectCharacterId(characterTransition)}));
 	}
 
 	private static void blastBits(long number, BitSet row) {

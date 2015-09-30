@@ -2,11 +2,11 @@ package io.github.theangrydev.opper.scanner.automaton.bfa;
 
 import java.util.BitSet;
 
-public class SetVariables {
+public class VariablesSet {
 
 	private final BitSet setVariables;
 
-	public SetVariables(BitSet setVariables) {
+	public VariablesSet(BitSet setVariables) {
 		this.setVariables = setVariables;
 	}
 

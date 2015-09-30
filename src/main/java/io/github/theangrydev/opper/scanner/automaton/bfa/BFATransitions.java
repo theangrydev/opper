@@ -27,18 +27,18 @@ public class BFATransitions {
 		return new BFATransitions(transitions, characterPresences, existsFromStateAndCharacter);
 	}
 
-	private static BinaryDecisionDiagram transitions(VariableOrdering variableOrders, AllVariables allVariables, TransitionTable transitionTable) {
+	private static BinaryDecisionDiagram transitions(VariableOrdering variableOrdering, AllVariables allVariables, TransitionTable transitionTable) {
 		List<SetVariables> transitions = transitionTable.transitions();
-		BinaryDecisionDiagram allTransitions = allVariables.specifyVariables(variableOrders.allVariables(), transitions.get(0));
+		BinaryDecisionDiagram allTransitions = allVariables.specifyVariables(variableOrdering.allVariables(), transitions.get(0));
 		for (int i = 1; i < transitions.size(); i++) {
-			BinaryDecisionDiagram transition = allVariables.specifyVariables(variableOrders.allVariables(), transitions.get(i));
+			BinaryDecisionDiagram transition = allVariables.specifyVariables(variableOrdering.allVariables(), transitions.get(i));
 			allTransitions = allTransitions.orTo(transition);
 		}
 		return allTransitions;
 	}
 
-	private static Char2ObjectMap<BinaryDecisionDiagram> characterPresence(VariableOrdering variableOrders, List<CharacterTransition> characterTransitions, VariableSummary variableSummary, AllVariables allVariables) {
-		List<Variable> characterVariables = variableOrders.characterVariables();
+	private static Char2ObjectMap<BinaryDecisionDiagram> characterPresence(VariableOrdering variableOrdering, List<CharacterTransition> characterTransitions, VariableSummary variableSummary, AllVariables allVariables) {
+		List<Variable> characterVariables = variableOrdering.characterVariables();
 		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = new Char2ObjectArrayMap<>(characterTransitions.size());
 		for (CharacterTransition characterTransition : characterTransitions) {
 			SetVariables character = SetVariables.character(variableSummary, characterTransition);

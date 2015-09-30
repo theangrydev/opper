@@ -2,7 +2,6 @@ package io.github.theangrydev.opper.scanner.automaton.bfa;
 
 import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
-import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagramFactory;
 import jdd.bdd.Permutation;
 
 import java.util.List;
@@ -16,15 +15,14 @@ public class BFABuilder {
 		TransitionTable transitionTable = TransitionTable.fromNFA(nfa);
 		VariableOrdering variableOrdering = VariableOrderingComputer.determineOrdering(nfa.variableSummary(), transitionTable);
 
-		BinaryDecisionDiagramFactory binaryDecisionDiagramFactory = new BinaryDecisionDiagramFactory();
-		AllVariables allVariables = new AllVariables(variableOrdering.numberOfVariables(), binaryDecisionDiagramFactory);
+		AllVariables allVariables = new AllVariables(variableOrdering.numberOfVariables());
 
 		BFAAcceptance bfaAcceptance = BFAAcceptance.bfaAcceptance(nfa, variableOrdering, allVariables);
 
-		BFATransitions bfaTransitions = BFATransitions.bfaTransitions(nfa, transitionTable, variableOrdering, binaryDecisionDiagramFactory, allVariables);
+		BFATransitions bfaTransitions = BFATransitions.bfaTransitions(nfa, transitionTable, variableOrdering, allVariables);
 
 		BinaryDecisionDiagram startingFrom = initialState(nfa, variableOrdering, allVariables);
-		Permutation relabelToStateToFromState = relabelToStateToFromState(variableOrdering, allVariables, binaryDecisionDiagramFactory);
+		Permutation relabelToStateToFromState = relabelToStateToFromState(variableOrdering, allVariables);
 
 		return new BFA(bfaTransitions, bfaAcceptance, startingFrom, relabelToStateToFromState);
 	}
@@ -35,9 +33,9 @@ public class BFABuilder {
 		return allVariables.specifyVariables(fromStateVariables, fromState);
 	}
 
-	private static Permutation relabelToStateToFromState(VariableOrdering variableOrdering, AllVariables allVariables, BinaryDecisionDiagramFactory binaryDecisionDiagramFactory) {
+	private static Permutation relabelToStateToFromState(VariableOrdering variableOrdering, AllVariables allVariables) {
 		Stream<BinaryDecisionDiagram> toVariables = variableOrdering.toStateVariablesInOriginalOrder().map(allVariables::variable);
 		Stream<BinaryDecisionDiagram> fromVariables = variableOrdering.fromStateVariablesInOriginalOrder().map(allVariables::variable);
-		return binaryDecisionDiagramFactory.createPermutation(toVariables, fromVariables);
+		return allVariables.createPermutation(toVariables, fromVariables);
 	}
 }

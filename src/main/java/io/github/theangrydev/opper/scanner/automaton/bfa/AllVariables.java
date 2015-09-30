@@ -2,16 +2,20 @@ package io.github.theangrydev.opper.scanner.automaton.bfa;
 
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagramFactory;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
+import jdd.bdd.Permutation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class AllVariables {
 
+	private final BinaryDecisionDiagramFactory binaryDecisionDiagramFactory;
 	private final List<BinaryDecisionDiagram> binaryDecisionDiagrams;
 	private final List<BinaryDecisionDiagram> bddNotVariables;
 
-	public AllVariables(int numberOfVariables, BinaryDecisionDiagramFactory binaryDecisionDiagramFactory) {
+	public AllVariables(int numberOfVariables) {
+		this.binaryDecisionDiagramFactory = new BinaryDecisionDiagramFactory();
 		binaryDecisionDiagrams = new ArrayList<>(numberOfVariables);
 		for (int i = 0; i < numberOfVariables; i++) {
 			binaryDecisionDiagrams.add(binaryDecisionDiagramFactory.newVariable());
@@ -50,5 +54,13 @@ public class AllVariables {
 		} else {
 			return notVariable(variable.order());
 		}
+	}
+
+	public Permutation createPermutation(Stream<BinaryDecisionDiagram> fromSetVariables, Stream<BinaryDecisionDiagram> toSetVariables) {
+		return binaryDecisionDiagramFactory.createPermutation(fromSetVariables, toSetVariables);
+	}
+
+	public BinaryDecisionDiagram newCube(boolean[] setVariables) {
+		return binaryDecisionDiagramFactory.newCube(setVariables);
 	}
 }

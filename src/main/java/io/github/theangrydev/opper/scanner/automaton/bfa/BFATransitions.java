@@ -3,7 +3,6 @@ package io.github.theangrydev.opper.scanner.automaton.bfa;
 import io.github.theangrydev.opper.scanner.automaton.nfa.CharacterTransition;
 import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
-import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagramFactory;
 import it.unimi.dsi.fastutil.chars.Char2ObjectArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
 
@@ -22,11 +21,11 @@ public class BFATransitions {
 		this.existsFromStateAndCharacter = existsFromStateAndCharacter;
 	}
 
-	public static BFATransitions bfaTransitions(NFA nfa, TransitionTable transitionTable, VariableOrdering variableOrdering, BinaryDecisionDiagramFactory binaryDecisionDiagramFactory, AllVariables allVariables) {
+	public static BFATransitions bfaTransitions(NFA nfa, TransitionTable transitionTable, VariableOrdering variableOrdering, AllVariables allVariables) {
 		VariableSummary variableSummary = nfa.variableSummary();
 		BinaryDecisionDiagram transitions = transitions(variableOrdering, allVariables, transitionTable);
 		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = characterPresence(variableOrdering, nfa.characterTransitions(), variableSummary, allVariables);
-		BinaryDecisionDiagram existsFromStateAndCharacter = existsFromStateAndCharacter(variableOrdering, variableSummary, binaryDecisionDiagramFactory);
+		BinaryDecisionDiagram existsFromStateAndCharacter = existsFromStateAndCharacter(variableOrdering, variableSummary, allVariables);
 		return new BFATransitions(transitions, characterPresences, existsFromStateAndCharacter);
 	}
 
@@ -51,10 +50,10 @@ public class BFATransitions {
 		return characterPresences;
 	}
 
-	private static BinaryDecisionDiagram existsFromStateAndCharacter(VariableOrdering variableOrdering, VariableSummary variableSummary, BinaryDecisionDiagramFactory variableFactory) {
+	private static BinaryDecisionDiagram existsFromStateAndCharacter(VariableOrdering variableOrdering, VariableSummary variableSummary, AllVariables allVariables) {
 		List<Integer> fromStateOrCharacterVariables = variableOrdering.fromStateOrCharacterVariables().map(Variable::order).collect(toList());
 		boolean[] presentVariables = variableSummary.presentVariables(fromStateOrCharacterVariables);
-		return variableFactory.newCube(presentVariables);
+		return allVariables.newCube(presentVariables);
 	}
 
 	public BinaryDecisionDiagram transition(BinaryDecisionDiagram frontier, char character) {

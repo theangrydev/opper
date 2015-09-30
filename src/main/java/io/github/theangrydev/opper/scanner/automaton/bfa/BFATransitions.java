@@ -40,7 +40,7 @@ public class BFATransitions {
 	}
 
 	private static Char2ObjectMap<BinaryDecisionDiagram> characterPresence(VariableOrdering variableOrders, List<CharacterTransition> characterTransitions, VariableSummary variableSummary, AllVariables allVariables) {
-		List<Variable> characterVariables = variableOrders.characterVariables().collect(toList());
+		List<Variable> characterVariables = variableOrders.characterVariables();
 		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = new Char2ObjectArrayMap<>(characterTransitions.size());
 		for (CharacterTransition characterTransition : characterTransitions) {
 			SetVariables character = SetVariables.character(variableSummary, characterTransition);

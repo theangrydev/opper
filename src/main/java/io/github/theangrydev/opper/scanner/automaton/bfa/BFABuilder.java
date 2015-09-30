@@ -24,15 +24,28 @@ public class BFABuilder {
 
 		BinaryDecisionDiagramFactory binaryDecisionDiagramFactory = new BinaryDecisionDiagramFactory();
 		AllVariables allVariables = new AllVariables(variableOrdering.numberOfVariables(), binaryDecisionDiagramFactory);
+
+		BFAAcceptance bfaAcceptance = bfaAcceptance(nfa, variableSummary, variableOrdering, allVariables);
+
+		BFATransitions bfaTransitions = bfaTransitions(nfa, transitionTable, variableSummary, variableOrdering, binaryDecisionDiagramFactory, allVariables);
+
 		BinaryDecisionDiagram startingFrom = fromState(variableOrdering, variableSummary, allVariables, nfa.initialState());
+		Permutation relabelToStateToFromState = relabelToStateToFromState(variableOrdering, allVariables, binaryDecisionDiagramFactory);
+
+		return new BFA(bfaTransitions, bfaAcceptance, startingFrom, relabelToStateToFromState);
+	}
+
+	private static BFATransitions bfaTransitions(NFA nfa, TransitionTable transitionTable, VariableSummary variableSummary, VariableOrdering variableOrdering, BinaryDecisionDiagramFactory binaryDecisionDiagramFactory, AllVariables allVariables) {
 		BinaryDecisionDiagram transitions = transitions(variableOrdering, allVariables, transitionTable);
 		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = characterPresence(variableOrdering, nfa.characterTransitions(), variableSummary, allVariables);
-		BinaryDecisionDiagram acceptingStates = acceptingStates(variableOrdering, nfa, variableSummary, allVariables);
-		Permutation relabelToStateToFromState = relabelToStateToFromState(variableOrdering, allVariables, binaryDecisionDiagramFactory);
 		BinaryDecisionDiagram existsFromStateAndCharacter = existsFromStateAndCharacter(variableOrdering, variableSummary, binaryDecisionDiagramFactory);
+		return new BFATransitions(transitions, characterPresences, existsFromStateAndCharacter);
+	}
+
+	private static BFAAcceptance bfaAcceptance(NFA nfa, VariableSummary variableSummary, VariableOrdering variableOrdering, AllVariables allVariables) {
+		BinaryDecisionDiagram acceptingStates = acceptingStates(variableOrdering, nfa, variableSummary, allVariables);
 		List<Symbol> symbolsByStateId = nfa.symbolsByStateId();
-		BFATransitions bfaTransitions = new BFATransitions(transitions, characterPresences, existsFromStateAndCharacter);
-		return new BFA(bfaTransitions, acceptingStates, startingFrom, variableOrdering, variableSummary, symbolsByStateId, relabelToStateToFromState);
+		return new BFAAcceptance(acceptingStates, variableOrdering, variableSummary, symbolsByStateId);
 	}
 
 	private static BinaryDecisionDiagram transitions(VariableOrdering variableOrders, AllVariables allVariables, TransitionTable transitionTable) {

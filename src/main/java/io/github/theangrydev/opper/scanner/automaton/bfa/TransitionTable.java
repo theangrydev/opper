@@ -5,7 +5,6 @@ import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.github.theangrydev.opper.scanner.automaton.bfa.VariableSummary.transition;
 import static java.util.stream.Collectors.toList;
 
 public class TransitionTable {
@@ -18,7 +17,7 @@ public class TransitionTable {
 	public static TransitionTable fromNFA(NFA nfa) {
 		List<SetVariables> transitions = new ArrayList<>();
 		VariableSummary variableSummary = nfa.variableSummary();
-		nfa.visitTransitions((from, via, to) -> transitions.add(transition(variableSummary, from, via, to)));
+		nfa.visitTransitions((from, via, to) -> transitions.add(variableSummary.transition(from, via, to)));
 		return new TransitionTable(transitions);
 	}
 

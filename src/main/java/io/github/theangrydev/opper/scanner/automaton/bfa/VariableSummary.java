@@ -23,11 +23,11 @@ public class VariableSummary {
 		bitsPerRow = bitsForStates * 2 + bitsForCharacters;
 	}
 
-	public static SetVariables transition(VariableSummary variableSummary, State from, Transition via, State to) {
-		BitSet setVariables = new BitSet(variableSummary.bitsPerRow());
-		blastBits(variableSummary.projectFromId(from), setVariables);
-		blastBits(variableSummary.projectCharacterId(via), setVariables);
-		blastBits(variableSummary.projectToId(to), setVariables);
+	public SetVariables transition(State from, Transition via, State to) {
+		BitSet setVariables = new BitSet(bitsPerRow());
+		blastBits(projectFromId(from), setVariables);
+		blastBits(projectCharacterId(via), setVariables);
+		blastBits(projectToId(to), setVariables);
 		return new SetVariables(setVariables);
 	}
 
@@ -92,15 +92,15 @@ public class VariableSummary {
 			'}';
 	}
 
-	public int projectFromId(State from) {
+	private int projectFromId(State from) {
 		return from.id();
 	}
 
-	public int projectCharacterId(Transition transition) {
+	private int projectCharacterId(Transition transition) {
 		return transition.id() << bitsForStates();
 	}
 
-	public int projectToId(State to) {
+	private int projectToId(State to) {
 		return to.id() << (bitsForStates() + bitsForCharacters());
 	}
 

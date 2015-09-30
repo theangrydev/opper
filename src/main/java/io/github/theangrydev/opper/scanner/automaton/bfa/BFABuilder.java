@@ -26,12 +26,13 @@ public class BFABuilder {
 		AllVariables allVariables = new AllVariables(variableOrdering.numberOfVariables(), binaryDecisionDiagramFactory);
 		BinaryDecisionDiagram startingFrom = fromState(variableOrdering, variableSummary, allVariables, nfa.initialState());
 		BinaryDecisionDiagram transitions = transitions(variableOrdering, allVariables, transitionTable);
-		Char2ObjectMap<BinaryDecisionDiagram> characterPresence = characterPresence(variableOrdering, nfa.characterTransitions(), variableSummary, allVariables);
+		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = characterPresence(variableOrdering, nfa.characterTransitions(), variableSummary, allVariables);
 		BinaryDecisionDiagram acceptingStates = acceptingStates(variableOrdering, nfa, variableSummary, allVariables);
 		Permutation relabelToStateToFromState = relabelToStateToFromState(variableOrdering, allVariables, binaryDecisionDiagramFactory);
 		BinaryDecisionDiagram existsFromStateAndCharacter = existsFromStateAndCharacter(variableOrdering, variableSummary, binaryDecisionDiagramFactory);
 		List<Symbol> symbolsByStateId = nfa.symbolsByStateId();
-		return new BFA(transitions, characterPresence, acceptingStates, startingFrom, variableOrdering, variableSummary, symbolsByStateId, relabelToStateToFromState, existsFromStateAndCharacter);
+		BFATransitions bfaTransitions = new BFATransitions(transitions, characterPresences, existsFromStateAndCharacter);
+		return new BFA(bfaTransitions, acceptingStates, startingFrom, variableOrdering, variableSummary, symbolsByStateId, relabelToStateToFromState);
 	}
 
 	private static BinaryDecisionDiagram transitions(VariableOrdering variableOrders, AllVariables allVariables, TransitionTable transitionTable) {

@@ -1,12 +1,14 @@
 package io.github.theangrydev.opper.scanner.automaton.bfa;
 
 import com.google.common.math.IntMath;
+import io.github.theangrydev.opper.scanner.automaton.nfa.CharacterTransition;
 import io.github.theangrydev.opper.scanner.automaton.nfa.State;
 import io.github.theangrydev.opper.scanner.automaton.nfa.Transition;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 
 import java.math.RoundingMode;
+import java.util.BitSet;
 import java.util.List;
 
 public class VariableSummary {
@@ -19,6 +21,30 @@ public class VariableSummary {
 		bitsForStates = IntMath.log2(numberOfStates, RoundingMode.FLOOR) + 1;
 		bitsForCharacters = IntMath.log2(numberOfCharacters, RoundingMode.FLOOR) + 1;
 		bitsPerRow = bitsForStates * 2 + bitsForCharacters;
+	}
+
+	public static SetVariables transition(VariableSummary variableSummary, State from, Transition via, State to) {
+		BitSet setVariables = new BitSet(variableSummary.bitsPerRow());
+		blastBits(variableSummary.projectFromId(from), setVariables);
+		blastBits(variableSummary.projectCharacterId(via), setVariables);
+		blastBits(variableSummary.projectToId(to), setVariables);
+		return new SetVariables(setVariables);
+	}
+
+	public SetVariables toState(State state) {
+		return new SetVariables(BitSet.valueOf(new long[]{projectToId(state)}));
+	}
+
+	public SetVariables fromState(State state) {
+		return new SetVariables(BitSet.valueOf(new long[]{projectFromId(state)}));
+	}
+
+	public SetVariables character(CharacterTransition characterTransition) {
+		return new SetVariables(BitSet.valueOf(new long[]{projectCharacterId(characterTransition)}));
+	}
+
+	private static void blastBits(long number, BitSet row) {
+		row.or(BitSet.valueOf(new long[]{number}));
 	}
 
 	public int minCharacterVariable() {

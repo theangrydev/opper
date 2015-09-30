@@ -5,7 +5,7 @@ import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.github.theangrydev.opper.scanner.automaton.bfa.SetVariables.transition;
+import static io.github.theangrydev.opper.scanner.automaton.bfa.VariableSummary.transition;
 import static java.util.stream.Collectors.toList;
 
 public class TransitionTable {

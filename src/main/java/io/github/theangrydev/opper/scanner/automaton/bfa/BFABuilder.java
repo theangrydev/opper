@@ -27,7 +27,7 @@ public class BFABuilder {
 
 	private static BinaryDecisionDiagram initialState(NFA nfa, VariableOrdering variableOrdering, AllVariables allVariables) {
 		List<Variable> fromStateVariables = variableOrdering.fromStateVariables();
-		SetVariables fromState = SetVariables.fromState(nfa.variableSummary(), nfa.initialState());
+		SetVariables fromState = nfa.variableSummary().fromState(nfa.initialState());
 		return allVariables.specifyVariables(fromStateVariables, fromState);
 	}
 

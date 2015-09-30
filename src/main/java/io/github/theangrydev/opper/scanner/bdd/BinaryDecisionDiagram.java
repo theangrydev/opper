@@ -17,6 +17,14 @@ public class BinaryDecisionDiagram {
 		return new BinaryDecisionDiagram(bdd, bdd.createVar());
 	}
 
+	public static BinaryDecisionDiagram anything(BDD bdd) {
+		return new BinaryDecisionDiagram(bdd, bdd.getOne());
+	}
+
+	public static BinaryDecisionDiagram nothing(BDD bdd) {
+		return new BinaryDecisionDiagram(bdd, bdd.getZero());
+	}
+
 	public static BinaryDecisionDiagram newCube(BDD bdd, boolean[] setVariables) {
 		return new BinaryDecisionDiagram(bdd, bdd.cube(setVariables));
 	}

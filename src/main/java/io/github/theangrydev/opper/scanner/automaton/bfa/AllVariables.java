@@ -41,7 +41,7 @@ public class AllVariables {
 	}
 
 	public BinaryDecisionDiagram anything() {
-		return binaryDecisionDiagramFactory.newCube(new boolean[0]);
+		return binaryDecisionDiagramFactory.anything();
 	}
 
 	public BinaryDecisionDiagram specifyVariables(List<Variable> variablesToSpecify, SetVariables setVariables) {
@@ -67,5 +67,9 @@ public class AllVariables {
 
 	public BinaryDecisionDiagram newCube(boolean[] setVariables) {
 		return binaryDecisionDiagramFactory.newCube(setVariables);
+	}
+
+	public BinaryDecisionDiagram nothing() {
+		return binaryDecisionDiagramFactory.nothing();
 	}
 }

@@ -28,4 +28,12 @@ public class BinaryDecisionDiagramFactory {
 	private int[] variableIds(Stream<BinaryDecisionDiagram> variables) {
 		return variables.mapToInt(BinaryDecisionDiagram::id).toArray();
 	}
+
+	public BinaryDecisionDiagram anything() {
+		return BinaryDecisionDiagram.anything(bdd);
+	}
+
+	public BinaryDecisionDiagram nothing() {
+		return BinaryDecisionDiagram.nothing(bdd);
+	}
 }

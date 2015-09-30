@@ -28,10 +28,10 @@ public class BFATransitions {
 	}
 
 	private static BinaryDecisionDiagram transitions(VariableOrdering variableOrdering, AllVariables allVariables, TransitionTable transitionTable) {
-		List<SetVariables> transitions = transitionTable.transitions();
-		BinaryDecisionDiagram allTransitions = allVariables.specifyVariables(variableOrdering.allVariables(), transitions.get(0));
-		for (int i = 1; i < transitions.size(); i++) {
-			BinaryDecisionDiagram transition = allVariables.specifyVariables(variableOrdering.allVariables(), transitions.get(i));
+		List<SetVariables> specifiedTransitions = transitionTable.transitions();
+		BinaryDecisionDiagram allTransitions = allVariables.nothing();
+		for (SetVariables specifiedTransition : specifiedTransitions) {
+			BinaryDecisionDiagram transition = allVariables.specifyVariables(variableOrdering.allVariables(), specifiedTransition);
 			allTransitions = allTransitions.orTo(transition);
 		}
 		return allTransitions;

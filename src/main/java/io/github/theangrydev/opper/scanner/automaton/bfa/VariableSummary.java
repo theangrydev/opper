@@ -43,65 +43,8 @@ public class VariableSummary {
 		return new VariablesSet(BitSet.valueOf(new long[]{projectCharacterId(characterTransition)}));
 	}
 
-	private static void blastBits(long number, BitSet row) {
-		row.or(BitSet.valueOf(new long[]{number}));
-	}
-
-	public int minCharacterVariable() {
-		return bitsForStates + 1;
-	}
-
-	public int maxCharacterVariable() {
-		return minCharacterVariable() + bitsForCharacters;
-	}
-
-	private int maxToStateVariable() {
-		return minToStateVariable() + bitsForStates;
-	}
-
-	private int minToStateVariable() {
-		return maxCharacterVariable();
-	}
-
-	private int maxFromStateVariable() {
-		return minFromStateVariable() + bitsForStates;
-	}
-
-	private int minFromStateVariable() {
-		return 1;
-	}
-
-	public int bitsForStates() {
-		return bitsForStates;
-	}
-
-	public int bitsForCharacters() {
-		return bitsForCharacters;
-	}
-
 	public int bitsPerRow() {
 		return bitsPerRow;
-	}
-
-	@Override
-	public String toString() {
-		return "BitSummary{" +
-			"bitsForStates=" + bitsForStates +
-			", bitsForCharacters=" + bitsForCharacters +
-			", bitsPerRow=" + bitsPerRow +
-			'}';
-	}
-
-	private int projectFromId(State from) {
-		return from.id();
-	}
-
-	private int projectCharacterId(Transition transition) {
-		return transition.id() << bitsForStates();
-	}
-
-	private int projectToId(State to) {
-		return to.id() << (bitsForStates() + bitsForCharacters());
 	}
 
 	public int unprojectToIdBitPosition(int position) {
@@ -138,5 +81,54 @@ public class VariableSummary {
 			variables[presentVariable.order()] = true;
 		}
 		return variables;
+	}
+
+	private int projectFromId(State from) {
+		return from.id();
+	}
+
+	private int projectCharacterId(Transition transition) {
+		return transition.id() << bitsForStates;
+	}
+
+	private int projectToId(State to) {
+		return to.id() << (bitsForStates + bitsForCharacters);
+	}
+
+	private int minCharacterVariable() {
+		return bitsForStates + 1;
+	}
+
+	private int maxCharacterVariable() {
+		return minCharacterVariable() + bitsForCharacters;
+	}
+
+	private int maxToStateVariable() {
+		return minToStateVariable() + bitsForStates;
+	}
+
+	private int minToStateVariable() {
+		return maxCharacterVariable();
+	}
+
+	private int maxFromStateVariable() {
+		return minFromStateVariable() + bitsForStates;
+	}
+
+	private int minFromStateVariable() {
+		return 1;
+	}
+
+	private static void blastBits(long number, BitSet row) {
+		row.or(BitSet.valueOf(new long[]{number}));
+	}
+
+	@Override
+	public String toString() {
+		return "BitSummary{" +
+			"bitsForStates=" + bitsForStates +
+			", bitsForCharacters=" + bitsForCharacters +
+			", bitsPerRow=" + bitsPerRow +
+			'}';
 	}
 }

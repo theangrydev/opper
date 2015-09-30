@@ -43,8 +43,8 @@ public class VariableOrdering {
 		return variablesWithOrder.size();
 	}
 
-	public Stream<Variable> toStateVariables() {
-		return variablesWithOrder.stream().filter(variableSummary::isToState);
+	public List<Variable> toStateVariables() {
+		return variablesWithOrder.stream().filter(variableSummary::isToState).collect(toList());
 	}
 
 	public Stream<Variable> characterVariables() {

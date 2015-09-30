@@ -9,8 +9,6 @@ import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagramVariableAssi
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
-
 public class BFAAcceptance {
 	private final BinaryDecisionDiagram acceptingStates;
 	private final VariableOrdering variableOrdering;
@@ -33,7 +31,7 @@ public class BFAAcceptance {
 
 	private static BinaryDecisionDiagram acceptingStates(VariableOrdering variableOrdering, NFA nfa, VariableSummary variableSummary, AllVariables allVariables) {
 		List<State> acceptanceStates = nfa.acceptanceStates();
-		List<Variable> toStateVariables = variableOrdering.toStateVariables().collect(toList());
+		List<Variable> toStateVariables = variableOrdering.toStateVariables();
 
 		SetVariables firstAcceptanceState = SetVariables.toState(variableSummary, acceptanceStates.get(0));
 		BinaryDecisionDiagram acceptingStates = allVariables.specifyVariables(toStateVariables, firstAcceptanceState);

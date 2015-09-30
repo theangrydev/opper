@@ -14,7 +14,8 @@ public class AllVariables {
 	private final List<BinaryDecisionDiagram> binaryDecisionDiagrams;
 	private final List<BinaryDecisionDiagram> bddNotVariables;
 
-	public AllVariables(int numberOfVariables) {
+	public AllVariables(VariableOrdering variableOrdering) {
+		int numberOfVariables = variableOrdering.numberOfVariables();
 		this.binaryDecisionDiagramFactory = new BinaryDecisionDiagramFactory();
 		binaryDecisionDiagrams = new ArrayList<>(numberOfVariables);
 		for (int i = 0; i < numberOfVariables; i++) {

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 
 public class VariableOrdering {
 	private final VariableSummary variableSummary;
@@ -34,8 +35,8 @@ public class VariableOrdering {
 		return variablesWithOrder.stream().filter(variableSummary::isFromStateOrCharacter);
 	}
 
-	public Stream<Variable> fromStateVariables() {
-		return variablesWithOrder.stream().filter(variableSummary::isFromState);
+	public List<Variable> fromStateVariables() {
+		return variablesWithOrder.stream().filter(variableSummary::isFromState).collect(toList());
 	}
 
 	public int numberOfVariables() {

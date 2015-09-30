@@ -7,8 +7,6 @@ import jdd.bdd.Permutation;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
-
 public class BFABuilder {
 
 	public static BFA convertToBFA(NFA nfa) {
@@ -28,7 +26,7 @@ public class BFABuilder {
 	}
 
 	private static BinaryDecisionDiagram initialState(NFA nfa, VariableOrdering variableOrdering, AllVariables allVariables) {
-		List<Variable> fromStateVariables = variableOrdering.fromStateVariables().collect(toList());
+		List<Variable> fromStateVariables = variableOrdering.fromStateVariables();
 		SetVariables fromState = SetVariables.fromState(nfa.variableSummary(), nfa.initialState());
 		return allVariables.specifyVariables(fromStateVariables, fromState);
 	}

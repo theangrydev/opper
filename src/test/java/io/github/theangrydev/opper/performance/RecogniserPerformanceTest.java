@@ -25,7 +25,7 @@ public class RecogniserPerformanceTest {
 			.withRule("START", "REPEATED", "START")
 			.withRule("START", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(100000, grammar.symbolByName("REPEATED")));
+		Corpus corpus = corpus(nCopies(90000, grammar.symbolByName("REPEATED")));
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 

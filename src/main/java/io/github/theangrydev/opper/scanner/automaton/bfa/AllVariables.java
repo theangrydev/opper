@@ -40,10 +40,14 @@ public class AllVariables {
 		return bddNotVariables.get(variableIndex);
 	}
 
+	public BinaryDecisionDiagram anything() {
+		return binaryDecisionDiagramFactory.newCube(new boolean[0]);
+	}
+
 	public BinaryDecisionDiagram specifyVariables(List<Variable> variablesToSpecify, SetVariables setVariables) {
-		BinaryDecisionDiagram specifiedVariables = specifyVariable(variablesToSpecify.get(0), setVariables);
-		for (int i = 1; i < variablesToSpecify.size(); i++) {
-			BinaryDecisionDiagram specifiedVariable = specifyVariable(variablesToSpecify.get(i), setVariables);
+		BinaryDecisionDiagram specifiedVariables = anything();
+		for (Variable specified : variablesToSpecify) {
+			BinaryDecisionDiagram specifiedVariable = specifyVariable(specified, setVariables);
 			specifiedVariables = specifiedVariables.andTo(specifiedVariable);
 		}
 		return specifiedVariables;

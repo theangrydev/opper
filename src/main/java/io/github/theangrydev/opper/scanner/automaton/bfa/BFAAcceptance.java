@@ -1,11 +1,15 @@
 package io.github.theangrydev.opper.scanner.automaton.bfa;
 
 import io.github.theangrydev.opper.grammar.Symbol;
+import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
+import io.github.theangrydev.opper.scanner.automaton.nfa.State;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagramVariableAssignment;
 
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 public class BFAAcceptance {
 	private final BinaryDecisionDiagram acceptingStates;
@@ -13,11 +17,31 @@ public class BFAAcceptance {
 	private final VariableSummary variableSummary;
 	private final List<Symbol> symbolsByStateId;
 
-	public BFAAcceptance(BinaryDecisionDiagram acceptingStates, VariableOrdering variableOrdering, VariableSummary variableSummary, List<Symbol> symbolsByStateId) {
+	private BFAAcceptance(BinaryDecisionDiagram acceptingStates, VariableOrdering variableOrdering, VariableSummary variableSummary, List<Symbol> symbolsByStateId) {
 		this.acceptingStates = acceptingStates;
 		this.variableOrdering = variableOrdering;
 		this.variableSummary = variableSummary;
 		this.symbolsByStateId = symbolsByStateId;
+	}
+
+	public static BFAAcceptance bfaAcceptance(NFA nfa, VariableSummary variableSummary, VariableOrdering variableOrdering, AllVariables allVariables) {
+		BinaryDecisionDiagram acceptingStates = acceptingStates(variableOrdering, nfa, variableSummary, allVariables);
+		List<Symbol> symbolsByStateId = nfa.symbolsByStateId();
+		return new BFAAcceptance(acceptingStates, variableOrdering, variableSummary, symbolsByStateId);
+	}
+
+	private static BinaryDecisionDiagram acceptingStates(VariableOrdering variableOrdering, NFA nfa, VariableSummary variableSummary, AllVariables allVariables) {
+		List<State> acceptanceStates = nfa.acceptanceStates();
+		List<Variable> toStateVariables = variableOrdering.toStateVariables().collect(toList());
+
+		SetVariables firstAcceptanceState = SetVariables.toState(variableSummary, acceptanceStates.get(0));
+		BinaryDecisionDiagram acceptingStates = allVariables.specifyVariables(toStateVariables, firstAcceptanceState);
+		for (int i = 1; i < acceptanceStates.size(); i++) {
+			State state = acceptanceStates.get(i);
+			BinaryDecisionDiagram acceptingState = allVariables.specifyVariables(toStateVariables, SetVariables.toState(variableSummary, state));
+			acceptingStates = acceptingStates.orTo(acceptingState);
+		}
+		return acceptingStates;
 	}
 
 	public Optional<Symbol> checkAcceptance(BinaryDecisionDiagram frontier) {

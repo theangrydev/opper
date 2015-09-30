@@ -1,6 +1,5 @@
 package io.github.theangrydev.opper.scanner.automaton.bfa;
 
-import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.scanner.automaton.nfa.CharacterTransition;
 import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
 import io.github.theangrydev.opper.scanner.automaton.nfa.State;
@@ -25,7 +24,7 @@ public class BFABuilder {
 		BinaryDecisionDiagramFactory binaryDecisionDiagramFactory = new BinaryDecisionDiagramFactory();
 		AllVariables allVariables = new AllVariables(variableOrdering.numberOfVariables(), binaryDecisionDiagramFactory);
 
-		BFAAcceptance bfaAcceptance = bfaAcceptance(nfa, variableSummary, variableOrdering, allVariables);
+		BFAAcceptance bfaAcceptance = BFAAcceptance.bfaAcceptance(nfa, variableSummary, variableOrdering, allVariables);
 
 		BFATransitions bfaTransitions = bfaTransitions(nfa, transitionTable, variableSummary, variableOrdering, binaryDecisionDiagramFactory, allVariables);
 
@@ -40,12 +39,6 @@ public class BFABuilder {
 		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = characterPresence(variableOrdering, nfa.characterTransitions(), variableSummary, allVariables);
 		BinaryDecisionDiagram existsFromStateAndCharacter = existsFromStateAndCharacter(variableOrdering, variableSummary, binaryDecisionDiagramFactory);
 		return new BFATransitions(transitions, characterPresences, existsFromStateAndCharacter);
-	}
-
-	private static BFAAcceptance bfaAcceptance(NFA nfa, VariableSummary variableSummary, VariableOrdering variableOrdering, AllVariables allVariables) {
-		BinaryDecisionDiagram acceptingStates = acceptingStates(variableOrdering, nfa, variableSummary, allVariables);
-		List<Symbol> symbolsByStateId = nfa.symbolsByStateId();
-		return new BFAAcceptance(acceptingStates, variableOrdering, variableSummary, symbolsByStateId);
 	}
 
 	private static BinaryDecisionDiagram transitions(VariableOrdering variableOrders, AllVariables allVariables, TransitionTable transitionTable) {
@@ -67,20 +60,6 @@ public class BFABuilder {
 			characterPresences.put(characterTransition.character(), characterPresence);
 		}
 		return characterPresences;
-	}
-
-	private static BinaryDecisionDiagram acceptingStates(VariableOrdering variableOrdering, NFA nfa, VariableSummary variableSummary, AllVariables allVariables) {
-		List<State> acceptanceStates = nfa.acceptanceStates();
-		List<Variable> toStateVariables = variableOrdering.toStateVariables().collect(toList());
-
-		SetVariables firstAcceptanceState = SetVariables.toState(variableSummary, acceptanceStates.get(0));
-		BinaryDecisionDiagram acceptingStates = allVariables.specifyVariables(toStateVariables, firstAcceptanceState);
-		for (int i = 1; i < acceptanceStates.size(); i++) {
-			State state = acceptanceStates.get(i);
-			BinaryDecisionDiagram acceptingState = allVariables.specifyVariables(toStateVariables, SetVariables.toState(variableSummary, state));
-			acceptingStates = acceptingStates.orTo(acceptingState);
-		}
-		return acceptingStates;
 	}
 
 	private static BinaryDecisionDiagram fromState(VariableOrdering variableOrdering, VariableSummary variableSummary, AllVariables allVariables, State state) {

@@ -24,7 +24,8 @@ public class BFAAcceptance {
 		this.symbolsByStateId = symbolsByStateId;
 	}
 
-	public static BFAAcceptance bfaAcceptance(NFA nfa, VariableSummary variableSummary, VariableOrdering variableOrdering, AllVariables allVariables) {
+	public static BFAAcceptance bfaAcceptance(NFA nfa, VariableOrdering variableOrdering, AllVariables allVariables) {
+		VariableSummary variableSummary = nfa.variableSummary();
 		BinaryDecisionDiagram acceptingStates = acceptingStates(variableOrdering, nfa, variableSummary, allVariables);
 		List<Symbol> symbolsByStateId = nfa.symbolsByStateId();
 		return new BFAAcceptance(acceptingStates, variableOrdering, variableSummary, symbolsByStateId);

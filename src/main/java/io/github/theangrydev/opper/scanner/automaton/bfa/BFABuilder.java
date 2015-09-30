@@ -1,7 +1,6 @@
 package io.github.theangrydev.opper.scanner.automaton.bfa;
 
 import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
-import io.github.theangrydev.opper.scanner.automaton.nfa.State;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagramFactory;
 import jdd.bdd.Permutation;
@@ -15,25 +14,24 @@ public class BFABuilder {
 
 	public static BFA convertToBFA(NFA nfa) {
 		TransitionTable transitionTable = TransitionTable.fromNFA(nfa);
-		VariableSummary variableSummary = nfa.variableSummary();
-		VariableOrdering variableOrdering = VariableOrderingComputer.determineOrdering(variableSummary, transitionTable);
+		VariableOrdering variableOrdering = VariableOrderingComputer.determineOrdering(nfa.variableSummary(), transitionTable);
 
 		BinaryDecisionDiagramFactory binaryDecisionDiagramFactory = new BinaryDecisionDiagramFactory();
 		AllVariables allVariables = new AllVariables(variableOrdering.numberOfVariables(), binaryDecisionDiagramFactory);
 
-		BFAAcceptance bfaAcceptance = BFAAcceptance.bfaAcceptance(nfa, variableSummary, variableOrdering, allVariables);
+		BFAAcceptance bfaAcceptance = BFAAcceptance.bfaAcceptance(nfa, variableOrdering, allVariables);
 
-		BFATransitions bfaTransitions = BFATransitions.bfaTransitions(nfa, transitionTable, variableSummary, variableOrdering, binaryDecisionDiagramFactory, allVariables);
+		BFATransitions bfaTransitions = BFATransitions.bfaTransitions(nfa, transitionTable, variableOrdering, binaryDecisionDiagramFactory, allVariables);
 
-		BinaryDecisionDiagram startingFrom = fromState(variableOrdering, variableSummary, allVariables, nfa.initialState());
+		BinaryDecisionDiagram startingFrom = initialState(nfa, variableOrdering, allVariables);
 		Permutation relabelToStateToFromState = relabelToStateToFromState(variableOrdering, allVariables, binaryDecisionDiagramFactory);
 
 		return new BFA(bfaTransitions, bfaAcceptance, startingFrom, relabelToStateToFromState);
 	}
 
-	private static BinaryDecisionDiagram fromState(VariableOrdering variableOrdering, VariableSummary variableSummary, AllVariables allVariables, State state) {
+	private static BinaryDecisionDiagram initialState(NFA nfa, VariableOrdering variableOrdering, AllVariables allVariables) {
 		List<Variable> fromStateVariables = variableOrdering.fromStateVariables().collect(toList());
-		SetVariables fromState = SetVariables.fromState(variableSummary, state);
+		SetVariables fromState = SetVariables.fromState(nfa.variableSummary(), nfa.initialState());
 		return allVariables.specifyVariables(fromStateVariables, fromState);
 	}
 

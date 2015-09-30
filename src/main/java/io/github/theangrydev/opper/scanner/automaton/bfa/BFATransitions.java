@@ -22,7 +22,8 @@ public class BFATransitions {
 		this.existsFromStateAndCharacter = existsFromStateAndCharacter;
 	}
 
-	public static BFATransitions bfaTransitions(NFA nfa, TransitionTable transitionTable, VariableSummary variableSummary, VariableOrdering variableOrdering, BinaryDecisionDiagramFactory binaryDecisionDiagramFactory, AllVariables allVariables) {
+	public static BFATransitions bfaTransitions(NFA nfa, TransitionTable transitionTable, VariableOrdering variableOrdering, BinaryDecisionDiagramFactory binaryDecisionDiagramFactory, AllVariables allVariables) {
+		VariableSummary variableSummary = nfa.variableSummary();
 		BinaryDecisionDiagram transitions = transitions(variableOrdering, allVariables, transitionTable);
 		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = characterPresence(variableOrdering, nfa.characterTransitions(), variableSummary, allVariables);
 		BinaryDecisionDiagram existsFromStateAndCharacter = existsFromStateAndCharacter(variableOrdering, variableSummary, binaryDecisionDiagramFactory);

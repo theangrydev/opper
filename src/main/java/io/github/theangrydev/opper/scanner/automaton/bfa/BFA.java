@@ -13,7 +13,7 @@ public class BFA {
 
 	private final BinaryDecisionDiagram transitions;
 	private final Char2ObjectMap<BinaryDecisionDiagram> characterPresences;
-	private final BinaryDecisionDiagram acceptanceingStates;
+	private final BinaryDecisionDiagram acceptingStates;
 	private final BinaryDecisionDiagram initialState;
 	private final VariableOrdering variableOrdering;
 	private final VariableSummary variableSummary;
@@ -21,10 +21,10 @@ public class BFA {
 	private final Permutation relabelToStateToFromState;
 	private final BinaryDecisionDiagram existsFromStateAndCharacter;
 
-	public BFA(BinaryDecisionDiagram transitions, Char2ObjectMap<BinaryDecisionDiagram> characterPresences, BinaryDecisionDiagram acceptanceingStates, BinaryDecisionDiagram initialState, VariableOrdering variableOrdering, VariableSummary variableSummary, List<Symbol> symbolsByStateId, Permutation relabelToStateToFromState, BinaryDecisionDiagram existsFromStateAndCharacter) {
+	public BFA(BinaryDecisionDiagram transitions, Char2ObjectMap<BinaryDecisionDiagram> characterPresences, BinaryDecisionDiagram acceptingStates, BinaryDecisionDiagram initialState, VariableOrdering variableOrdering, VariableSummary variableSummary, List<Symbol> symbolsByStateId, Permutation relabelToStateToFromState, BinaryDecisionDiagram existsFromStateAndCharacter) {
 		this.transitions = transitions;
 		this.characterPresences = characterPresences;
-		this.acceptanceingStates = acceptanceingStates;
+		this.acceptingStates = acceptingStates;
 		this.initialState = initialState;
 		this.variableOrdering = variableOrdering;
 		this.variableSummary = variableSummary;
@@ -54,7 +54,7 @@ public class BFA {
 	}
 
 	public Optional<Symbol> checkAcceptance(BinaryDecisionDiagram frontier) {
-		BinaryDecisionDiagram acceptCheck = acceptanceingStates.and(frontier);
+		BinaryDecisionDiagram acceptCheck = acceptingStates.and(frontier);
 		boolean accepted = acceptCheck.isNotZero();
 		if (!accepted) {
 			acceptCheck.discard();

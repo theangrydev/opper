@@ -27,11 +27,28 @@ public class AllVariables {
 		return variable(variable.order());
 	}
 
-	public BinaryDecisionDiagram variable(int variableIndex) {
+	private BinaryDecisionDiagram variable(int variableIndex) {
 		return binaryDecisionDiagrams.get(variableIndex);
 	}
 
-	public BinaryDecisionDiagram notVariable(int variableIndex) {
+	private BinaryDecisionDiagram notVariable(int variableIndex) {
 		return bddNotVariables.get(variableIndex);
+	}
+
+	public BinaryDecisionDiagram specifyVariables(List<Variable> variablesToSpecify, SetVariables setVariables) {
+		BinaryDecisionDiagram specifiedVariables = specifyVariable(variablesToSpecify.get(0), setVariables);
+		for (int i = 1; i < variablesToSpecify.size(); i++) {
+			BinaryDecisionDiagram specifiedVariable = specifyVariable(variablesToSpecify.get(i), setVariables);
+			specifiedVariables = specifiedVariables.andTo(specifiedVariable);
+		}
+		return specifiedVariables;
+	}
+
+	private BinaryDecisionDiagram specifyVariable(Variable variable, SetVariables setVariables) {
+		if (setVariables.contains(variable)) {
+			return variable(variable.order());
+		} else {
+			return notVariable(variable.order());
+		}
 	}
 }

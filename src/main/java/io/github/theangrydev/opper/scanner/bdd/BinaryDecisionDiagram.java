@@ -6,7 +6,7 @@ import jdd.bdd.Permutation;
 public class BinaryDecisionDiagram {
 
 	private final BDD bdd;
-	private final int id;
+	private int id;
 
 	private BinaryDecisionDiagram(BDD bdd, int id) {
 		this.bdd = bdd;
@@ -38,11 +38,13 @@ public class BinaryDecisionDiagram {
 	}
 
 	public BinaryDecisionDiagram andTo(BinaryDecisionDiagram binaryDecisionDiagram) {
-		return new BinaryDecisionDiagram(bdd, bdd.andTo(id, binaryDecisionDiagram.id));
+		this.id = bdd.andTo(id, binaryDecisionDiagram.id);
+		return this;
 	}
 
 	public BinaryDecisionDiagram orTo(BinaryDecisionDiagram binaryDecisionDiagram) {
-		return new BinaryDecisionDiagram(bdd, bdd.orTo(id, binaryDecisionDiagram.id));
+		this.id = bdd.orTo(id, binaryDecisionDiagram.id);
+		return this;
 	}
 
 	public void printSet() {
@@ -62,18 +64,25 @@ public class BinaryDecisionDiagram {
 	}
 
 	public void discard() {
+		discard(id);
+	}
+
+	private void discard(int id) {
 		bdd.deref(id);
 	}
 
 	public BinaryDecisionDiagram replaceTo(Permutation permutation) {
-		BinaryDecisionDiagram result = new BinaryDecisionDiagram(bdd, bdd.replace(id, permutation));
-		discard();
-		return result;
+		int oldId = id;
+		this.id = bdd.replace(id, permutation);
+		discard(oldId);
+		return this;
 	}
 
 	public BinaryDecisionDiagram existsTo(BinaryDecisionDiagram binaryDecisionDiagram) {
-		BinaryDecisionDiagram result = new BinaryDecisionDiagram(bdd, bdd.exists(id, binaryDecisionDiagram.id));
-		discard();
-		return result;
+		int oldId = id;
+		this.id = bdd.exists(id, binaryDecisionDiagram.id);
+		discard(oldId);
+		return this;
+
 	}
 }

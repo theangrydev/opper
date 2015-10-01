@@ -28,11 +28,11 @@ public class VariableSummary {
 		this.bitsForStates = IntMath.log2(numberOfStates, RoundingMode.FLOOR) + 1;
 		this.bitsForCharacters = IntMath.log2(numberOfCharacters, RoundingMode.FLOOR) + 1;
 		this.bitsPerRow = bitsForStates * 2 + bitsForCharacters;
-		this.maxFromStateVariable = MIN_FROM_STATE_VARIABLE + bitsForStates;
-		this.minCharacterVariable = bitsForStates + 1;
-		this.maxCharacterVariable = minCharacterVariable + bitsForCharacters;
-		this.minToStateVariable = maxCharacterVariable;
-		this.maxToStateVariable = minToStateVariable + bitsForStates;
+		this.maxFromStateVariable = MIN_FROM_STATE_VARIABLE + bitsForStates - 1;
+		this.minCharacterVariable = maxFromStateVariable + 1;
+		this.maxCharacterVariable = minCharacterVariable + bitsForCharacters - 1;
+		this.minToStateVariable = maxCharacterVariable + 1;
+		this.maxToStateVariable = minToStateVariable + bitsForStates - 1;
 	}
 
 	public VariablesSet variablesSetInTransition(State from, Transition via, State to) {
@@ -64,15 +64,15 @@ public class VariableSummary {
 	}
 
 	public boolean isCharacter(Variable variable) {
-		return variable.id() >= minCharacterVariable && variable.id() < maxCharacterVariable;
+		return variable.id() >= minCharacterVariable && variable.id() <= maxCharacterVariable;
 	}
 
 	public boolean isToState(Variable variable) {
-		return variable.id() >= minToStateVariable && variable.id() < maxToStateVariable;
+		return variable.id() >= minToStateVariable && variable.id() <= maxToStateVariable;
 	}
 
 	public boolean isFromState(Variable variable) {
-		return variable.id() >= MIN_FROM_STATE_VARIABLE && variable.id() < maxFromStateVariable;
+		return variable.id() >= MIN_FROM_STATE_VARIABLE && variable.id() <= maxFromStateVariable;
 	}
 
 	public boolean isFromStateOrCharacter(Variable variable) {

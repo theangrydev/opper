@@ -19,9 +19,9 @@ public class BFAAcceptance {
 		this.symbolForAssignment = symbolForAssignment;
 	}
 
-	public static BFAAcceptance bfaAcceptance(NFA nfa, VariableOrdering variableOrdering, AllVariables allVariables) {
+	public static BFAAcceptance bfaAcceptance(NFA nfa, AllVariables allVariables) {
 		BinaryDecisionDiagram acceptingStates = acceptingStates(nfa, allVariables);
-		SymbolForAssignment symbolForAssignment = SymbolForAssignment.make(nfa, variableOrdering);
+		SymbolForAssignment symbolForAssignment = SymbolForAssignment.make(nfa, allVariables);
 		return new BFAAcceptance(acceptingStates, symbolForAssignment);
 	}
 

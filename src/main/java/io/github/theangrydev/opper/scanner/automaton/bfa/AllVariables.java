@@ -4,6 +4,7 @@ import io.github.theangrydev.opper.scanner.automaton.nfa.CharacterTransition;
 import io.github.theangrydev.opper.scanner.automaton.nfa.State;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagramFactory;
+import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagramVariableAssignment;
 import jdd.bdd.Permutation;
 
 import java.util.ArrayList;
@@ -104,5 +105,13 @@ public class AllVariables {
 		Stream<BinaryDecisionDiagram> toVariables = variableOrdering.toStateVariablesInOriginalOrder().map(this::variable);
 		Stream<BinaryDecisionDiagram> fromVariables = variableOrdering.fromStateVariablesInOriginalOrder().map(this::variable);
 		return binaryDecisionDiagramFactory.createPermutation(toVariables, fromVariables);
+	}
+
+	public int toStateId(BinaryDecisionDiagramVariableAssignment assignment) {
+		return assignment.assignedVariableIndexes()
+			.map(variableOrdering::variableId)
+			.map(variableSummary::toStateBitPositionForVariableId)
+			.map(bitPosition -> 1 << bitPosition)
+			.reduce(0, (a, b) -> a | b);
 	}
 }

@@ -8,20 +8,16 @@ import java.util.List;
 
 public class SymbolForAssignment {
 
-	private final VariableOrdering variableOrdering;
-	private final VariableSummary variableSummary;
 	private final List<Symbol> symbolsByStateId;
+	private final AllVariables allVariables;
 
-	private SymbolForAssignment(VariableOrdering variableOrdering, VariableSummary variableSummary, List<Symbol> symbolsByStateId) {
-		this.variableOrdering = variableOrdering;
-		this.variableSummary = variableSummary;
+	private SymbolForAssignment(AllVariables allVariables, List<Symbol> symbolsByStateId) {
+		this.allVariables = allVariables;
 		this.symbolsByStateId = symbolsByStateId;
 	}
 
-	public static SymbolForAssignment make(NFA nfa, VariableOrdering variableOrdering) {
-		List<Symbol> symbolsByStateId = nfa.symbolsByStateId();
-		VariableSummary variableSummary = nfa.variableSummary();
-		return new SymbolForAssignment(variableOrdering, variableSummary, symbolsByStateId);
+	public static SymbolForAssignment make(NFA nfa, AllVariables allVariables) {
+		return new SymbolForAssignment(allVariables, nfa.symbolsByStateId());
 	}
 
 	public Symbol symbolForAssignment(BinaryDecisionDiagramVariableAssignment assignment) {
@@ -29,10 +25,6 @@ public class SymbolForAssignment {
 	}
 
 	private int lookupToState(BinaryDecisionDiagramVariableAssignment assignment) {
-		return assignment.assignedVariableIndexes()
-			.map(variableOrdering::variableId)
-			.map(variableSummary::toStateBitPositionForVariableId)
-			.map(bitPosition -> 1 << bitPosition)
-			.reduce(0, (a, b) -> a | b);
+		return allVariables.toStateId(assignment);
 	}
 }

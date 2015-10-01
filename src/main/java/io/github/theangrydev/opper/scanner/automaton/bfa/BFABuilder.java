@@ -12,7 +12,7 @@ public class BFABuilder {
 
 		AllVariables allVariables = new AllVariables(nfa.variableSummary(), variableOrdering);
 
-		BFAAcceptance bfaAcceptance = BFAAcceptance.bfaAcceptance(nfa, variableOrdering, allVariables);
+		BFAAcceptance bfaAcceptance = BFAAcceptance.bfaAcceptance(nfa, allVariables);
 
 		BFATransitions bfaTransitions = BFATransitions.bfaTransitions(nfa, transitionTable, allVariables);
 

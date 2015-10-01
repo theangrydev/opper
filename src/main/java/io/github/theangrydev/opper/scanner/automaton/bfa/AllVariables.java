@@ -123,10 +123,16 @@ public class AllVariables {
 	}
 
 	public int toStateId(BinaryDecisionDiagramVariableAssignment toStateAssignment) {
-		return toStateAssignment.assignedVariableIndexes()
-			.map(variableOrdering::variableId)
-			.map(variableSummary::toStateBitPositionForVariableId)
-			.map(bitPosition -> 1 << bitPosition)
-			.reduce(0, (a, b) -> a | b);
+		int[] assignment = toStateAssignment.assignment();
+		int toStateId = 0;
+		for (int i = assignment.length - 1; i >= 0; i--) {
+			if (assignment[i] != 1) {
+				continue;
+			}
+			int variableId = variableOrdering.variableId(i);
+			int bitPosition = variableSummary.toStateBitPositionForVariableId(variableId);
+			toStateId |= 1 << bitPosition;
+		}
+		return toStateId;
 	}
 }

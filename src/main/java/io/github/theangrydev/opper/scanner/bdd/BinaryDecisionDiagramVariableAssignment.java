@@ -1,21 +1,20 @@
 package io.github.theangrydev.opper.scanner.bdd;
 
 import java.util.Arrays;
-import java.util.stream.IntStream;
 
 public class BinaryDecisionDiagramVariableAssignment {
-	private final int[] assignedIndexes;
+	private final int[] assignment;
 
 	public BinaryDecisionDiagramVariableAssignment(int[] assignment) {
-		this.assignedIndexes = IntStream.range(0, assignment.length).filter(index -> assignment[index] == 1).toArray();
+		this.assignment = assignment;
 	}
 
 	@Override
 	public String toString() {
-		return "assigned: " + Arrays.toString(assignedIndexes);
+		return "assigned: " + Arrays.toString(assignment);
 	}
 
-	public IntStream assignedVariableIndexes() {
-		return Arrays.stream(assignedIndexes);
+	public int[] assignment() {
+		return assignment;
 	}
 }

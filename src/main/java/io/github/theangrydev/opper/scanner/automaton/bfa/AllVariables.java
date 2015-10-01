@@ -31,7 +31,7 @@ public class AllVariables {
 		}
 	}
 
-	public BinaryDecisionDiagram variable(Variable variable) {
+	private BinaryDecisionDiagram variable(Variable variable) {
 		return variable(variable.order());
 	}
 

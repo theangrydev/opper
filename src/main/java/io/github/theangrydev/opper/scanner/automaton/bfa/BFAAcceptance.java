@@ -26,11 +26,10 @@ public class BFAAcceptance {
 	}
 
 	private static BinaryDecisionDiagram acceptingStates(NFA nfa, AllVariables allVariables) {
-		VariableSummary variableSummary = nfa.variableSummary();
 		List<State> specifiedAcceptingStates = nfa.acceptanceStates();
 		BinaryDecisionDiagram acceptingStates = allVariables.nothing();
 		for (State specifiedAcceptingState : specifiedAcceptingStates) {
-			BinaryDecisionDiagram acceptingState = allVariables.specifyToVariables(variableSummary.variablesSetForToState(specifiedAcceptingState));
+			BinaryDecisionDiagram acceptingState = allVariables.specifyToVariables(specifiedAcceptingState);
 			acceptingStates = acceptingStates.orTo(acceptingState);
 		}
 		return acceptingStates;

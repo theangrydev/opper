@@ -10,21 +10,17 @@ public class BFABuilder {
 		TransitionTable transitionTable = TransitionTable.fromNFA(nfa);
 		VariableOrdering variableOrdering = VariableOrderingComputer.determineOrdering(nfa.variableSummary(), transitionTable);
 
-		AllVariables allVariables = new AllVariables(variableOrdering);
+		AllVariables allVariables = new AllVariables(nfa.variableSummary(), variableOrdering);
 
 		BFAAcceptance bfaAcceptance = BFAAcceptance.bfaAcceptance(nfa, variableOrdering, allVariables);
 
 		BFATransitions bfaTransitions = BFATransitions.bfaTransitions(nfa, transitionTable, allVariables);
 
-		BinaryDecisionDiagram startingFrom = initialState(nfa, allVariables);
+		BinaryDecisionDiagram startingFrom = allVariables.specifyFromVariables(nfa.initialState());
 
 		Permutation relabelToStateToFromState = allVariables.relabelToStateToFromState();
 
 		return new BFA(bfaTransitions, bfaAcceptance, startingFrom, relabelToStateToFromState);
 	}
 
-	private static BinaryDecisionDiagram initialState(NFA nfa, AllVariables allVariables) {
-		VariablesSet fromState = nfa.variableSummary().variablesSetForFromState(nfa.initialState());
-		return allVariables.specifyFromVariables(fromState);
-	}
 }

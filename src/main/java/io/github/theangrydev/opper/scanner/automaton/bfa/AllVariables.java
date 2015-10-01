@@ -1,5 +1,7 @@
 package io.github.theangrydev.opper.scanner.automaton.bfa;
 
+import io.github.theangrydev.opper.scanner.automaton.nfa.CharacterTransition;
+import io.github.theangrydev.opper.scanner.automaton.nfa.State;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagramFactory;
 import jdd.bdd.Permutation;
@@ -10,12 +12,14 @@ import java.util.stream.Stream;
 
 public class AllVariables {
 
+	private final VariableSummary variableSummary;
 	private final VariableOrdering variableOrdering;
 	private final BinaryDecisionDiagramFactory binaryDecisionDiagramFactory;
 	private final List<BinaryDecisionDiagram> binaryDecisionDiagrams;
 	private final List<BinaryDecisionDiagram> bddNotVariables;
 
-	public AllVariables(VariableOrdering variableOrdering) {
+	public AllVariables(VariableSummary variableSummary, VariableOrdering variableOrdering) {
+		this.variableSummary = variableSummary;
 		this.variableOrdering = variableOrdering;
 		this.binaryDecisionDiagramFactory = new BinaryDecisionDiagramFactory();
 
@@ -84,16 +88,16 @@ public class AllVariables {
 		return specifyVariablePresence(variableOrdering.allVariables(), variablesSet);
 	}
 
-	public BinaryDecisionDiagram specifyCharacterVariables(VariablesSet characterVariablesSet) {
-		return specifyVariablePresence(variableOrdering.characterVariables(), characterVariablesSet);
+	public BinaryDecisionDiagram specifyCharacterVariables(CharacterTransition characterTransition) {
+		return specifyVariablePresence(variableOrdering.characterVariables(), variableSummary.variablesSetForCharacter(characterTransition));
 	}
 
-	public BinaryDecisionDiagram specifyToVariables(VariablesSet toVariablesSet) {
-		return specifyVariablePresence(variableOrdering.toStateVariables(), toVariablesSet);
+	public BinaryDecisionDiagram specifyToVariables(State toState) {
+		return specifyVariablePresence(variableOrdering.toStateVariables(), variableSummary.variablesSetForToState(toState));
 	}
 
-	public BinaryDecisionDiagram specifyFromVariables(VariablesSet fromVariableSet) {
-		return specifyVariablePresence(variableOrdering.fromStateVariables(), fromVariableSet);
+	public BinaryDecisionDiagram specifyFromVariables(State fromState) {
+		return specifyVariablePresence(variableOrdering.fromStateVariables(), variableSummary.variablesSetForFromState(fromState));
 	}
 
 	public Permutation relabelToStateToFromState() {

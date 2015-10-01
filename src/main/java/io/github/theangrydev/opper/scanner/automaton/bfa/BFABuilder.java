@@ -17,7 +17,7 @@ public class BFABuilder {
 
 		BFAAcceptance bfaAcceptance = BFAAcceptance.bfaAcceptance(nfa, variableOrdering, allVariables);
 
-		BFATransitions bfaTransitions = BFATransitions.bfaTransitions(nfa, transitionTable, variableOrdering, allVariables);
+		BFATransitions bfaTransitions = BFATransitions.bfaTransitions(nfa, transitionTable, allVariables);
 
 		BinaryDecisionDiagram startingFrom = initialState(nfa, variableOrdering, allVariables);
 		Permutation relabelToStateToFromState = relabelToStateToFromState(variableOrdering, allVariables);

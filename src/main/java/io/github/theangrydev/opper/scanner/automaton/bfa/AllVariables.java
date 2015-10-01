@@ -68,8 +68,16 @@ public class AllVariables {
 		return binaryDecisionDiagramFactory.createPermutation(fromSetVariables, toSetVariables);
 	}
 
-	public BinaryDecisionDiagram newCube(boolean[] setVariables) {
-		return binaryDecisionDiagramFactory.newCube(setVariables);
+	private BinaryDecisionDiagram exists(List<Variable> presentVariables) {
+		boolean[] variables = new boolean[variableOrdering.numberOfVariables()];
+		for (Variable presentVariable : presentVariables) {
+			variables[presentVariable.order()] = true;
+		}
+		return binaryDecisionDiagramFactory.newCube(variables);
+	}
+
+	public BinaryDecisionDiagram existsFromStateAndCharacter() {
+		return exists(variableOrdering.fromStateOrCharacterVariables());
 	}
 
 	public BinaryDecisionDiagram nothing() {

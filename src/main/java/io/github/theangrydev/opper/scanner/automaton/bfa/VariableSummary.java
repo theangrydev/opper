@@ -9,7 +9,6 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 
 import java.math.RoundingMode;
 import java.util.BitSet;
-import java.util.List;
 
 public class VariableSummary {
 
@@ -73,14 +72,6 @@ public class VariableSummary {
 			allVariables.add(i);
 		}
 		return allVariables;
-	}
-
-	public boolean[] presentVariables(List<Variable> presentVariables) {
-		boolean[] variables = new boolean[bitsPerRow()];
-		for (Variable presentVariable : presentVariables) {
-			variables[presentVariable.order()] = true;
-		}
-		return variables;
 	}
 
 	private int projectFromId(State from) {

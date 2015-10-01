@@ -19,11 +19,11 @@ public class BFATransitions {
 		this.existsFromStateAndCharacter = existsFromStateAndCharacter;
 	}
 
-	public static BFATransitions bfaTransitions(NFA nfa, TransitionTable transitionTable, VariableOrdering variableOrdering, AllVariables allVariables) {
+	public static BFATransitions bfaTransitions(NFA nfa, TransitionTable transitionTable, AllVariables allVariables) {
 		VariableSummary variableSummary = nfa.variableSummary();
 		BinaryDecisionDiagram transitions = transitions(allVariables, transitionTable);
 		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = characterPresence(nfa.characterTransitions(), variableSummary, allVariables);
-		BinaryDecisionDiagram existsFromStateAndCharacter = existsFromStateAndCharacter(variableOrdering, variableSummary, allVariables);
+		BinaryDecisionDiagram existsFromStateAndCharacter = allVariables.existsFromStateAndCharacter();
 		return new BFATransitions(transitions, characterPresences, existsFromStateAndCharacter);
 	}
 
@@ -45,12 +45,6 @@ public class BFATransitions {
 			characterPresences.put(characterTransition.character(), characterPresence);
 		}
 		return characterPresences;
-	}
-
-	private static BinaryDecisionDiagram existsFromStateAndCharacter(VariableOrdering variableOrdering, VariableSummary variableSummary, AllVariables allVariables) {
-		List<Variable> fromStateOrCharacterVariables = variableOrdering.fromStateOrCharacterVariables();
-		boolean[] presentVariables = variableSummary.presentVariables(fromStateOrCharacterVariables);
-		return allVariables.newCube(presentVariables);
 	}
 
 	public BinaryDecisionDiagram transition(BinaryDecisionDiagram frontier, char character) {

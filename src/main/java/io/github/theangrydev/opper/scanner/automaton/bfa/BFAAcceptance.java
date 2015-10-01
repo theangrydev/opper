@@ -10,23 +10,20 @@ import java.util.List;
 import java.util.Optional;
 
 public class BFAAcceptance {
-	private final BinaryDecisionDiagram acceptingStates;
-	private final VariableOrdering variableOrdering;
-	private final VariableSummary variableSummary;
-	private final List<Symbol> symbolsByStateId;
 
-	private BFAAcceptance(BinaryDecisionDiagram acceptingStates, VariableOrdering variableOrdering, VariableSummary variableSummary, List<Symbol> symbolsByStateId) {
+	private final ToStateLookup toStateLookup;
+	private final BinaryDecisionDiagram acceptingStates;
+
+	private BFAAcceptance(BinaryDecisionDiagram acceptingStates, ToStateLookup toStateLookup) {
 		this.acceptingStates = acceptingStates;
-		this.variableOrdering = variableOrdering;
-		this.variableSummary = variableSummary;
-		this.symbolsByStateId = symbolsByStateId;
+		this.toStateLookup = toStateLookup;
 	}
 
 	public static BFAAcceptance bfaAcceptance(NFA nfa, VariableOrdering variableOrdering, AllVariables allVariables) {
 		VariableSummary variableSummary = nfa.variableSummary();
 		BinaryDecisionDiagram acceptingStates = acceptingStates(variableOrdering, nfa, variableSummary, allVariables);
-		List<Symbol> symbolsByStateId = nfa.symbolsByStateId();
-		return new BFAAcceptance(acceptingStates, variableOrdering, variableSummary, symbolsByStateId);
+		ToStateLookup toStateLookup = ToStateLookup.make(nfa, variableOrdering);
+		return new BFAAcceptance(acceptingStates, toStateLookup);
 	}
 
 	private static BinaryDecisionDiagram acceptingStates(VariableOrdering variableOrdering, NFA nfa, VariableSummary variableSummary, AllVariables allVariables) {
@@ -50,19 +47,8 @@ public class BFAAcceptance {
 		}
 		acceptCheck.discard();
 		BinaryDecisionDiagramVariableAssignment satisfyingAssignment = acceptCheck.oneSatisfyingAssignment();
-		Symbol acceptedSymbol = symbolForAssignment(satisfyingAssignment);
+		Symbol acceptedSymbol = toStateLookup.symbolForAssignment(satisfyingAssignment);
 		return Optional.of(acceptedSymbol);
 	}
 
-	private Symbol symbolForAssignment(BinaryDecisionDiagramVariableAssignment assignment) {
-		return symbolsByStateId.get(lookupToState(assignment));
-	}
-
-	private int lookupToState(BinaryDecisionDiagramVariableAssignment assignment) {
-		return assignment.assignedVariableIndexes()
-			.map(variableOrdering::variableId)
-			.map(variableSummary::toStateBitPositionForVariableId)
-			.map(bitPosition -> 1 << bitPosition)
-			.reduce(0, (a, b) -> a | b);
-	}
 }

@@ -4,7 +4,6 @@ import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 import jdd.bdd.Permutation;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 public class BFABuilder {
@@ -19,16 +18,15 @@ public class BFABuilder {
 
 		BFATransitions bfaTransitions = BFATransitions.bfaTransitions(nfa, transitionTable, allVariables);
 
-		BinaryDecisionDiagram startingFrom = initialState(nfa, variableOrdering, allVariables);
+		BinaryDecisionDiagram startingFrom = initialState(nfa, allVariables);
 		Permutation relabelToStateToFromState = relabelToStateToFromState(variableOrdering, allVariables);
 
 		return new BFA(bfaTransitions, bfaAcceptance, startingFrom, relabelToStateToFromState);
 	}
 
-	private static BinaryDecisionDiagram initialState(NFA nfa, VariableOrdering variableOrdering, AllVariables allVariables) {
-		List<Variable> fromStateVariables = variableOrdering.fromStateVariables();
+	private static BinaryDecisionDiagram initialState(NFA nfa, AllVariables allVariables) {
 		VariablesSet fromState = nfa.variableSummary().variablesSetForFromState(nfa.initialState());
-		return allVariables.specifyVariables(fromStateVariables, fromState);
+		return allVariables.specifyFromVariables(fromState);
 	}
 
 	private static Permutation relabelToStateToFromState(VariableOrdering variableOrdering, AllVariables allVariables) {

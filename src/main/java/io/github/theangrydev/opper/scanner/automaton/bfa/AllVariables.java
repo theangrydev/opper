@@ -10,13 +10,16 @@ import java.util.stream.Stream;
 
 public class AllVariables {
 
+	private final VariableOrdering variableOrdering;
 	private final BinaryDecisionDiagramFactory binaryDecisionDiagramFactory;
 	private final List<BinaryDecisionDiagram> binaryDecisionDiagrams;
 	private final List<BinaryDecisionDiagram> bddNotVariables;
 
 	public AllVariables(VariableOrdering variableOrdering) {
-		int numberOfVariables = variableOrdering.numberOfVariables();
+		this.variableOrdering = variableOrdering;
 		this.binaryDecisionDiagramFactory = new BinaryDecisionDiagramFactory();
+
+		int numberOfVariables = variableOrdering.numberOfVariables();
 		binaryDecisionDiagrams = new ArrayList<>(numberOfVariables);
 		for (int i = 0; i < numberOfVariables; i++) {
 			binaryDecisionDiagrams.add(binaryDecisionDiagramFactory.newVariable());
@@ -71,5 +74,13 @@ public class AllVariables {
 
 	public BinaryDecisionDiagram nothing() {
 		return binaryDecisionDiagramFactory.nothing();
+	}
+
+	public BinaryDecisionDiagram specifyAllVariables(VariablesSet variablesSet) {
+		return specifyVariables(variableOrdering.allVariables(), variablesSet);
+	}
+
+	public BinaryDecisionDiagram specifyCharacterVariables(VariablesSet characterVariablesSet) {
+		return specifyVariables(variableOrdering.characterVariables(), characterVariablesSet);
 	}
 }

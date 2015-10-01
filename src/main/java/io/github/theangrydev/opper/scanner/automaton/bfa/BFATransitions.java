@@ -37,8 +37,7 @@ public class BFATransitions {
 	private static Char2ObjectMap<BinaryDecisionDiagram> characterPresence(List<CharacterTransition> characterTransitions, AllVariables allVariables) {
 		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = new Char2ObjectArrayMap<>(characterTransitions.size());
 		for (CharacterTransition characterTransition : characterTransitions) {
-			BinaryDecisionDiagram characterPresence = allVariables.specifyCharacterVariables(characterTransition);
-			characterPresences.put(characterTransition.character(), characterPresence);
+			characterPresences.put(characterTransition.character(), allVariables.specifyCharacterVariables(characterTransition));
 		}
 		return characterPresences;
 	}

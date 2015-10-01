@@ -31,10 +31,6 @@ public class NFA {
 		states = states.stream().filter(State::wasReached).collect(toList());
 	}
 
-	public List<State> states() {
-		return states;
-	}
-
 	public State initialState() {
 		return initialState;
 	}
@@ -75,6 +71,6 @@ public class NFA {
 	}
 
 	public List<Symbol> symbolsByStateId() {
-		return concat(Stream.of((Symbol) null), states().stream().sorted(comparing(State::id)).map(State::symbol)).collect(toList());
+		return concat(Stream.of((Symbol) null), states.stream().sorted(comparing(State::id)).map(State::symbol)).collect(toList());
 	}
 }

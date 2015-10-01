@@ -40,7 +40,7 @@ public class AllVariables {
 		return bddNotVariables.get(variableIndex);
 	}
 
-	public BinaryDecisionDiagram anything() {
+	private BinaryDecisionDiagram anything() {
 		return binaryDecisionDiagramFactory.anything();
 	}
 

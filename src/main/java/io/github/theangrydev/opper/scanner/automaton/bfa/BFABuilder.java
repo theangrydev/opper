@@ -4,8 +4,6 @@ import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 import jdd.bdd.Permutation;
 
-import java.util.stream.Stream;
-
 public class BFABuilder {
 
 	public static BFA convertToBFA(NFA nfa) {
@@ -19,7 +17,8 @@ public class BFABuilder {
 		BFATransitions bfaTransitions = BFATransitions.bfaTransitions(nfa, transitionTable, allVariables);
 
 		BinaryDecisionDiagram startingFrom = initialState(nfa, allVariables);
-		Permutation relabelToStateToFromState = relabelToStateToFromState(variableOrdering, allVariables);
+
+		Permutation relabelToStateToFromState = allVariables.relabelToStateToFromState();
 
 		return new BFA(bfaTransitions, bfaAcceptance, startingFrom, relabelToStateToFromState);
 	}
@@ -27,11 +26,5 @@ public class BFABuilder {
 	private static BinaryDecisionDiagram initialState(NFA nfa, AllVariables allVariables) {
 		VariablesSet fromState = nfa.variableSummary().variablesSetForFromState(nfa.initialState());
 		return allVariables.specifyFromVariables(fromState);
-	}
-
-	private static Permutation relabelToStateToFromState(VariableOrdering variableOrdering, AllVariables allVariables) {
-		Stream<BinaryDecisionDiagram> toVariables = variableOrdering.toStateVariablesInOriginalOrder().map(allVariables::variable);
-		Stream<BinaryDecisionDiagram> fromVariables = variableOrdering.fromStateVariablesInOriginalOrder().map(allVariables::variable);
-		return allVariables.createPermutation(toVariables, fromVariables);
 	}
 }

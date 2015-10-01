@@ -64,10 +64,6 @@ public class AllVariables {
 		}
 	}
 
-	public Permutation createPermutation(Stream<BinaryDecisionDiagram> fromSetVariables, Stream<BinaryDecisionDiagram> toSetVariables) {
-		return binaryDecisionDiagramFactory.createPermutation(fromSetVariables, toSetVariables);
-	}
-
 	private BinaryDecisionDiagram exists(List<Variable> presentVariables) {
 		boolean[] variables = new boolean[variableOrdering.numberOfVariables()];
 		for (Variable presentVariable : presentVariables) {
@@ -98,5 +94,11 @@ public class AllVariables {
 
 	public BinaryDecisionDiagram specifyFromVariables(VariablesSet fromVariableSet) {
 		return specifyVariables(variableOrdering.fromStateVariables(), fromVariableSet);
+	}
+
+	public Permutation relabelToStateToFromState() {
+		Stream<BinaryDecisionDiagram> toVariables = variableOrdering.toStateVariablesInOriginalOrder().map(this::variable);
+		Stream<BinaryDecisionDiagram> fromVariables = variableOrdering.fromStateVariablesInOriginalOrder().map(this::variable);
+		return binaryDecisionDiagramFactory.createPermutation(toVariables, fromVariables);
 	}
 }

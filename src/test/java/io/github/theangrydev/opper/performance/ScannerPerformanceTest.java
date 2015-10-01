@@ -25,7 +25,7 @@ public class ScannerPerformanceTest implements WithAssertions {
 		Symbol symbol = new Symbol(1, "symbol");
 		SymbolDefinition symbolDefinition = new SymbolDefinition(symbol, expression);
 
-		Scanner scanner = new Scanner(singletonList(symbolDefinition), characters(10000));
+		Scanner scanner = new Scanner(singletonList(symbolDefinition), characters(100000));
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 

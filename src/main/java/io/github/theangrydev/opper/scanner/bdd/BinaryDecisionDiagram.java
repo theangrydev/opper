@@ -51,19 +51,21 @@ public class BinaryDecisionDiagram {
 		bdd.printSet(id);
 	}
 
-	public BinaryDecisionDiagram and(BinaryDecisionDiagram binaryDecisionDiagram) {
-		return new BinaryDecisionDiagram(bdd, bdd.and(id, binaryDecisionDiagram.id));
+	public BinaryDecisionDiagram and(BinaryDecisionDiagram binaryDecisionDiagram, BinaryDecisionDiagram buffer) {
+		buffer.discard();
+		buffer.id = bdd.ref(bdd.and(id, binaryDecisionDiagram.id));
+		return buffer;
 	}
 
 	public boolean isNotZero() {
 		return id != bdd.getZero();
 	}
 
-	public BinaryDecisionDiagramVariableAssignment oneSatisfyingAssignment() {
-		return new BinaryDecisionDiagramVariableAssignment(bdd.oneSat(id, null));
+	public int[] oneSatisfyingAssignment(int[] buffer) {
+		return bdd.oneSat(id, buffer);
 	}
 
-	public void discard() {
+	private void discard() {
 		discard(id);
 	}
 
@@ -83,6 +85,5 @@ public class BinaryDecisionDiagram {
 		this.id = bdd.exists(id, binaryDecisionDiagram.id);
 		discard(oldId);
 		return this;
-
 	}
 }

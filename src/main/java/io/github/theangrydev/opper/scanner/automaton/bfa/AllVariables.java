@@ -4,7 +4,6 @@ import io.github.theangrydev.opper.scanner.automaton.nfa.CharacterTransition;
 import io.github.theangrydev.opper.scanner.automaton.nfa.State;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagramFactory;
-import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagramVariableAssignment;
 import jdd.bdd.Permutation;
 
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ public class AllVariables {
 		return bddNotVariables.get(variableIndex);
 	}
 
-	private BinaryDecisionDiagram anything() {
+	public BinaryDecisionDiagram anything() {
 		return binaryDecisionDiagramFactory.anything();
 	}
 
@@ -122,11 +121,10 @@ public class AllVariables {
 		return binaryDecisionDiagramFactory.createPermutation(toVariables, fromVariables);
 	}
 
-	public int toStateId(BinaryDecisionDiagramVariableAssignment toStateAssignment) {
-		int[] assignment = toStateAssignment.assignment();
+	public int toStateId(int[] toStateAssignment) {
 		int toStateId = 0;
-		for (int i = assignment.length - 1; i >= 0; i--) {
-			if (assignment[i] != 1) {
+		for (int i = toStateAssignment.length - 1; i >= 0; i--) {
+			if (toStateAssignment[i] != 1) {
 				continue;
 			}
 			int variableId = variableOrdering.variableId(i);
@@ -134,5 +132,9 @@ public class AllVariables {
 			toStateId |= 1 << bitPosition;
 		}
 		return toStateId;
+	}
+
+	public int[] assignmentBuffer() {
+		return new int[variableOrdering.numberOfVariables()];
 	}
 }

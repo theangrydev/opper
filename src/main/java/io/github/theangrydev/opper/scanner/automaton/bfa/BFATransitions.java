@@ -28,13 +28,11 @@ public class BFATransitions {
 	}
 
 	private static BinaryDecisionDiagram transitions(AllVariables allVariables, TransitionTable transitionTable) {
-		List<VariablesSet> specifiedTransitions = transitionTable.transitions();
-		BinaryDecisionDiagram allTransitions = allVariables.nothing();
-		for (VariablesSet specifiedTransition : specifiedTransitions) {
-			BinaryDecisionDiagram transition = allVariables.specifyAllVariables(specifiedTransition);
-			allTransitions = allTransitions.orTo(transition);
+		BinaryDecisionDiagram transitions = allVariables.nothing();
+		for (VariablesSet transition : transitionTable.transitions()) {
+			transitions = transitions.orTo(allVariables.specifyAllVariables(transition));
 		}
-		return allTransitions;
+		return transitions;
 	}
 
 	private static Char2ObjectMap<BinaryDecisionDiagram> characterPresence(List<CharacterTransition> characterTransitions, VariableSummary variableSummary, AllVariables allVariables) {

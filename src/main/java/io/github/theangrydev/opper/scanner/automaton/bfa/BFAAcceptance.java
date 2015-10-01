@@ -43,7 +43,7 @@ public class BFAAcceptance {
 			return Optional.empty();
 		}
 		BinaryDecisionDiagramVariableAssignment satisfyingAssignment = acceptCheck.oneSatisfyingAssignment();
-		Symbol acceptedSymbol = symbolForAssignment.symbolForAssignment(satisfyingAssignment);
+		Symbol acceptedSymbol = symbolForAssignment.symbolForToState(satisfyingAssignment);
 		return Optional.of(acceptedSymbol);
 	}
 

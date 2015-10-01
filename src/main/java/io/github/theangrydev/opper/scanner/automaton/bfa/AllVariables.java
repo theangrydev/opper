@@ -107,8 +107,8 @@ public class AllVariables {
 		return binaryDecisionDiagramFactory.createPermutation(toVariables, fromVariables);
 	}
 
-	public int toStateId(BinaryDecisionDiagramVariableAssignment assignment) {
-		return assignment.assignedVariableIndexes()
+	public int toStateId(BinaryDecisionDiagramVariableAssignment toStateAssignment) {
+		return toStateAssignment.assignedVariableIndexes()
 			.map(variableOrdering::variableId)
 			.map(variableSummary::toStateBitPositionForVariableId)
 			.map(bitPosition -> 1 << bitPosition)

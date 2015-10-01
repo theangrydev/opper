@@ -20,11 +20,11 @@ public class SymbolForAssignment {
 		return new SymbolForAssignment(allVariables, nfa.symbolsByStateId());
 	}
 
-	public Symbol symbolForAssignment(BinaryDecisionDiagramVariableAssignment assignment) {
-		return symbolsByStateId.get(lookupToState(assignment));
+	public Symbol symbolForToState(BinaryDecisionDiagramVariableAssignment toStateAssignment) {
+		return symbolsByStateId.get(lookupToState(toStateAssignment));
 	}
 
-	private int lookupToState(BinaryDecisionDiagramVariableAssignment assignment) {
-		return allVariables.toStateId(assignment);
+	private int lookupToState(BinaryDecisionDiagramVariableAssignment toStateAssignment) {
+		return allVariables.toStateId(toStateAssignment);
 	}
 }

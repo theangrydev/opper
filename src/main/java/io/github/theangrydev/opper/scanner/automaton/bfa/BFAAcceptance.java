@@ -61,7 +61,7 @@ public class BFAAcceptance {
 	private int lookupToState(BinaryDecisionDiagramVariableAssignment assignment) {
 		return assignment.assignedVariableIndexes()
 			.map(variableOrdering::variableId)
-			.map(variableSummary::unprojectToIdBitPosition)
+			.map(variableSummary::toStateBitPositionForVariableId)
 			.map(bitPosition -> 1 << bitPosition)
 			.reduce(0, (a, b) -> a | b);
 	}

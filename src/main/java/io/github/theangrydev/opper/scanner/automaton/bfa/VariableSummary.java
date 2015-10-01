@@ -47,8 +47,8 @@ public class VariableSummary {
 		return bitsPerRow;
 	}
 
-	public int unprojectToIdBitPosition(int position) {
-		return position - minToStateVariable();
+	public int toStateBitPositionForVariableId(int variableId) {
+		return variableId - minToStateVariable();
 	}
 
 	public boolean isCharacter(Variable variable) {

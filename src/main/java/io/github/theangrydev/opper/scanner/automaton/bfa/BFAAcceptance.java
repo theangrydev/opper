@@ -38,12 +38,11 @@ public class BFAAcceptance {
 
 	public Optional<Symbol> checkAcceptance(BinaryDecisionDiagram frontier) {
 		BinaryDecisionDiagram acceptCheck = acceptingStates.and(frontier);
+		acceptCheck.discard();
 		boolean accepted = acceptCheck.isNotZero();
 		if (!accepted) {
-			acceptCheck.discard();
 			return Optional.empty();
 		}
-		acceptCheck.discard();
 		BinaryDecisionDiagramVariableAssignment satisfyingAssignment = acceptCheck.oneSatisfyingAssignment();
 		Symbol acceptedSymbol = symbolForAssignment.symbolForAssignment(satisfyingAssignment);
 		return Optional.of(acceptedSymbol);

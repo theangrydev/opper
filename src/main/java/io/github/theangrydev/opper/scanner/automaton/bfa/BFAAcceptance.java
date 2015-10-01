@@ -11,19 +11,19 @@ import java.util.Optional;
 
 public class BFAAcceptance {
 
-	private final ToStateLookup toStateLookup;
+	private final SymbolForAssignment symbolForAssignment;
 	private final BinaryDecisionDiagram acceptingStates;
 
-	private BFAAcceptance(BinaryDecisionDiagram acceptingStates, ToStateLookup toStateLookup) {
+	private BFAAcceptance(BinaryDecisionDiagram acceptingStates, SymbolForAssignment symbolForAssignment) {
 		this.acceptingStates = acceptingStates;
-		this.toStateLookup = toStateLookup;
+		this.symbolForAssignment = symbolForAssignment;
 	}
 
 	public static BFAAcceptance bfaAcceptance(NFA nfa, VariableOrdering variableOrdering, AllVariables allVariables) {
 		VariableSummary variableSummary = nfa.variableSummary();
 		BinaryDecisionDiagram acceptingStates = acceptingStates(variableOrdering, nfa, variableSummary, allVariables);
-		ToStateLookup toStateLookup = ToStateLookup.make(nfa, variableOrdering);
-		return new BFAAcceptance(acceptingStates, toStateLookup);
+		SymbolForAssignment symbolForAssignment = SymbolForAssignment.make(nfa, variableOrdering);
+		return new BFAAcceptance(acceptingStates, symbolForAssignment);
 	}
 
 	private static BinaryDecisionDiagram acceptingStates(VariableOrdering variableOrdering, NFA nfa, VariableSummary variableSummary, AllVariables allVariables) {
@@ -47,7 +47,7 @@ public class BFAAcceptance {
 		}
 		acceptCheck.discard();
 		BinaryDecisionDiagramVariableAssignment satisfyingAssignment = acceptCheck.oneSatisfyingAssignment();
-		Symbol acceptedSymbol = toStateLookup.symbolForAssignment(satisfyingAssignment);
+		Symbol acceptedSymbol = symbolForAssignment.symbolForAssignment(satisfyingAssignment);
 		return Optional.of(acceptedSymbol);
 	}
 

@@ -6,22 +6,22 @@ import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagramVariableAssi
 
 import java.util.List;
 
-public class ToStateLookup {
+public class SymbolForAssignment {
 
 	private final VariableOrdering variableOrdering;
 	private final VariableSummary variableSummary;
 	private final List<Symbol> symbolsByStateId;
 
-	private ToStateLookup(VariableOrdering variableOrdering, VariableSummary variableSummary, List<Symbol> symbolsByStateId) {
+	private SymbolForAssignment(VariableOrdering variableOrdering, VariableSummary variableSummary, List<Symbol> symbolsByStateId) {
 		this.variableOrdering = variableOrdering;
 		this.variableSummary = variableSummary;
 		this.symbolsByStateId = symbolsByStateId;
 	}
 
-	public static ToStateLookup make(NFA nfa, VariableOrdering variableOrdering) {
+	public static SymbolForAssignment make(NFA nfa, VariableOrdering variableOrdering) {
 		List<Symbol> symbolsByStateId = nfa.symbolsByStateId();
 		VariableSummary variableSummary = nfa.variableSummary();
-		return new ToStateLookup(variableOrdering, variableSummary, symbolsByStateId);
+		return new SymbolForAssignment(variableOrdering, variableSummary, symbolsByStateId);
 	}
 
 	public Symbol symbolForAssignment(BinaryDecisionDiagramVariableAssignment assignment) {

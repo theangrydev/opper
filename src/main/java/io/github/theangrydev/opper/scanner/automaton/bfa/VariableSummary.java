@@ -12,14 +12,27 @@ import java.util.BitSet;
 
 public class VariableSummary {
 
+	private static final int MIN_FROM_STATE_VARIABLE = 1;
+
 	private final int bitsForStates;
 	private final int bitsForCharacters;
 	private final int bitsPerRow;
 
+	private final int maxFromStateVariable;
+	private final int minCharacterVariable;
+	private final int maxCharacterVariable;
+	private final int minToStateVariable;
+	private final int maxToStateVariable;
+
 	public VariableSummary(int numberOfStates, int numberOfCharacters) {
-		bitsForStates = IntMath.log2(numberOfStates, RoundingMode.FLOOR) + 1;
-		bitsForCharacters = IntMath.log2(numberOfCharacters, RoundingMode.FLOOR) + 1;
-		bitsPerRow = bitsForStates * 2 + bitsForCharacters;
+		this.bitsForStates = IntMath.log2(numberOfStates, RoundingMode.FLOOR) + 1;
+		this.bitsForCharacters = IntMath.log2(numberOfCharacters, RoundingMode.FLOOR) + 1;
+		this.bitsPerRow = bitsForStates * 2 + bitsForCharacters;
+		this.maxFromStateVariable = MIN_FROM_STATE_VARIABLE + bitsForStates;
+		this.minCharacterVariable = bitsForStates + 1;
+		this.maxCharacterVariable = minCharacterVariable + bitsForCharacters;
+		this.minToStateVariable = maxCharacterVariable;
+		this.maxToStateVariable = minToStateVariable + bitsForStates;
 	}
 
 	public VariablesSet variablesSetInTransition(State from, Transition via, State to) {
@@ -47,19 +60,19 @@ public class VariableSummary {
 	}
 
 	public int toStateBitPositionForVariableId(int variableId) {
-		return variableId - minToStateVariable();
+		return variableId - minToStateVariable;
 	}
 
 	public boolean isCharacter(Variable variable) {
-		return variable.id() >= minCharacterVariable() && variable.id() < maxCharacterVariable();
+		return variable.id() >= minCharacterVariable && variable.id() < maxCharacterVariable;
 	}
 
 	public boolean isToState(Variable variable) {
-		return variable.id() >= minToStateVariable() && variable.id() < maxToStateVariable();
+		return variable.id() >= minToStateVariable && variable.id() < maxToStateVariable;
 	}
 
 	public boolean isFromState(Variable variable) {
-		return variable.id() >= minFromStateVariable() && variable.id() < maxFromStateVariable();
+		return variable.id() >= MIN_FROM_STATE_VARIABLE && variable.id() < maxFromStateVariable;
 	}
 
 	public boolean isFromStateOrCharacter(Variable variable) {
@@ -84,30 +97,6 @@ public class VariableSummary {
 
 	private int projectToId(State to) {
 		return to.id() << (bitsForStates + bitsForCharacters);
-	}
-
-	private int minCharacterVariable() {
-		return bitsForStates + 1;
-	}
-
-	private int maxCharacterVariable() {
-		return minCharacterVariable() + bitsForCharacters;
-	}
-
-	private int maxToStateVariable() {
-		return minToStateVariable() + bitsForStates;
-	}
-
-	private int minToStateVariable() {
-		return maxCharacterVariable();
-	}
-
-	private int maxFromStateVariable() {
-		return minFromStateVariable() + bitsForStates;
-	}
-
-	private int minFromStateVariable() {
-		return 1;
 	}
 
 	private static void blastBits(long number, BitSet row) {

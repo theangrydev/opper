@@ -6,7 +6,6 @@ import io.github.theangrydev.opper.scanner.automaton.nfa.State;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagramVariableAssignment;
 
-import java.util.List;
 import java.util.Optional;
 
 public class BFAAcceptance {
@@ -26,9 +25,8 @@ public class BFAAcceptance {
 	}
 
 	private static BinaryDecisionDiagram acceptingStates(NFA nfa, AllVariables allVariables) {
-		List<State> specifiedAcceptingStates = nfa.acceptanceStates();
 		BinaryDecisionDiagram acceptingStates = allVariables.nothing();
-		for (State specifiedAcceptingState : specifiedAcceptingStates) {
+		for (State specifiedAcceptingState : nfa.acceptanceStates()) {
 			BinaryDecisionDiagram acceptingState = allVariables.specifyToVariables(specifiedAcceptingState);
 			acceptingStates = acceptingStates.orTo(acceptingState);
 		}

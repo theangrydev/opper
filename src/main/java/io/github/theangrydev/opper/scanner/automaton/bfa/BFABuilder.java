@@ -10,7 +10,7 @@ public class BFABuilder {
 		TransitionTable transitionTable = TransitionTable.fromNFA(nfa);
 		VariableOrdering variableOrdering = VariableOrderingComputer.determineOrdering(nfa.variableSummary(), transitionTable);
 
-		AllVariables allVariables = new AllVariables(nfa.variableSummary(), variableOrdering);
+		AllVariables allVariables = AllVariables.allVariables(nfa.variableSummary(), variableOrdering);
 
 		BFAAcceptance bfaAcceptance = BFAAcceptance.bfaAcceptance(nfa, allVariables);
 

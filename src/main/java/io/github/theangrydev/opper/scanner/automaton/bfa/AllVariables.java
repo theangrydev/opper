@@ -16,24 +16,39 @@ public class AllVariables {
 	private final VariableSummary variableSummary;
 	private final VariableOrdering variableOrdering;
 	private final BinaryDecisionDiagramFactory binaryDecisionDiagramFactory;
-	private final List<BinaryDecisionDiagram> binaryDecisionDiagrams;
+	private final List<BinaryDecisionDiagram> bddVariables;
 	private final List<BinaryDecisionDiagram> bddNotVariables;
 
-	public AllVariables(VariableSummary variableSummary, VariableOrdering variableOrdering) {
+	private AllVariables(VariableSummary variableSummary, VariableOrdering variableOrdering, BinaryDecisionDiagramFactory binaryDecisionDiagramFactory, List<BinaryDecisionDiagram> bddVariables, List<BinaryDecisionDiagram> bddNotVariables) {
 		this.variableSummary = variableSummary;
 		this.variableOrdering = variableOrdering;
-		this.binaryDecisionDiagramFactory = new BinaryDecisionDiagramFactory();
+		this.binaryDecisionDiagramFactory = binaryDecisionDiagramFactory;
+		this.bddVariables = bddVariables;
+		this.bddNotVariables = bddNotVariables;
+	}
 
+	public static AllVariables allVariables(VariableSummary variableSummary, VariableOrdering variableOrdering) {
+		BinaryDecisionDiagramFactory binaryDecisionDiagramFactory = new BinaryDecisionDiagramFactory();
 		int numberOfVariables = variableOrdering.numberOfVariables();
-		binaryDecisionDiagrams = new ArrayList<>(numberOfVariables);
-		for (int i = 0; i < numberOfVariables; i++) {
-			binaryDecisionDiagrams.add(binaryDecisionDiagramFactory.newVariable());
-		}
+		List<BinaryDecisionDiagram> bddVariables = bddVariables(binaryDecisionDiagramFactory, numberOfVariables);
+		List<BinaryDecisionDiagram> bddNotVariables = bddNotVariables(numberOfVariables, bddVariables);
+		return new AllVariables(variableSummary, variableOrdering, binaryDecisionDiagramFactory, bddVariables, bddNotVariables);
+	}
 
-		bddNotVariables = new ArrayList<>(numberOfVariables);
+	private static List<BinaryDecisionDiagram> bddNotVariables(int numberOfVariables, List<BinaryDecisionDiagram> bddVariables) {
+		List<BinaryDecisionDiagram> bddNotVariables = new ArrayList<>(numberOfVariables);
 		for (int i = 0; i < numberOfVariables; i++) {
-			bddNotVariables.add(binaryDecisionDiagrams.get(i).not());
+			bddNotVariables.add(bddVariables.get(i).not());
 		}
+		return bddNotVariables;
+	}
+
+	private static List<BinaryDecisionDiagram> bddVariables(BinaryDecisionDiagramFactory binaryDecisionDiagramFactory, int numberOfVariables) {
+		List<BinaryDecisionDiagram> bddVariables = new ArrayList<>(numberOfVariables);
+		for (int i = 0; i < numberOfVariables; i++) {
+			bddVariables.add(binaryDecisionDiagramFactory.newVariable());
+		}
+		return bddVariables;
 	}
 
 	private BinaryDecisionDiagram variable(Variable variable) {
@@ -41,7 +56,7 @@ public class AllVariables {
 	}
 
 	private BinaryDecisionDiagram variable(int variableIndex) {
-		return binaryDecisionDiagrams.get(variableIndex);
+		return bddVariables.get(variableIndex);
 	}
 
 	private BinaryDecisionDiagram notVariable(int variableIndex) {

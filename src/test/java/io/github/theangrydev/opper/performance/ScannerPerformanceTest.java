@@ -8,6 +8,7 @@ import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
+import java.io.CharArrayReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,10 +69,10 @@ public class ScannerPerformanceTest implements WithAssertions {
 		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
 	}
 
-	private char[] characters(int numberOfCharacters) {
+	private CharArrayReader characters(int numberOfCharacters) {
 		char[] chars = new char[numberOfCharacters];
 		Arrays.fill(chars, '&');
-		return chars;
+		return new CharArrayReader(chars);
 	}
 
 	private void scanAllSymbols(Scanner scanner) {

@@ -6,6 +6,7 @@ import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
+import java.io.CharArrayReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class ScannerTest implements WithAssertions {
 		Symbol symbol = new Symbol(1, "symbol");
 		SymbolDefinition symbolDefinition = SymbolDefinition.definition(symbol, expression);
 
-		Scanner scanner = new Scanner(singletonList(symbolDefinition), 'c', 'd', 'c', 'd', 'a', 'b');
+		Scanner scanner = new Scanner(singletonList(symbolDefinition), new CharArrayReader(new char[]{'c', 'd', 'c', 'd', 'a', 'b'}));
 
 		assertThat(allSymbolsThatCanBeScanned(scanner)).containsOnly(symbol).hasSize(4);
 	}

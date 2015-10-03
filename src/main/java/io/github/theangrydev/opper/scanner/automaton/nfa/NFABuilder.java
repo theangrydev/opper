@@ -14,8 +14,10 @@ public class NFABuilder {
 		for (SymbolDefinition symbolDefinition : symbolDefinitions) {
 			SymbolOwnedStateGenerator generator = symbolDefinition.stateGenerator(stateFactory, transitionFactory);
 			State from = generator.newState();
+			State to = generator.newState();
 			initial.addNullTransition(from);
-			symbolDefinition.populate(generator, from, accepting);
+			symbolDefinition.populate(generator, from, to);
+			to.addNullTransition(accepting);
 		}
 		return new NFA(initial, stateFactory.states(), transitionFactory.characterTransitions());
 	}

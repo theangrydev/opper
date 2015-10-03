@@ -86,4 +86,11 @@ public class BinaryDecisionDiagram {
 		discard(oldId);
 		return this;
 	}
+
+	public BinaryDecisionDiagram relativeProductTo(BinaryDecisionDiagram transitions, BinaryDecisionDiagram existsFromStateAndCharacter) {
+		int oldId = id;
+		this.id = bdd.relProd(id, transitions.id, existsFromStateAndCharacter.id);
+		discard(oldId);
+		return this;
+	}
 }

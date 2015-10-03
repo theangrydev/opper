@@ -13,6 +13,6 @@ public class ExpressionsCanBeConstructedTest implements WithAssertions {
 	@Test
 	public void shouldHaveAGoodStringRepresentation() {
 		Expression expression = repeat(either(character('a'), character('b'), concatenate(character('c'), character('d'))));
-		assertThat(expression).hasToString("[a, b, cd]*");
+		assertThat(expression).hasToString("[a, b, [c, d]]*");
 	}
 }

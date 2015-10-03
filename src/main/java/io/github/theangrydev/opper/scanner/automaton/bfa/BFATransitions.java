@@ -43,8 +43,7 @@ public class BFATransitions {
 	}
 
 	public BinaryDecisionDiagram transition(BinaryDecisionDiagram frontier, char character) {
-		frontier = frontier.andTo(transitions);
 		frontier = frontier.andTo(characterPresences.get(character));
-		return frontier.existsTo(existsFromStateAndCharacter);
+		return frontier.relativeProductTo(transitions, existsFromStateAndCharacter);
 	}
 }

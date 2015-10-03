@@ -21,7 +21,7 @@ public class ScannerTest implements WithAssertions {
 	public void shouldScanASimpleExpression() {
 		Expression expression = repeat(either(character('a'), character('b'), concatenate(character('c'), character('d'))));
 		Symbol symbol = new Symbol(1, "symbol");
-		SymbolDefinition symbolDefinition = new SymbolDefinition(symbol, expression);
+		SymbolDefinition symbolDefinition = SymbolDefinition.definition(symbol, expression);
 
 		Scanner scanner = new Scanner(singletonList(symbolDefinition), 'c', 'd', 'c', 'd', 'a', 'b');
 

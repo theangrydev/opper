@@ -5,12 +5,18 @@ import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySet;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySetsBySymbol;
 
 public abstract class EarlyItem {
+	protected final ParseTree parseTree;
 	protected final TransitionsEarlySetsBySymbol origin;
 	protected final DottedRule dottedRule;
 
-	protected EarlyItem(TransitionsEarlySetsBySymbol origin, DottedRule dottedRule) {
+	protected EarlyItem(ParseTree parseTree, TransitionsEarlySetsBySymbol origin, DottedRule dottedRule) {
 		this.origin = origin;
 		this.dottedRule = dottedRule;
+		this.parseTree = parseTree;
+	}
+
+	protected EarlyItem(TransitionsEarlySetsBySymbol origin, DottedRule dottedRule) {
+		this(new ParseTree(dottedRule.rule()), origin, dottedRule);
 	}
 
 	public DottedRule dottedRule() {
@@ -37,7 +43,23 @@ public abstract class EarlyItem {
 		return dottedRule.postDot();
 	}
 
-	public abstract EarlyItem advance();
+	public ParseTree parseTree() {
+		return parseTree;
+	}
+
+	protected abstract EarlyItem advance();
+
+	public EarlyItem advance(String content) {
+		EarlyItem advance = advance();
+		advance.parseTree.withContent(content);
+		return advance;
+	}
+
+	public EarlyItem advance(EarlyItem earlyItem) {
+		EarlyItem advance = advance();
+		advance.parseTree.withChild(earlyItem.parseTree);
+		return advance;
+	}
 
 	@Override
 	public boolean equals(Object object) {
@@ -53,6 +75,6 @@ public abstract class EarlyItem {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + ":" + dottedRule.toString();
+		return getClass().getSimpleName() + ":" + dottedRule.toString() + " | " + parseTree;
 	}
 }

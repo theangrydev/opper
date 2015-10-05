@@ -8,8 +8,12 @@ public class TraditionalEarlyItem extends EarlyItem {
 		super(transitions, dottedRule);
 	}
 
+	public TraditionalEarlyItem(ParseTree parseTree, TransitionsEarlySetsBySymbol transitions, DottedRule dottedRule) {
+		super(parseTree, transitions, dottedRule);
+	}
+
 	@Override
 	public EarlyItem advance() {
-		return new TraditionalEarlyItem(origin, dottedRule.advance());
+		return new TraditionalEarlyItem(parseTree.copy(), origin, dottedRule.advance());
 	}
 }

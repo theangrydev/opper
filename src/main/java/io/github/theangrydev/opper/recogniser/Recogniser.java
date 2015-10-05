@@ -4,10 +4,7 @@ import io.github.theangrydev.opper.common.Logger;
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.recogniser.item.DottedRule;
-import io.github.theangrydev.opper.recogniser.item.EarlyItem;
-import io.github.theangrydev.opper.recogniser.item.LeoItem;
-import io.github.theangrydev.opper.recogniser.item.TraditionalEarlyItem;
+import io.github.theangrydev.opper.recogniser.item.*;
 import io.github.theangrydev.opper.recogniser.precomputed.prediction.ComputedRulePrediction;
 import io.github.theangrydev.opper.recogniser.precomputed.prediction.PrecomputedRulePrediction;
 import io.github.theangrydev.opper.recogniser.precomputed.prediction.RulePrediction;
@@ -17,6 +14,7 @@ import io.github.theangrydev.opper.recogniser.precomputed.recursion.RightRecursi
 import io.github.theangrydev.opper.recogniser.progress.EarlySet;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySet;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySetsBySymbol;
+import io.github.theangrydev.opper.scanner.SymbolInstance;
 
 import java.util.Optional;
 
@@ -43,20 +41,20 @@ public class Recogniser {
 		this.currentEarlySet = new EarlySet(grammar);
 	}
 
-	public boolean recognise() {
+	public Optional<ParseTree> recognise() {
 		initialize();
 		for (currentEarlySetIndex = 1; corpus.hasNextSymbol(); currentEarlySetIndex++) {
 			prepareIteration();
 			readNextSymbol();
 			if (currentEarlySet.isEmpty()) {
 				logger.log(() -> "Exiting early because the current early set is empty after reading");
-				return false;
+				return Optional.empty();
 			}
 			advanceItemsThatWereWaitingOnCompletions();
 			memoizeTransitions();
 			debug();
 		}
-		return currentEarlySet.hasCompletedAcceptanceRule(initialTransitions);
+		return currentEarlySet.completedAcceptanceRule(initialTransitions).map(EarlyItem::parseTree);
 	}
 
 	public int finalEarlySetSize() {
@@ -78,15 +76,12 @@ public class Recogniser {
 	}
 
 	private void readNextSymbol() {
-		Symbol symbol = corpus.nextSymbol().symbol();
-		// TODO: somehow need to record the text that was detected (e.g. variable name or constant)
-		// TODO: this could mean a "complex symbol" returned by the scanner that contains a regular symbol
-		// TODO: the recogniser only needs type information (the old symbol)
-		// TODO: but the full parser needs to retain the complex symbols
-		// TODO: this is the only part that adds symbols
+		SymbolInstance symbolInstance = corpus.nextSymbol();
+		Symbol symbol = symbolInstance.symbol();
+		String content = symbolInstance.content();
 		logger.log(() -> "Reading " + symbol);
 		for (EarlyItem itemThatCanAdvance : previousTransitions.itemsThatCanAdvanceGiven(symbol)) {
-			addEarlyItem(itemThatCanAdvance.advance());
+			addEarlyItem(itemThatCanAdvance.advance(content));
 		}
 	}
 
@@ -94,7 +89,7 @@ public class Recogniser {
 		for (EarlyItem earlyItem : currentEarlySet) {
 			if (earlyItem.isComplete()) {
 				for (EarlyItem itemThatCanAdvance : earlyItem.itemsThatCanAdvanceWhenThisIsComplete()) {
-					addEarlyItem(itemThatCanAdvance.advance());
+					addEarlyItem(itemThatCanAdvance.advance(earlyItem));
 				}
 			}
 		}

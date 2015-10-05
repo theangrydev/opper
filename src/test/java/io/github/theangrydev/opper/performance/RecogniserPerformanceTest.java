@@ -26,7 +26,7 @@ public class RecogniserPerformanceTest {
 			.withRule("START", "REPEATED", "START")
 			.withRule("START", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(80000, symbolInstance(grammar.symbolByName("REPEATED"), "")));
+		Corpus corpus = corpus(nCopies(10000, symbolInstance(grammar.symbolByName("REPEATED"), "")));
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
@@ -43,7 +43,7 @@ public class RecogniserPerformanceTest {
 			.withRule("START", "START", "REPEATED")
 			.withRule("START", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(100000, symbolInstance(grammar.symbolByName("REPEATED"), "")));
+		Corpus corpus = corpus(nCopies(10000, symbolInstance(grammar.symbolByName("REPEATED"), "")));
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
@@ -60,7 +60,7 @@ public class RecogniserPerformanceTest {
 			.withRule("START", "REPEATED", "START", "REPEATED")
 			.withRule("START", "REPEATED", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(500, symbolInstance(grammar.symbolByName("REPEATED"), "")));
+		Corpus corpus = corpus(nCopies(100, symbolInstance(grammar.symbolByName("REPEATED"), "")));
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 

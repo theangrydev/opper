@@ -35,8 +35,8 @@ public class EarlySet implements Iterable<EarlyItem> {
 		earlyItems.clear();
 	}
 
-	public boolean hasCompletedAcceptanceRule(TransitionsEarlySetsBySymbol initialTransitions) {
-		return earlyItems.stream().anyMatch(earlyItem -> earlyItem.hasCompletedAcceptanceRule(initialTransitions, grammar.acceptanceSymbol()));
+	public Optional<EarlyItem> completedAcceptanceRule(TransitionsEarlySetsBySymbol initialTransitions) {
+		return earlyItems.stream().filter(earlyItem -> earlyItem.hasCompletedAcceptanceRule(initialTransitions, grammar.acceptanceSymbol())).findAny();
 	}
 
 	@Override

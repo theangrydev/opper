@@ -23,7 +23,7 @@ public class FixedCorpus implements Corpus {
 	}
 
 	public static FixedCorpus corpus(Grammar grammar, Iterable<String> symbols) {
-		return new FixedCorpus(Streams.stream(symbols).map(grammar::symbolByName).map(symbol -> symbolInstance(symbol, "")).iterator());
+		return new FixedCorpus(Streams.stream(symbols).map(symbol -> symbolInstance(grammar.symbolByName(symbol), symbol)).iterator());
 	}
 
 	public static FixedCorpus corpus(SymbolInstance... symbols) {

@@ -1,6 +1,6 @@
 package io.github.theangrydev.opper.recogniser;
 
-import io.github.theangrydev.opper.common.DoNothingLogger;
+import io.github.theangrydev.opper.common.SystemOutLogger;
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
@@ -37,8 +37,8 @@ public class ArithmeticRecogniserTest {
 
 		Corpus corpus = corpus(grammar, "2", "+", "3", "+", "2", "+", "3", "*", "4");
 
-		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
+		Recogniser recogniser = new Recogniser(new SystemOutLogger(), grammar, corpus);
 
-		assertThat(recogniser.recognise()).isTrue();
+		assertThat(recogniser.recognise()).isPresent();
 	}
 }

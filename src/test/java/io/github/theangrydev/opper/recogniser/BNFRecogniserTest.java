@@ -47,6 +47,6 @@ public class BNFRecogniserTest {
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(recogniser.recognise()).isEqualTo(valueOf(shouldParse));
+		assertThat(recogniser.recognise().isPresent()).isEqualTo(valueOf(shouldParse));
 	}
 }

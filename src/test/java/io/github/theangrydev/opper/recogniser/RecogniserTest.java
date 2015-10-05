@@ -23,6 +23,6 @@ public class RecogniserTest {
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(recogniser.recognise()).isTrue();
+		assertThat(recogniser.recognise()).isPresent();
 	}
 }

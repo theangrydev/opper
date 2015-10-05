@@ -7,6 +7,7 @@ import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import org.junit.Test;
 
 import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
+import static io.github.theangrydev.opper.scanner.SymbolInstance.symbolInstance;
 import static java.util.Collections.nCopies;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +21,7 @@ public class DirectlyRightRecursiveRecogniserTest {
 			.withRule("START", "REPEATED", "START")
 			.withRule("START", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(10, grammar.symbolByName("REPEATED")));
+		Corpus corpus = corpus(nCopies(10, symbolInstance(grammar.symbolByName("REPEATED"), "")));
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 

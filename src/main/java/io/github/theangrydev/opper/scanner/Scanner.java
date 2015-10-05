@@ -14,12 +14,15 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Optional;
 
+import static io.github.theangrydev.opper.scanner.SymbolInstance.symbolInstance;
+
 public class Scanner implements Corpus {
 
 	private final Reader charactersToParse;
 	private final BFA bfa;
 	private BinaryDecisionDiagram frontier;
-	private Symbol next;
+	private SymbolInstance next;
+	private StringBuilder nextCharacters;
 
 	public Scanner(List<SymbolDefinition> symbolDefinitions, Reader charactersToParse) {
 		this.charactersToParse = charactersToParse;
@@ -30,28 +33,33 @@ public class Scanner implements Corpus {
 
 		bfa = BFABuilder.convertToBFA(nfa);
 		frontier = bfa.initialState();
+		nextCharacters = new StringBuilder();
 	}
 
 	@Override
-	public Symbol nextSymbol() {
+	public SymbolInstance nextSymbol() {
 		return next;
 	}
 
 	@Override
 	public boolean hasNextSymbol() {
-		for (int character = nextCharacter(); character != -1; character = nextCharacter()) {
-			BinaryDecisionDiagram transitionTo = bfa.transition(frontier, (char) character);
+		for (int read = read(); read != -1; read = read()) {
+			char character = (char) read;
+			nextCharacters.append(character);
+
+			BinaryDecisionDiagram transitionTo = bfa.transition(frontier, character);
 			Optional<Symbol> acceptedSymbol = bfa.checkAcceptance(transitionTo);
 			frontier = bfa.relabelToStateToFromState(transitionTo);
 			if (acceptedSymbol.isPresent()) {
-				next = acceptedSymbol.get();
+				next = symbolInstance(acceptedSymbol.get(), nextCharacters.toString());
+				nextCharacters = new StringBuilder();
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private int nextCharacter() {
+	private int read() {
 		try {
 			return charactersToParse.read();
 		} catch (IOException e) {

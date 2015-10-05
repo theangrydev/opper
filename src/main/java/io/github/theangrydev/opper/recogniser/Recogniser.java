@@ -78,7 +78,12 @@ public class Recogniser {
 	}
 
 	private void readNextSymbol() {
-		Symbol symbol = corpus.nextSymbol();
+		Symbol symbol = corpus.nextSymbol().symbol();
+		// TODO: somehow need to record the text that was detected (e.g. variable name or constant)
+		// TODO: this could mean a "complex symbol" returned by the scanner that contains a regular symbol
+		// TODO: the recogniser only needs type information (the old symbol)
+		// TODO: but the full parser needs to retain the complex symbols
+		// TODO: this is the only part that adds symbols
 		logger.log(() -> "Reading " + symbol);
 		for (EarlyItem itemThatCanAdvance : previousTransitions.itemsThatCanAdvanceGiven(symbol)) {
 			addEarlyItem(itemThatCanAdvance.advance());

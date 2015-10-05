@@ -32,7 +32,7 @@ public class ScannerTest implements WithAssertions {
 	private List<Symbol> allSymbolsThatCanBeScanned(Scanner scanner) {
 		List<Symbol> accepted = new ArrayList<>();
 		while (scanner.hasNextSymbol()) {
-			accepted.add(scanner.nextSymbol());
+			accepted.add(scanner.nextSymbol().symbol());
 		}
 		return accepted;
 	}

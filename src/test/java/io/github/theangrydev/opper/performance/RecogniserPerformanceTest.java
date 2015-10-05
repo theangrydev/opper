@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
+import static io.github.theangrydev.opper.scanner.SymbolInstance.symbolInstance;
 import static java.util.Collections.nCopies;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,7 +26,7 @@ public class RecogniserPerformanceTest {
 			.withRule("START", "REPEATED", "START")
 			.withRule("START", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(80000, grammar.symbolByName("REPEATED")));
+		Corpus corpus = corpus(nCopies(80000, symbolInstance(grammar.symbolByName("REPEATED"), "")));
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
@@ -42,7 +43,7 @@ public class RecogniserPerformanceTest {
 			.withRule("START", "START", "REPEATED")
 			.withRule("START", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(100000, grammar.symbolByName("REPEATED")));
+		Corpus corpus = corpus(nCopies(100000, symbolInstance(grammar.symbolByName("REPEATED"), "")));
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
@@ -59,7 +60,7 @@ public class RecogniserPerformanceTest {
 			.withRule("START", "REPEATED", "START", "REPEATED")
 			.withRule("START", "REPEATED", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(500, grammar.symbolByName("REPEATED")));
+		Corpus corpus = corpus(nCopies(500, symbolInstance(grammar.symbolByName("REPEATED"), "")));
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 

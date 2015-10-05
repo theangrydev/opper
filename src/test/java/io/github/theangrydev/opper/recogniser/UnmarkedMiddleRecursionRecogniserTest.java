@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
+import static io.github.theangrydev.opper.scanner.SymbolInstance.symbolInstance;
 import static java.lang.Boolean.valueOf;
 import static java.lang.Integer.parseInt;
 import static java.util.Collections.nCopies;
@@ -35,7 +36,7 @@ public class UnmarkedMiddleRecursionRecogniserTest {
 			.withRule("START", "REPEATED", "START", "REPEATED")
 			.withRule("START", "REPEATED", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(parseInt(repetitions), grammar.symbolByName("REPEATED")));
+		Corpus corpus = corpus(nCopies(parseInt(repetitions), symbolInstance(grammar.symbolByName("REPEATED"), "")));
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 

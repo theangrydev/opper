@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper.recogniser.item;
+package io.github.theangrydev.opper.recogniser;
 
 import io.github.theangrydev.opper.grammar.Rule;
 
@@ -31,6 +31,18 @@ public class ParseTree {
 
 	public void withChild(ParseTree child) {
 		children.add(child);
+	}
+
+	public Rule rule() {
+		return rule;
+	}
+
+	public List<ParseTree> children() {
+		return children;
+	}
+
+	public String content() {
+		return content;
 	}
 
 	@Override

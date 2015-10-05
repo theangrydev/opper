@@ -1,6 +1,7 @@
 package io.github.theangrydev.opper.recogniser.item;
 
 import io.github.theangrydev.opper.grammar.Symbol;
+import io.github.theangrydev.opper.recogniser.ParseTree;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySet;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySetsBySymbol;
 

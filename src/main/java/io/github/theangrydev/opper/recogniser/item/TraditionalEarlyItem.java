@@ -9,7 +9,7 @@ public class TraditionalEarlyItem extends EarlyItem {
 		super(transitions, dottedRule);
 	}
 
-	public TraditionalEarlyItem(ParseTree parseTree, TransitionsEarlySetsBySymbol transitions, DottedRule dottedRule) {
+	private TraditionalEarlyItem(ParseTree parseTree, TransitionsEarlySetsBySymbol transitions, DottedRule dottedRule) {
 		super(parseTree, transitions, dottedRule);
 	}
 

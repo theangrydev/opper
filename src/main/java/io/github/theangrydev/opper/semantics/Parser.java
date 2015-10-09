@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper.parser;
+package io.github.theangrydev.opper.semantics;
 
 import io.github.theangrydev.opper.grammar.Rule;
 import io.github.theangrydev.opper.recogniser.ParseTree;

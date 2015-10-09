@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper.parser;
+package io.github.theangrydev.opper.semantics;
 
 import java.util.List;
 

@@ -11,14 +11,14 @@ import java.util.Map;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
-public class ParseTreeEvaluator {
+public class ParseTreeAnalyser {
 	private final Map<Rule, RuleEvaluator> ruleParsers;
 
-	public ParseTreeEvaluator(Map<Rule, RuleEvaluator> ruleParsers) {
+	public ParseTreeAnalyser(Map<Rule, RuleEvaluator> ruleParsers) {
 		this.ruleParsers = ruleParsers;
 	}
 
-	public Object evaluate(ParseTree parseTree) {
+	public Object analyse(ParseTree parseTree) {
 		RuleEvaluator ruleEvaluator = ruleParsers.get(parseTree.rule());
 		return ruleEvaluator.parse(parseTree.visit(new ParseTree.Visitor<List<Object>>() {
 			@Override
@@ -28,7 +28,7 @@ public class ParseTreeEvaluator {
 
 			@Override
 			public List<Object> visit(ParseTreeNode parseTreeNode) {
-				return parseTreeNode.children().stream().map(ParseTreeEvaluator.this::evaluate).collect(toList());
+				return parseTreeNode.children().stream().map(ParseTreeAnalyser.this::analyse).collect(toList());
 			}
 		}));
 	}

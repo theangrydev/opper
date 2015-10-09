@@ -12,7 +12,7 @@ public class ParseTree {
 	private String content;
 
 	public ParseTree(Rule rule) {
-		this(rule, new ArrayList<>(), "");
+		this(rule, new ArrayList<>(rule.derivationLength()), "");
 	}
 
 	private ParseTree(Rule rule, List<ParseTree> children, String content) {

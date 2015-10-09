@@ -14,7 +14,7 @@ import io.github.theangrydev.opper.parser.precomputed.recursion.RightRecursion;
 import io.github.theangrydev.opper.parser.progress.EarlySet;
 import io.github.theangrydev.opper.parser.transition.TransitionsEarlySet;
 import io.github.theangrydev.opper.parser.transition.TransitionsEarlySetsBySymbol;
-import io.github.theangrydev.opper.scanner.SymbolInstance;
+import io.github.theangrydev.opper.scanner.ScannedSymbol;
 
 import java.util.Optional;
 
@@ -76,9 +76,9 @@ public class Parser {
 	}
 
 	private void readNextSymbol() {
-		SymbolInstance symbolInstance = corpus.nextSymbol();
-		Symbol symbol = symbolInstance.symbol();
-		String content = symbolInstance.content();
+		ScannedSymbol scannedSymbol = corpus.nextSymbol();
+		Symbol symbol = scannedSymbol.symbol();
+		String content = scannedSymbol.content();
 		logger.log(() -> "Reading " + symbol);
 		for (EarlyItem itemThatCanAdvance : previousTransitions.itemsThatCanAdvanceGiven(symbol)) {
 			addEarlyItem(itemThatCanAdvance.advance(content));

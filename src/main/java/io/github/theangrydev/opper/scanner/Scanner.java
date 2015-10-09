@@ -14,14 +14,14 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Optional;
 
-import static io.github.theangrydev.opper.scanner.SymbolInstance.symbolInstance;
+import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 
 public class Scanner implements Corpus {
 
 	private final Reader charactersToParse;
 	private final BFA bfa;
 	private BinaryDecisionDiagram frontier;
-	private SymbolInstance next;
+	private ScannedSymbol next;
 	private StringBuilder nextCharacters;
 
 	public Scanner(List<SymbolDefinition> symbolDefinitions, Reader charactersToParse) {
@@ -37,7 +37,7 @@ public class Scanner implements Corpus {
 	}
 
 	@Override
-	public SymbolInstance nextSymbol() {
+	public ScannedSymbol nextSymbol() {
 		return next;
 	}
 
@@ -51,7 +51,7 @@ public class Scanner implements Corpus {
 			Optional<Symbol> acceptedSymbol = bfa.checkAcceptance(transitionTo);
 			frontier = bfa.relabelToStateToFromState(transitionTo);
 			if (acceptedSymbol.isPresent()) {
-				next = symbolInstance(acceptedSymbol.get(), nextCharacters.toString());
+				next = scannedSymbol(acceptedSymbol.get(), nextCharacters.toString());
 				nextCharacters = new StringBuilder();
 				return true;
 			}

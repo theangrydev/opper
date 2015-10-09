@@ -9,7 +9,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
-import static io.github.theangrydev.opper.scanner.SymbolInstance.symbolInstance;
+import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 import static java.util.Collections.nCopies;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
@@ -23,7 +23,7 @@ public class LeftRecursiveParserTest {
 			.withRule("START", "START", "REPEATED")
 			.withRule("START", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(10, symbolInstance(grammar.symbolByName("REPEATED"), "")));
+		Corpus corpus = corpus(nCopies(10, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
 
 		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 

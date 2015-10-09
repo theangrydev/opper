@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
-import static io.github.theangrydev.opper.scanner.SymbolInstance.symbolInstance;
+import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 import static java.util.Collections.nCopies;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,7 +26,7 @@ public class ParserPerformanceTest {
 			.withRule("START", "REPEATED", "START")
 			.withRule("START", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(10000, symbolInstance(grammar.symbolByName("REPEATED"), "")));
+		Corpus corpus = corpus(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
 
 		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
@@ -43,7 +43,7 @@ public class ParserPerformanceTest {
 			.withRule("START", "START", "REPEATED")
 			.withRule("START", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(10000, symbolInstance(grammar.symbolByName("REPEATED"), "")));
+		Corpus corpus = corpus(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
 
 		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
@@ -60,7 +60,7 @@ public class ParserPerformanceTest {
 			.withRule("START", "REPEATED", "START", "REPEATED")
 			.withRule("START", "REPEATED", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(100, symbolInstance(grammar.symbolByName("REPEATED"), "")));
+		Corpus corpus = corpus(nCopies(100, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
 
 		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 

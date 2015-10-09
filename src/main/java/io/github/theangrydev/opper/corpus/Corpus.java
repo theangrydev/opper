@@ -1,8 +1,8 @@
 package io.github.theangrydev.opper.corpus;
 
-import io.github.theangrydev.opper.scanner.SymbolInstance;
+import io.github.theangrydev.opper.scanner.ScannedSymbol;
 
 public interface Corpus {
-	SymbolInstance nextSymbol();
+	ScannedSymbol nextSymbol();
 	boolean hasNextSymbol();
 }

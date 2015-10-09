@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
-import static io.github.theangrydev.opper.scanner.SymbolInstance.symbolInstance;
+import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 import static java.lang.Boolean.valueOf;
 import static java.lang.Integer.parseInt;
 import static java.util.Collections.nCopies;
@@ -36,7 +36,7 @@ public class UnmarkedMiddleRecursionParserTest {
 			.withRule("START", "REPEATED", "START", "REPEATED")
 			.withRule("START", "REPEATED", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(parseInt(repetitions), symbolInstance(grammar.symbolByName("REPEATED"), "")));
+		Corpus corpus = corpus(nCopies(parseInt(repetitions), scannedSymbol(grammar.symbolByName("REPEATED"), "")));
 
 		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 

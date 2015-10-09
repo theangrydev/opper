@@ -5,16 +5,18 @@ import io.github.theangrydev.opper.grammar.Rule;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.github.theangrydev.opper.recogniser.ParseTreeLeaf.leaf;
+
 public class ParseTreeNode extends ParseTree {
 	private List<ParseTree> children;
-
-	public ParseTreeNode(Rule rule) {
-		this(rule, new ArrayList<>(rule.derivationLength()));
-	}
 
 	private ParseTreeNode(Rule rule, List<ParseTree> children) {
 		super(rule);
 		this.children = children;
+	}
+
+	public static ParseTreeNode node(Rule rule) {
+		return new ParseTreeNode(rule, new ArrayList<>(rule.derivationLength()));
 	}
 
 	public ParseTreeNode copy() {
@@ -22,7 +24,7 @@ public class ParseTreeNode extends ParseTree {
 	}
 
 	public void withContent(String content) {
-		children.add(new ParseTreeLeaf(rule(), content));
+		children.add(leaf(rule(), content));
 	}
 
 	public void withChild(ParseTree child) {

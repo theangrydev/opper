@@ -6,6 +6,8 @@ import io.github.theangrydev.opper.recogniser.ParseTreeNode;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySet;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySetsBySymbol;
 
+import static io.github.theangrydev.opper.recogniser.ParseTreeNode.node;
+
 public abstract class EarlyItem {
 	protected final ParseTreeNode parseTree;
 	protected final TransitionsEarlySetsBySymbol origin;
@@ -18,7 +20,7 @@ public abstract class EarlyItem {
 	}
 
 	protected EarlyItem(TransitionsEarlySetsBySymbol origin, DottedRule dottedRule) {
-		this(new ParseTreeNode(dottedRule.rule()), origin, dottedRule);
+		this(node(dottedRule.rule()), origin, dottedRule);
 	}
 
 	public DottedRule dottedRule() {

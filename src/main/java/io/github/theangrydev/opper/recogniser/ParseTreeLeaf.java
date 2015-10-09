@@ -8,9 +8,13 @@ import java.util.List;
 public class ParseTreeLeaf extends ParseTree {
 	private final String content;
 
-	public ParseTreeLeaf(Rule rule, String content) {
+	private ParseTreeLeaf(Rule rule, String content) {
 		super(rule);
 		this.content = content;
+	}
+
+	public static ParseTreeLeaf leaf(Rule rule, String content) {
+		return new ParseTreeLeaf(rule, content);
 	}
 
 	@Override

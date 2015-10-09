@@ -2,7 +2,6 @@ package io.github.theangrydev.opper.parser;
 
 import io.github.theangrydev.opper.grammar.Rule;
 import io.github.theangrydev.opper.recogniser.ParseTree;
-import io.github.theangrydev.opper.recogniser.ParseTreeLeaf;
 import io.github.theangrydev.opper.recogniser.ParseTreeNode;
 import org.junit.Test;
 
@@ -10,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.github.theangrydev.opper.recogniser.ParseTreeLeaf.leaf;
+import static io.github.theangrydev.opper.recogniser.ParseTreeNode.node;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -36,11 +37,11 @@ public class ParserTest {
 	}
 
 	private ParseTree parseTree(Rule rule, String content) {
-		return new ParseTreeLeaf(rule, content);
+		return leaf(rule, content);
 	}
 
 	private ParseTree parseTree(Rule rule, ParseTree... children) {
-		ParseTreeNode parseTree = new ParseTreeNode(rule);
+		ParseTreeNode parseTree = node(rule);
 		for (ParseTree child : children) {
 			parseTree.withChild(child);
 		}

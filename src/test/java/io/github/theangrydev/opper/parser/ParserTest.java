@@ -50,14 +50,14 @@ public class ParserTest {
 
 	private class NumberParser implements RuleParser {
 		@Override
-		public Object parse(String content, List<Object> arguments) {
-			return new Number(Integer.parseInt(content));
+		public Object parse(List<Object> arguments) {
+			return new Number(Integer.parseInt((String) arguments.get(0)));
 		}
 	}
 
 	private class AddParser implements RuleParser {
 		@Override
-		public Object parse(String content, List<Object> arguments) {
+		public Object parse(List<Object> arguments) {
 			return new Addition((Numeric) arguments.get(0), (Numeric) arguments.get(1));
 		}
 
@@ -65,7 +65,7 @@ public class ParserTest {
 
 	private class MultiplicationParser implements RuleParser {
 		@Override
-		public Object parse(String content, List<Object> arguments) {
+		public Object parse(List<Object> arguments) {
 			return new Multiplication((Numeric) arguments.get(0), (Numeric) arguments.get(1));
 		}
 	}

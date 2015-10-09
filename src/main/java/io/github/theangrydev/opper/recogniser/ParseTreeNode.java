@@ -31,18 +31,17 @@ public class ParseTreeNode extends ParseTree {
 		children.add(child);
 	}
 
-	@Override
 	public List<ParseTree> children() {
 		return children;
 	}
 
 	@Override
-	public String content() {
-		return "";
+	public String toString() {
+		return children.toString();
 	}
 
 	@Override
-	public String toString() {
-		return children.toString();
+	public <T> T visit(Visitor<T> visitor) {
+		return visitor.visit(this);
 	}
 }

@@ -2,10 +2,13 @@ package io.github.theangrydev.opper.parser;
 
 import io.github.theangrydev.opper.grammar.Rule;
 import io.github.theangrydev.opper.recogniser.ParseTree;
+import io.github.theangrydev.opper.recogniser.ParseTreeLeaf;
+import io.github.theangrydev.opper.recogniser.ParseTreeNode;
 
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 public class Parser {
@@ -17,7 +20,16 @@ public class Parser {
 
 	public Object parse(ParseTree parseTree) {
 		RuleParser ruleParser = ruleParsers.get(parseTree.rule());
-		List<Object> arguments = parseTree.children().stream().map(this::parse).collect(toList());
-		return ruleParser.parse(parseTree.content(), arguments);
+		return ruleParser.parse(parseTree.visit(new ParseTree.Visitor<List<Object>>() {
+			@Override
+			public List<Object> visit(ParseTreeLeaf parseTreeLeaf) {
+				return singletonList(parseTreeLeaf.content());
+			}
+
+			@Override
+			public List<Object> visit(ParseTreeNode parseTreeNode) {
+				return parseTreeNode.children().stream().map(Parser.this::parse).collect(toList());
+			}
+		}));
 	}
 }

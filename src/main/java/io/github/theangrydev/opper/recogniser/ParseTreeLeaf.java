@@ -2,9 +2,6 @@ package io.github.theangrydev.opper.recogniser;
 
 import io.github.theangrydev.opper.grammar.Rule;
 
-import java.util.Collections;
-import java.util.List;
-
 public class ParseTreeLeaf extends ParseTree {
 	private final String content;
 
@@ -17,12 +14,6 @@ public class ParseTreeLeaf extends ParseTree {
 		return new ParseTreeLeaf(rule, content);
 	}
 
-	@Override
-	public List<ParseTree> children() {
-		return Collections.emptyList();
-	}
-
-	@Override
 	public String content() {
 		return content;
 	}
@@ -30,5 +21,10 @@ public class ParseTreeLeaf extends ParseTree {
 	@Override
 	public String toString() {
 		return content;
+	}
+
+	@Override
+	public <T> T visit(Visitor<T> visitor) {
+		return visitor.visit(this);
 	}
 }

@@ -21,7 +21,7 @@ public class ParseTreeEvaluatorTest {
 		Rule times = rule();
 		Rule number = rule();
 
-		Map<Rule, RuleParser> ruleParsers = new HashMap<>();
+		Map<Rule, RuleEvaluator> ruleParsers = new HashMap<>();
 		ruleParsers.put(add, arguments -> new Addition((Numeric) arguments.get(0), (Numeric) arguments.get(1)));
 		ruleParsers.put(times, arguments -> new Multiplication((Numeric) arguments.get(0), (Numeric) arguments.get(1)));
 		ruleParsers.put(number, arguments -> new Number(Integer.parseInt((String) arguments.get(0))));

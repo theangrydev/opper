@@ -1,7 +1,7 @@
 package io.github.theangrydev.opper.parser;
 
 import io.github.theangrydev.opper.common.Logger;
-import io.github.theangrydev.opper.corpus.Corpus;
+import io.github.theangrydev.opper.scanner.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.parser.item.*;

@@ -2,6 +2,7 @@ package io.github.theangrydev.opper.corpus;
 
 import io.github.theangrydev.opper.common.Streams;
 import io.github.theangrydev.opper.grammar.Grammar;
+import io.github.theangrydev.opper.scanner.Corpus;
 import io.github.theangrydev.opper.scanner.ScannedSymbol;
 
 import java.util.Arrays;

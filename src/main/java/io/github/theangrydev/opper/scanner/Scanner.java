@@ -1,6 +1,5 @@
 package io.github.theangrydev.opper.scanner;
 
-import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.scanner.automaton.bfa.BFA;
 import io.github.theangrydev.opper.scanner.automaton.bfa.BFABuilder;

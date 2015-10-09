@@ -2,7 +2,7 @@ package io.github.theangrydev.opper.performance;
 
 import com.google.common.base.Stopwatch;
 import io.github.theangrydev.opper.common.DoNothingLogger;
-import io.github.theangrydev.opper.corpus.Corpus;
+import io.github.theangrydev.opper.scanner.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import io.github.theangrydev.opper.parser.Parser;

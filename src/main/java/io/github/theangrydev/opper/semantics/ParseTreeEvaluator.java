@@ -18,7 +18,7 @@ public class ParseTreeEvaluator {
 		this.ruleParsers = ruleParsers;
 	}
 
-	public Object parse(ParseTree parseTree) {
+	public Object evaluate(ParseTree parseTree) {
 		RuleEvaluator ruleEvaluator = ruleParsers.get(parseTree.rule());
 		return ruleEvaluator.parse(parseTree.visit(new ParseTree.Visitor<List<Object>>() {
 			@Override
@@ -28,7 +28,7 @@ public class ParseTreeEvaluator {
 
 			@Override
 			public List<Object> visit(ParseTreeNode parseTreeNode) {
-				return parseTreeNode.children().stream().map(ParseTreeEvaluator.this::parse).collect(toList());
+				return parseTreeNode.children().stream().map(ParseTreeEvaluator.this::evaluate).collect(toList());
 			}
 		}));
 	}

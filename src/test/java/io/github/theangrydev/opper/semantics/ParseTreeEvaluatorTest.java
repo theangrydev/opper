@@ -16,21 +16,21 @@ import static org.mockito.Mockito.mock;
 public class ParseTreeEvaluatorTest {
 
 	@Test
-	public void shouldParseAParseTree() {
+	public void shouldEvaluateAParseTree() {
 		Rule add = rule();
 		Rule times = rule();
 		Rule number = rule();
 
-		Map<Rule, RuleEvaluator> ruleParsers = new HashMap<>();
-		ruleParsers.put(add, arguments -> new Addition((Numeric) arguments.get(0), (Numeric) arguments.get(1)));
-		ruleParsers.put(times, arguments -> new Multiplication((Numeric) arguments.get(0), (Numeric) arguments.get(1)));
-		ruleParsers.put(number, arguments -> new Number(Integer.parseInt((String) arguments.get(0))));
+		Map<Rule, RuleEvaluator> ruleEvaluators = new HashMap<>();
+		ruleEvaluators.put(add, arguments -> new Addition((Numeric) arguments.get(0), (Numeric) arguments.get(1)));
+		ruleEvaluators.put(times, arguments -> new Multiplication((Numeric) arguments.get(0), (Numeric) arguments.get(1)));
+		ruleEvaluators.put(number, arguments -> new Number(Integer.parseInt((String) arguments.get(0))));
 
-		ParseTreeEvaluator parseTreeEvaluator = new ParseTreeEvaluator(ruleParsers);
+		ParseTreeEvaluator parseTreeEvaluator = new ParseTreeEvaluator(ruleEvaluators);
 
 		ParseTree parseTree = parseTree(add, parseTree(add, parseTree(add, parseTree(number, "2"), parseTree(number, "3")), parseTree(number, "2")), parseTree(times, parseTree(number, "3"), parseTree(number, "4")));
 
-		Object parse = parseTreeEvaluator.parse(parseTree);
+		Object parse = parseTreeEvaluator.evaluate(parseTree);
 
 		assertThat(parse).hasToString("Addition{left=Addition{left=Addition{left=Number{value=2}, right=Number{value=3}}, right=Number{value=2}}, right=Multiplication{left=Number{value=3}, right=Number{value=4}}}");
 	}

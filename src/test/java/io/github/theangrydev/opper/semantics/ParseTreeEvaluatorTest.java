@@ -13,7 +13,7 @@ import static io.github.theangrydev.opper.parser.ParseTreeNode.node;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-public class ParserTest {
+public class ParseTreeEvaluatorTest {
 
 	@Test
 	public void shouldParseAParseTree() {
@@ -26,11 +26,11 @@ public class ParserTest {
 		ruleParsers.put(times, arguments -> new Multiplication((Numeric) arguments.get(0), (Numeric) arguments.get(1)));
 		ruleParsers.put(number, arguments -> new Number(Integer.parseInt((String) arguments.get(0))));
 
-		Parser parser = new Parser(ruleParsers);
+		ParseTreeEvaluator parseTreeEvaluator = new ParseTreeEvaluator(ruleParsers);
 
 		ParseTree parseTree = parseTree(add, parseTree(add, parseTree(add, parseTree(number, "2"), parseTree(number, "3")), parseTree(number, "2")), parseTree(times, parseTree(number, "3"), parseTree(number, "4")));
 
-		Object parse = parser.parse(parseTree);
+		Object parse = parseTreeEvaluator.parse(parseTree);
 
 		assertThat(parse).hasToString("Addition{left=Addition{left=Addition{left=Number{value=2}, right=Number{value=3}}, right=Number{value=2}}, right=Multiplication{left=Number{value=3}, right=Number{value=4}}}");
 	}

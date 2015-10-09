@@ -2,22 +2,23 @@ package io.github.theangrydev.opper.recogniser.item;
 
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.recogniser.ParseTree;
+import io.github.theangrydev.opper.recogniser.ParseTreeNode;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySet;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySetsBySymbol;
 
 public abstract class EarlyItem {
-	protected final ParseTree parseTree;
+	protected final ParseTreeNode parseTree;
 	protected final TransitionsEarlySetsBySymbol origin;
 	protected final DottedRule dottedRule;
 
-	protected EarlyItem(ParseTree parseTree, TransitionsEarlySetsBySymbol origin, DottedRule dottedRule) {
+	protected EarlyItem(ParseTreeNode parseTree, TransitionsEarlySetsBySymbol origin, DottedRule dottedRule) {
 		this.origin = origin;
 		this.dottedRule = dottedRule;
 		this.parseTree = parseTree;
 	}
 
 	protected EarlyItem(TransitionsEarlySetsBySymbol origin, DottedRule dottedRule) {
-		this(new ParseTree(dottedRule.rule()), origin, dottedRule);
+		this(new ParseTreeNode(dottedRule.rule()), origin, dottedRule);
 	}
 
 	public DottedRule dottedRule() {

@@ -1,6 +1,6 @@
 package io.github.theangrydev.opper.recogniser.item;
 
-import io.github.theangrydev.opper.recogniser.ParseTree;
+import io.github.theangrydev.opper.recogniser.ParseTreeNode;
 import io.github.theangrydev.opper.recogniser.transition.TransitionsEarlySetsBySymbol;
 
 public class TraditionalEarlyItem extends EarlyItem {
@@ -9,7 +9,7 @@ public class TraditionalEarlyItem extends EarlyItem {
 		super(transitions, dottedRule);
 	}
 
-	private TraditionalEarlyItem(ParseTree parseTree, TransitionsEarlySetsBySymbol transitions, DottedRule dottedRule) {
+	private TraditionalEarlyItem(ParseTreeNode parseTree, TransitionsEarlySetsBySymbol transitions, DottedRule dottedRule) {
 		super(parseTree, transitions, dottedRule);
 	}
 

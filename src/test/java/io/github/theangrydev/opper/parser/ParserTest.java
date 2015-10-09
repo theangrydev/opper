@@ -2,6 +2,8 @@ package io.github.theangrydev.opper.parser;
 
 import io.github.theangrydev.opper.grammar.Rule;
 import io.github.theangrydev.opper.recogniser.ParseTree;
+import io.github.theangrydev.opper.recogniser.ParseTreeLeaf;
+import io.github.theangrydev.opper.recogniser.ParseTreeNode;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -34,13 +36,11 @@ public class ParserTest {
 	}
 
 	private ParseTree parseTree(Rule rule, String content) {
-		ParseTree parseTree = new ParseTree(rule);
-		parseTree.withContent(content);
-		return parseTree;
+		return new ParseTreeLeaf(rule, content);
 	}
 
 	private ParseTree parseTree(Rule rule, ParseTree... children) {
-		ParseTree parseTree = new ParseTree(rule);
+		ParseTreeNode parseTree = new ParseTreeNode(rule);
 		for (ParseTree child : children) {
 			parseTree.withChild(child);
 		}

@@ -188,6 +188,7 @@
 				<artifactId>findbugs-maven-plugin</artifactId>
 				<version>${findbugs.plugin.version}</version>
 				<configuration>
+					<includeTests>true</includeTests>
 					<effort>Max</effort>
 					<threshold>Low</threshold>
 					<xmlOutput>true</xmlOutput>
@@ -195,8 +196,7 @@
 				</configuration>
 				<executions>
 					<execution>
-						<id>analyze-compile</id>
-						<phase>compile</phase>
+						<phase>verify</phase>
 						<goals>
 							<goal>check</goal>
 						</goals>

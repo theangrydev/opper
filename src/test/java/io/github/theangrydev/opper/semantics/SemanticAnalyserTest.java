@@ -47,7 +47,7 @@ public class SemanticAnalyserTest {
 		return parseTree;
 	}
 
-	private class Number implements Numeric {
+	private static class Number implements Numeric {
 		private final int value;
 
 		public Number(int value) {
@@ -66,7 +66,7 @@ public class SemanticAnalyserTest {
 		}
 	}
 
-	private class Addition implements Numeric {
+	private static class Addition implements Numeric {
 		private final Numeric left;
 		private final Numeric right;
 
@@ -90,7 +90,7 @@ public class SemanticAnalyserTest {
 				'}';
 		}
 	}
-	private class Multiplication implements Numeric {
+	private static class Multiplication implements Numeric {
 		private final Numeric left;
 		private final Numeric right;
 

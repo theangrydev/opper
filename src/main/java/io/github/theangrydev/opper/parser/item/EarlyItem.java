@@ -65,16 +65,8 @@ public abstract class EarlyItem {
 		return advance;
 	}
 
-	@Override
-	public boolean equals(Object object) {
-		if (this == object) {
-			return true;
-		}
-		if (getClass() != object.getClass()) {
-			return false;
-		}
-		final EarlyItem other = (EarlyItem) object;
-		return this.origin == other.origin && this.dottedRule == other.dottedRule;
+	public boolean sameAs(EarlyItem other) {
+		return this == other || this.origin == other.origin && this.dottedRule == other.dottedRule;
 	}
 
 	@Override

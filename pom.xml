@@ -59,6 +59,7 @@
 		<jflex.maven.plugin.version>1.6.1</jflex.maven.plugin.version>
 		<assertj.assertions.generator.plugin.version>2.0.0</assertj.assertions.generator.plugin.version>
 		<versions.plugin.version>2.2</versions.plugin.version>
+		<findbugs.plugin.version>3.0.2</findbugs.plugin.version>
 
 		<!-- Dependencies -->
 		<assertj.core.version>3.1.0</assertj.core.version>
@@ -176,6 +177,28 @@
 						<phase>generate-test-sources</phase>
 						<goals>
 							<goal>generate-assertions</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- FindBugs -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>${findbugs.plugin.version}</version>
+				<configuration>
+					<effort>Max</effort>
+					<threshold>Low</threshold>
+					<xmlOutput>true</xmlOutput>
+					<findbugsXmlOutputDirectory>${project.build.directory}/findbugs</findbugsXmlOutputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>analyze-compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>check</goal>
 						</goals>
 					</execution>
 				</executions>

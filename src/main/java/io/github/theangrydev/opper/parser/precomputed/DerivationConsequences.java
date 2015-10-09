@@ -24,12 +24,12 @@ public class DerivationConsequences {
 	}
 
 	public Set<Symbol> of(Symbol symbol) {
-		List<Symbol> confirmedConsequences = new ObjectArrayList<Symbol>(){{
-			add(symbol);
-		}};
-		Set<Symbol> uniqueConsequences = new ObjectArraySet<Symbol>(){{
-			add(symbol);
-		}};
+		List<Symbol> confirmedConsequences = new ObjectArrayList<>();
+		confirmedConsequences.add(symbol);
+
+		Set<Symbol> uniqueConsequences = new ObjectArraySet<>();
+		uniqueConsequences.add(symbol);
+
 		confirmedConsequences.forEach(confirmedConsequence -> rulesTriggeredBy(confirmedConsequence).map(consequence).forEach(consequence -> {
 			boolean wasNew = uniqueConsequences.add(consequence);
 			if (wasNew) {

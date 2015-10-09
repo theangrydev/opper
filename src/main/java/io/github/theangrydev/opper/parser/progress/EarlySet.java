@@ -74,7 +74,7 @@ public class EarlySet implements Iterable<EarlyItem> {
 
 	private boolean contains(EarlyItem earlyItem) {
 		for (int i = earlyItems.size() - 1; i >= 0; i--) {
-			if (earlyItems.get(i).equals(earlyItem)) {
+			if (earlyItems.get(i).sameAs(earlyItem)) {
 				return true;
 			}
 		}

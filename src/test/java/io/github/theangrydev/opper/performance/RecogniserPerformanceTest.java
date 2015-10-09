@@ -31,7 +31,7 @@ public class RecogniserPerformanceTest {
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
-		recogniser.recognise();
+		recogniser.parse();
 		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
 	}
 
@@ -48,7 +48,7 @@ public class RecogniserPerformanceTest {
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
-		recogniser.recognise();
+		recogniser.parse();
 		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
 	}
 
@@ -65,7 +65,7 @@ public class RecogniserPerformanceTest {
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
-		recogniser.recognise();
+		recogniser.parse();
 		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
 	}
 }

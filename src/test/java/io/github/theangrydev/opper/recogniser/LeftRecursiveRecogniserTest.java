@@ -27,6 +27,6 @@ public class LeftRecursiveRecogniserTest {
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(recogniser.recognise()).isPresent();
+		assertThat(recogniser.parse()).isPresent();
 	}
 }

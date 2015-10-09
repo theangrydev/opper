@@ -24,6 +24,6 @@ public class IndireclytRightRecursiveRecogniserTest {
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(recogniser.recognise()).isPresent();
+		assertThat(recogniser.parse()).isPresent();
 	}
 }

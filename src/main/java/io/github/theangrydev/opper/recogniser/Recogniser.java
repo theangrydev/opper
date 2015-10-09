@@ -41,7 +41,7 @@ public class Recogniser {
 		this.currentEarlySet = new EarlySet(grammar);
 	}
 
-	public Optional<ParseTree> recognise() {
+	public Optional<ParseTree> parse() {
 		initialize();
 		for (currentEarlySetIndex = 1; corpus.hasNextSymbol(); currentEarlySetIndex++) {
 			prepareIteration();

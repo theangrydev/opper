@@ -26,7 +26,7 @@ public class RepeatedPredictionRecogniserTest {
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(recogniser.recognise()).isPresent();
+		assertThat(recogniser.parse()).isPresent();
 		assertThat(recogniser.finalEarlySetSize()).isEqualTo(6);
 	}
 }

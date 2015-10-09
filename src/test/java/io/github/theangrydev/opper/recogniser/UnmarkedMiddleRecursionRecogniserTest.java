@@ -40,6 +40,6 @@ public class UnmarkedMiddleRecursionRecogniserTest {
 
 		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(recogniser.recognise().isPresent()).describedAs(repetitions + " should be " + shouldParse).isEqualTo(valueOf(shouldParse));
+		assertThat(recogniser.parse().isPresent()).describedAs(repetitions + " should be " + shouldParse).isEqualTo(valueOf(shouldParse));
 	}
 }

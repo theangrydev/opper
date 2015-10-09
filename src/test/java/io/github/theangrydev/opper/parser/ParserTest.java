@@ -6,7 +6,6 @@ import io.github.theangrydev.opper.recogniser.ParseTreeNode;
 import org.junit.Test;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static io.github.theangrydev.opper.recogniser.ParseTreeLeaf.leaf;
@@ -23,9 +22,9 @@ public class ParserTest {
 		Rule number = rule();
 
 		Map<Rule, RuleParser> ruleParsers = new HashMap<>();
-		ruleParsers.put(add, new AddParser());
-		ruleParsers.put(times, new MultiplicationParser());
-		ruleParsers.put(number, new NumberParser());
+		ruleParsers.put(add, arguments -> new Addition((Numeric) arguments.get(0), (Numeric) arguments.get(1)));
+		ruleParsers.put(times, arguments -> new Multiplication((Numeric) arguments.get(0), (Numeric) arguments.get(1)));
+		ruleParsers.put(number, arguments -> new Number(Integer.parseInt((String) arguments.get(0))));
 
 		Parser parser = new Parser(ruleParsers);
 
@@ -46,28 +45,6 @@ public class ParserTest {
 			parseTree.withChild(child);
 		}
 		return parseTree;
-	}
-
-	private class NumberParser implements RuleParser {
-		@Override
-		public Object parse(List<Object> arguments) {
-			return new Number(Integer.parseInt((String) arguments.get(0)));
-		}
-	}
-
-	private class AddParser implements RuleParser {
-		@Override
-		public Object parse(List<Object> arguments) {
-			return new Addition((Numeric) arguments.get(0), (Numeric) arguments.get(1));
-		}
-
-	}
-
-	private class MultiplicationParser implements RuleParser {
-		@Override
-		public Object parse(List<Object> arguments) {
-			return new Multiplication((Numeric) arguments.get(0), (Numeric) arguments.get(1));
-		}
 	}
 
 	private class Number implements Numeric {

@@ -25,6 +25,8 @@ public class ParseTree {
 		return new ParseTree(rule, new ArrayList<>(children), content);
 	}
 
+	//TODO: this is not enough, it is possible for a rule to consist of more than one terminal
+	//TODO: which means that the list of children will either be parse trees or content
 	public void withContent(String content) {
 		this.content = content;
 	}

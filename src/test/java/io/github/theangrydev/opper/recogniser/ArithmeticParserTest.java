@@ -18,7 +18,7 @@ import static org.assertj.core.api.StrictAssertions.assertThat;
  * </pre>
  * @see <a href="https://en.wikipedia.org/w/index.php?title=Earley_recogniser&oldid=667926718#Example">Early recogniser example</a>
  */
-public class ArithmeticRecogniserTest {
+public class ArithmeticParserTest {
 
 	@Test
 	public void shouldRecogniseALeftRecursiveGrammar() {
@@ -37,8 +37,8 @@ public class ArithmeticRecogniserTest {
 
 		Corpus corpus = corpus(grammar, "2", "+", "3", "+", "2", "+", "3", "*", "4");
 
-		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(recogniser.parse()).isPresent();
+		assertThat(parser.parse()).isPresent();
 	}
 }

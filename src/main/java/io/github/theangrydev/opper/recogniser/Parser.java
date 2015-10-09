@@ -18,7 +18,7 @@ import io.github.theangrydev.opper.scanner.SymbolInstance;
 
 import java.util.Optional;
 
-public class Recogniser {
+public class Parser {
 
 	private final Logger logger;
 	private final Grammar grammar;
@@ -32,7 +32,7 @@ public class Recogniser {
 	private EarlySet currentEarlySet;
 	private int currentEarlySetIndex;
 
-	public Recogniser(Logger logger, Grammar grammar, Corpus corpus) {
+	public Parser(Logger logger, Grammar grammar, Corpus corpus) {
 		this.logger = logger;
 		this.grammar = grammar;
 		this.corpus = corpus;

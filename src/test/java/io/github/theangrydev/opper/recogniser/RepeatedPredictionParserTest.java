@@ -9,7 +9,7 @@ import org.junit.Test;
 import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
-public class RepeatedPredictionRecogniserTest {
+public class RepeatedPredictionParserTest {
 
 	@Test
 	public void shouldRecogniseALeftRecursiveGrammar() throws Exception {
@@ -24,9 +24,9 @@ public class RepeatedPredictionRecogniserTest {
 			.build();
 		Corpus corpus = corpus(grammar, "BEGIN", "END");
 
-		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(recogniser.parse()).isPresent();
-		assertThat(recogniser.finalEarlySetSize()).isEqualTo(6);
+		assertThat(parser.parse()).isPresent();
+		assertThat(parser.finalEarlySetSize()).isEqualTo(6);
 	}
 }

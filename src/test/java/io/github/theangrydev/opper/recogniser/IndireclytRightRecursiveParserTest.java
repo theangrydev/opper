@@ -9,7 +9,7 @@ import org.junit.Test;
 import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class IndireclytRightRecursiveRecogniserTest {
+public class IndireclytRightRecursiveParserTest {
 
 	@Test
 	public void shouldRecogniseAnIndirectlyRightRecursiveGrammar() {
@@ -22,8 +22,8 @@ public class IndireclytRightRecursiveRecogniserTest {
 			.build();
 		Corpus corpus = corpus(grammar, "REPEATED", "MIDDLE", "REPEATED", "MIDDLE", "REPEATED");
 
-		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(recogniser.parse()).isPresent();
+		assertThat(parser.parse()).isPresent();
 	}
 }

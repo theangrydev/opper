@@ -16,7 +16,7 @@ import static java.lang.Boolean.valueOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(TableRunner.class)
-public class BNFRecogniserTest {
+public class BNFParserTest {
 
 	@Table({
 		@Row({"( ant )", "true"}),
@@ -45,8 +45,8 @@ public class BNFRecogniserTest {
 			.build();
 		Corpus corpus = corpus(grammar, Splitter.on(' ').split(spaceSeperatedCorpus));
 
-		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(recogniser.parse().isPresent()).isEqualTo(valueOf(shouldParse));
+		assertThat(parser.parse().isPresent()).isEqualTo(valueOf(shouldParse));
 	}
 }

@@ -18,7 +18,7 @@ import static java.util.Collections.nCopies;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
 @RunWith(TableRunner.class)
-public class UnmarkedMiddleRecursionRecogniserTest {
+public class UnmarkedMiddleRecursionParserTest {
 
 	@Table({
 		@Row({"1", "false"}),
@@ -38,8 +38,8 @@ public class UnmarkedMiddleRecursionRecogniserTest {
 			.build();
 		Corpus corpus = corpus(nCopies(parseInt(repetitions), symbolInstance(grammar.symbolByName("REPEATED"), "")));
 
-		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(recogniser.parse().isPresent()).describedAs(repetitions + " should be " + shouldParse).isEqualTo(valueOf(shouldParse));
+		assertThat(parser.parse().isPresent()).describedAs(repetitions + " should be " + shouldParse).isEqualTo(valueOf(shouldParse));
 	}
 }

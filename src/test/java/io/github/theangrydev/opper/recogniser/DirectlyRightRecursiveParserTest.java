@@ -11,7 +11,7 @@ import static io.github.theangrydev.opper.scanner.SymbolInstance.symbolInstance;
 import static java.util.Collections.nCopies;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DirectlyRightRecursiveRecogniserTest {
+public class DirectlyRightRecursiveParserTest {
 
 	@Test
 	public void shouldRecogniseADirectlyRightRecursiveGrammar() {
@@ -23,8 +23,8 @@ public class DirectlyRightRecursiveRecogniserTest {
 			.build();
 		Corpus corpus = corpus(nCopies(10, symbolInstance(grammar.symbolByName("REPEATED"), "")));
 
-		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(recogniser.parse()).isPresent();
+		assertThat(parser.parse()).isPresent();
 	}
 }

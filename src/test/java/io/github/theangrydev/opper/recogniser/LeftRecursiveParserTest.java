@@ -13,7 +13,7 @@ import static io.github.theangrydev.opper.scanner.SymbolInstance.symbolInstance;
 import static java.util.Collections.nCopies;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
-public class LeftRecursiveRecogniserTest {
+public class LeftRecursiveParserTest {
 
 	@Test
 	public void shouldRecogniseALeftRecursiveGrammar() throws IOException, InterruptedException {
@@ -25,8 +25,8 @@ public class LeftRecursiveRecogniserTest {
 			.build();
 		Corpus corpus = corpus(nCopies(10, symbolInstance(grammar.symbolByName("REPEATED"), "")));
 
-		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(recogniser.parse()).isPresent();
+		assertThat(parser.parse()).isPresent();
 	}
 }

@@ -9,7 +9,7 @@ import org.junit.Test;
 import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
-public class RecogniserTest {
+public class ParserTest {
 
 	@Test
 	public void shouldRecogniseASimpleGrammar() {
@@ -21,8 +21,8 @@ public class RecogniserTest {
 			.build();
 		Corpus corpus = corpus(grammar, "MIDDLE", "SECOND", "DUMMY");
 
-		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
-		assertThat(recogniser.parse()).isPresent();
+		assertThat(parser.parse()).isPresent();
 	}
 }

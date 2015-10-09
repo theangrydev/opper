@@ -5,7 +5,7 @@ import io.github.theangrydev.opper.common.DoNothingLogger;
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
-import io.github.theangrydev.opper.recogniser.Recogniser;
+import io.github.theangrydev.opper.recogniser.Parser;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -16,7 +16,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Category(PerformanceTests.class)
-public class RecogniserPerformanceTest {
+public class ParserPerformanceTest {
 
 	@Test
 	public void shouldRecogniseADirectlyRightRecursiveGrammarInGoodTime() {
@@ -28,10 +28,10 @@ public class RecogniserPerformanceTest {
 			.build();
 		Corpus corpus = corpus(nCopies(10000, symbolInstance(grammar.symbolByName("REPEATED"), "")));
 
-		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
-		recogniser.parse();
+		parser.parse();
 		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
 	}
 
@@ -45,10 +45,10 @@ public class RecogniserPerformanceTest {
 			.build();
 		Corpus corpus = corpus(nCopies(10000, symbolInstance(grammar.symbolByName("REPEATED"), "")));
 
-		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
-		recogniser.parse();
+		parser.parse();
 		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
 	}
 
@@ -62,10 +62,10 @@ public class RecogniserPerformanceTest {
 			.build();
 		Corpus corpus = corpus(nCopies(100, symbolInstance(grammar.symbolByName("REPEATED"), "")));
 
-		Recogniser recogniser = new Recogniser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
-		recogniser.parse();
+		parser.parse();
 		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
 	}
 }

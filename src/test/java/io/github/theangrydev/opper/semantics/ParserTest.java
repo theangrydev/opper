@@ -1,15 +1,15 @@
 package io.github.theangrydev.opper.semantics;
 
 import io.github.theangrydev.opper.grammar.Rule;
-import io.github.theangrydev.opper.recogniser.ParseTree;
-import io.github.theangrydev.opper.recogniser.ParseTreeNode;
+import io.github.theangrydev.opper.parser.ParseTree;
+import io.github.theangrydev.opper.parser.ParseTreeNode;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.github.theangrydev.opper.recogniser.ParseTreeLeaf.leaf;
-import static io.github.theangrydev.opper.recogniser.ParseTreeNode.node;
+import static io.github.theangrydev.opper.parser.ParseTreeLeaf.leaf;
+import static io.github.theangrydev.opper.parser.ParseTreeNode.node;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 

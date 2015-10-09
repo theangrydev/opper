@@ -5,7 +5,7 @@ import io.github.theangrydev.opper.common.DoNothingLogger;
 import io.github.theangrydev.opper.corpus.Corpus;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
-import io.github.theangrydev.opper.recogniser.Parser;
+import io.github.theangrydev.opper.parser.Parser;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 

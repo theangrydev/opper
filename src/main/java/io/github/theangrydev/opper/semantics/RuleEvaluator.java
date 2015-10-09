@@ -4,5 +4,5 @@ import java.util.List;
 
 @FunctionalInterface
 public interface RuleEvaluator {
-	Object parse(List<Object> arguments);
+	Object evaluate(List<Object> arguments);
 }

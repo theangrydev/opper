@@ -13,7 +13,7 @@ import static io.github.theangrydev.opper.parser.ParseTreeNode.node;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-public class ParseTreeAnalyserTest {
+public class SemanticAnalyserTest {
 
 	@Test
 	public void shouldEvaluateAParseTree() {
@@ -26,11 +26,11 @@ public class ParseTreeAnalyserTest {
 		ruleEvaluators.put(times, arguments -> new Multiplication((Numeric) arguments.get(0), (Numeric) arguments.get(1)));
 		ruleEvaluators.put(number, arguments -> new Number(Integer.parseInt((String) arguments.get(0))));
 
-		ParseTreeAnalyser parseTreeAnalyser = new ParseTreeAnalyser(ruleEvaluators);
+		SemanticAnalyser semanticAnalyser = new SemanticAnalyser(ruleEvaluators);
 
 		ParseTree parseTree = parseTree(add, parseTree(add, parseTree(add, parseTree(number, "2"), parseTree(number, "3")), parseTree(number, "2")), parseTree(times, parseTree(number, "3"), parseTree(number, "4")));
 
-		Object parse = parseTreeAnalyser.analyse(parseTree);
+		Object parse = semanticAnalyser.analyse(parseTree);
 
 		assertThat(parse).hasToString("Addition{left=Addition{left=Addition{left=Number{value=2}, right=Number{value=3}}, right=Number{value=2}}, right=Multiplication{left=Number{value=3}, right=Number{value=4}}}");
 	}

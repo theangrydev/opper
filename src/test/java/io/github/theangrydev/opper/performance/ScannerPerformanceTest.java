@@ -2,6 +2,7 @@ package io.github.theangrydev.opper.performance;
 
 import com.google.common.base.Stopwatch;
 import io.github.theangrydev.opper.grammar.SymbolFactory;
+import io.github.theangrydev.opper.scanner.BFAScanner;
 import io.github.theangrydev.opper.scanner.Scanner;
 import io.github.theangrydev.opper.scanner.definition.Expression;
 import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
@@ -61,7 +62,7 @@ public class ScannerPerformanceTest implements WithAssertions {
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("Real"), concatenate(integer, character('.'), integer)));
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("Whitespace"), either(character(' '), character('\n'), character('\t'))));
 
-		Scanner scanner = new Scanner(symbolDefinitions, characters(NUMBER_OF_CHARACTERS));
+		Scanner scanner = new BFAScanner(symbolDefinitions, characters(NUMBER_OF_CHARACTERS));
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		scanAllSymbols(scanner);

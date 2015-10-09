@@ -5,13 +5,13 @@ import com.googlecode.yatspec.junit.Row;
 import com.googlecode.yatspec.junit.Table;
 import com.googlecode.yatspec.junit.TableRunner;
 import io.github.theangrydev.opper.common.DoNothingLogger;
-import io.github.theangrydev.opper.scanner.Corpus;
+import io.github.theangrydev.opper.corpus.FixedScanner;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
+import io.github.theangrydev.opper.scanner.Scanner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
 import static java.lang.Boolean.valueOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,9 +43,9 @@ public class BNFParserTest {
 			.withRule("NAME", "bat")
 			.withRule("NAME", "cow")
 			.build();
-		Corpus corpus = corpus(grammar, Splitter.on(' ').split(spaceSeperatedCorpus));
+		Scanner scanner = FixedScanner.scanner(grammar, Splitter.on(' ').split(spaceSeperatedCorpus));
 
-		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, scanner);
 
 		assertThat(parser.parse().isPresent()).isEqualTo(valueOf(shouldParse));
 	}

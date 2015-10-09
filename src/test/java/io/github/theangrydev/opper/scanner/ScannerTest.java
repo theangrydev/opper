@@ -24,7 +24,7 @@ public class ScannerTest implements WithAssertions {
 		Symbol symbol = new Symbol(1, "symbol");
 		SymbolDefinition symbolDefinition = SymbolDefinition.definition(symbol, expression);
 
-		Scanner scanner = new Scanner(singletonList(symbolDefinition), new CharArrayReader(new char[]{'c', 'd', 'c', 'd', 'a', 'b'}));
+		Scanner scanner = new BFAScanner(singletonList(symbolDefinition), new CharArrayReader(new char[]{'c', 'd', 'c', 'd', 'a', 'b'}));
 
 		assertThat(allSymbolsThatCanBeScanned(scanner)).containsOnly(symbol).hasSize(4);
 	}

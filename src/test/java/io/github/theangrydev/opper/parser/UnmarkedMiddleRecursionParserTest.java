@@ -4,13 +4,13 @@ import com.googlecode.yatspec.junit.Row;
 import com.googlecode.yatspec.junit.Table;
 import com.googlecode.yatspec.junit.TableRunner;
 import io.github.theangrydev.opper.common.DoNothingLogger;
-import io.github.theangrydev.opper.scanner.Corpus;
+import io.github.theangrydev.opper.scanner.Scanner;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
+import static io.github.theangrydev.opper.corpus.FixedScanner.scanner;
 import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 import static java.lang.Boolean.valueOf;
 import static java.lang.Integer.parseInt;
@@ -36,9 +36,9 @@ public class UnmarkedMiddleRecursionParserTest {
 			.withRule("START", "REPEATED", "START", "REPEATED")
 			.withRule("START", "REPEATED", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(parseInt(repetitions), scannedSymbol(grammar.symbolByName("REPEATED"), "")));
+		Scanner scanner = scanner(nCopies(parseInt(repetitions), scannedSymbol(grammar.symbolByName("REPEATED"), "")));
 
-		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, scanner);
 
 		assertThat(parser.parse().isPresent()).describedAs(repetitions + " should be " + shouldParse).isEqualTo(valueOf(shouldParse));
 	}

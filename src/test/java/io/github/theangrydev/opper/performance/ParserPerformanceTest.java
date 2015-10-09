@@ -2,14 +2,14 @@ package io.github.theangrydev.opper.performance;
 
 import com.google.common.base.Stopwatch;
 import io.github.theangrydev.opper.common.DoNothingLogger;
-import io.github.theangrydev.opper.scanner.Corpus;
+import io.github.theangrydev.opper.scanner.Scanner;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import io.github.theangrydev.opper.parser.Parser;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
+import static io.github.theangrydev.opper.corpus.FixedScanner.scanner;
 import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 import static java.util.Collections.nCopies;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -26,9 +26,9 @@ public class ParserPerformanceTest {
 			.withRule("START", "REPEATED", "START")
 			.withRule("START", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
+		Scanner scanner = scanner(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
 
-		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, scanner);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		parser.parse();
@@ -43,9 +43,9 @@ public class ParserPerformanceTest {
 			.withRule("START", "START", "REPEATED")
 			.withRule("START", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
+		Scanner scanner = scanner(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
 
-		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, scanner);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		parser.parse();
@@ -60,9 +60,9 @@ public class ParserPerformanceTest {
 			.withRule("START", "REPEATED", "START", "REPEATED")
 			.withRule("START", "REPEATED", "REPEATED")
 			.build();
-		Corpus corpus = corpus(nCopies(100, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
+		Scanner scanner = scanner(nCopies(100, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
 
-		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, scanner);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		parser.parse();

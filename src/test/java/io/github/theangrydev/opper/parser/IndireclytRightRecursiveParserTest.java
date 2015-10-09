@@ -1,12 +1,13 @@
 package io.github.theangrydev.opper.parser;
 
 import io.github.theangrydev.opper.common.DoNothingLogger;
-import io.github.theangrydev.opper.scanner.Corpus;
+import io.github.theangrydev.opper.corpus.FixedScanner;
+import io.github.theangrydev.opper.scanner.Scanner;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import org.junit.Test;
 
-import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
+import static io.github.theangrydev.opper.corpus.FixedScanner.scanner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class IndireclytRightRecursiveParserTest {
@@ -20,9 +21,9 @@ public class IndireclytRightRecursiveParserTest {
 			.withRule("START", "REPEATED")
 			.withRule("INDIRECT", "MIDDLE", "START")
 			.build();
-		Corpus corpus = corpus(grammar, "REPEATED", "MIDDLE", "REPEATED", "MIDDLE", "REPEATED");
+		Scanner scanner = FixedScanner.scanner(grammar, "REPEATED", "MIDDLE", "REPEATED", "MIDDLE", "REPEATED");
 
-		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, scanner);
 
 		assertThat(parser.parse()).isPresent();
 	}

@@ -1,12 +1,12 @@
 package io.github.theangrydev.opper.parser;
 
 import io.github.theangrydev.opper.common.DoNothingLogger;
-import io.github.theangrydev.opper.scanner.Corpus;
+import io.github.theangrydev.opper.corpus.FixedScanner;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
+import io.github.theangrydev.opper.scanner.Scanner;
 import org.junit.Test;
 
-import static io.github.theangrydev.opper.corpus.FixedCorpus.corpus;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
 /**
@@ -35,9 +35,9 @@ public class ArithmeticParserTest {
 			.withRule("T", "4")
 			.build();
 
-		Corpus corpus = corpus(grammar, "2", "+", "3", "+", "2", "+", "3", "*", "4");
+		Scanner scanner = FixedScanner.scanner(grammar, "2", "+", "3", "+", "2", "+", "3", "*", "4");
 
-		Parser parser = new Parser(new DoNothingLogger(), grammar, corpus);
+		Parser parser = new Parser(new DoNothingLogger(), grammar, scanner);
 
 		assertThat(parser.parse()).isPresent();
 	}

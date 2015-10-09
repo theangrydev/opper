@@ -1,7 +1,7 @@
 package io.github.theangrydev.opper.parser;
 
 import io.github.theangrydev.opper.common.Logger;
-import io.github.theangrydev.opper.scanner.Corpus;
+import io.github.theangrydev.opper.scanner.Scanner;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.parser.item.*;
@@ -22,7 +22,7 @@ public class Parser {
 
 	private final Logger logger;
 	private final Grammar grammar;
-	private final Corpus corpus;
+	private final Scanner scanner;
 	private final RulePrediction rulePrediction;
 	private final RightRecursion rightRecursion;
 
@@ -32,10 +32,10 @@ public class Parser {
 	private EarlySet currentEarlySet;
 	private int currentEarlySetIndex;
 
-	public Parser(Logger logger, Grammar grammar, Corpus corpus) {
+	public Parser(Logger logger, Grammar grammar, Scanner scanner) {
 		this.logger = logger;
 		this.grammar = grammar;
-		this.corpus = corpus;
+		this.scanner = scanner;
 		this.rightRecursion = new PrecomputedRightRecursion(grammar, new ComputedRightRecursion(grammar));
 		this.rulePrediction = new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(grammar));
 		this.currentEarlySet = new EarlySet(grammar);
@@ -43,9 +43,9 @@ public class Parser {
 
 	public Optional<ParseTree> parse() {
 		initialize();
-		for (currentEarlySetIndex = 1; corpus.hasNextSymbol(); currentEarlySetIndex++) {
+		for (currentEarlySetIndex = 1; scanner.hasNextSymbol(); currentEarlySetIndex++) {
 			prepareIteration();
-			readNextSymbol();
+			scanNextSymbol();
 			if (currentEarlySet.isEmpty()) {
 				logger.log(() -> "Exiting early because the current early set is empty after reading");
 				return Optional.empty();
@@ -75,8 +75,8 @@ public class Parser {
 		currentTransitions = new TransitionsEarlySetsBySymbol(grammar.symbols());
 	}
 
-	private void readNextSymbol() {
-		ScannedSymbol scannedSymbol = corpus.nextSymbol();
+	private void scanNextSymbol() {
+		ScannedSymbol scannedSymbol = scanner.nextSymbol();
 		Symbol symbol = scannedSymbol.symbol();
 		String content = scannedSymbol.content();
 		logger.log(() -> "Reading " + symbol);

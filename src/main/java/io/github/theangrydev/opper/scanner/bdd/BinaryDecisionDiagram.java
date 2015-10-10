@@ -93,4 +93,8 @@ public class BinaryDecisionDiagram {
 		discard(oldId);
 		return this;
 	}
+
+	public BinaryDecisionDiagram copy() {
+		return new BinaryDecisionDiagram(bdd, bdd.ref(id));
+	}
 }

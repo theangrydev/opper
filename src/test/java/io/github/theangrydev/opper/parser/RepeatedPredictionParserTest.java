@@ -1,13 +1,13 @@
 package io.github.theangrydev.opper.parser;
 
 import io.github.theangrydev.opper.common.DoNothingLogger;
-import io.github.theangrydev.opper.corpus.FixedScanner;
+import io.github.theangrydev.opper.scanner.FixedScanner;
 import io.github.theangrydev.opper.scanner.Scanner;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import org.junit.Test;
 
-import static io.github.theangrydev.opper.corpus.FixedScanner.scanner;
+import static io.github.theangrydev.opper.scanner.FixedScanner.scanner;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
 public class RepeatedPredictionParserTest {

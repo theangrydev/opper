@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static io.github.theangrydev.opper.corpus.FixedScanner.scanner;
+import static io.github.theangrydev.opper.scanner.FixedScanner.scanner;
 import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 import static java.util.Collections.nCopies;
 import static org.assertj.core.api.StrictAssertions.assertThat;

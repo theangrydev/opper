@@ -10,7 +10,7 @@ import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static io.github.theangrydev.opper.corpus.FixedScanner.scanner;
+import static io.github.theangrydev.opper.scanner.FixedScanner.scanner;
 import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 import static java.lang.Boolean.valueOf;
 import static java.lang.Integer.parseInt;

@@ -6,7 +6,7 @@ import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import org.junit.Test;
 
-import static io.github.theangrydev.opper.corpus.FixedScanner.scanner;
+import static io.github.theangrydev.opper.scanner.FixedScanner.scanner;
 import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 import static java.util.Collections.nCopies;
 import static org.assertj.core.api.Assertions.assertThat;

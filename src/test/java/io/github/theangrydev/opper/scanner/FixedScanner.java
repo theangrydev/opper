@@ -1,9 +1,7 @@
-package io.github.theangrydev.opper.corpus;
+package io.github.theangrydev.opper.scanner;
 
 import io.github.theangrydev.opper.common.Streams;
 import io.github.theangrydev.opper.grammar.Grammar;
-import io.github.theangrydev.opper.scanner.Scanner;
-import io.github.theangrydev.opper.scanner.ScannedSymbol;
 
 import java.util.Arrays;
 import java.util.Iterator;

@@ -9,7 +9,7 @@ import io.github.theangrydev.opper.parser.Parser;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import static io.github.theangrydev.opper.corpus.FixedScanner.scanner;
+import static io.github.theangrydev.opper.scanner.FixedScanner.scanner;
 import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 import static java.util.Collections.nCopies;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;

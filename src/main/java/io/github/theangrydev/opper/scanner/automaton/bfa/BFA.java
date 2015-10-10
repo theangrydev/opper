@@ -25,7 +25,7 @@ public class BFA {
 	}
 
 	public BinaryDecisionDiagram initialState() {
-		return initialState;
+		return initialState.copy();
 	}
 
 	public Optional<Symbol> checkAcceptance(BinaryDecisionDiagram frontier) {

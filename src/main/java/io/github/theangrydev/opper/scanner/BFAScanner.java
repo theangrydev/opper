@@ -48,11 +48,13 @@ public class BFAScanner implements Scanner {
 
 			BinaryDecisionDiagram transitionTo = bfa.transition(frontier, character);
 			Optional<Symbol> acceptedSymbol = bfa.checkAcceptance(transitionTo);
-			frontier = bfa.relabelToStateToFromState(transitionTo);
 			if (acceptedSymbol.isPresent()) {
 				next = scannedSymbol(acceptedSymbol.get(), nextCharacters.toString());
 				nextCharacters = new StringBuilder();
+				frontier = bfa.initialState();
 				return true;
+			} else {
+				frontier = bfa.relabelToStateToFromState(transitionTo);
 			}
 		}
 		return false;

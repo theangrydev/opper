@@ -10,7 +10,7 @@ public class ParseTreeLeafAnalyser<T> implements ParseTreeAnalyser<T> {
 		this.leafAnalyser = leafAnalyser;
 	}
 
-	public static <T> ParseTreeLeafAnalyser<T> value(LeafAnalyser<T> leafAnalyser) {
+	public static <T> ParseTreeLeafAnalyser<T> analyser(LeafAnalyser<T> leafAnalyser) {
 		return new ParseTreeLeafAnalyser<>(leafAnalyser);
 	}
 

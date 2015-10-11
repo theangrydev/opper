@@ -4,7 +4,7 @@ import io.github.theangrydev.opper.parser.tree.ParseTree;
 
 import java.util.List;
 
-public class BinaryExpressionAnalyser<Result, Left, Right> extends ParseTreeNodeAnalyser<Result> {
+public class BinaryExpressionAnalyser<Result, Left, Right> implements ParseTreeNodeAnalyser.NodeAnalyser<Result> {
 
 	private final BinaryConstructor<Result, Left, Right> binaryConstructor;
 	private final ParseTreeAnalyser<Left> leftAnalyser;
@@ -25,7 +25,7 @@ public class BinaryExpressionAnalyser<Result, Left, Right> extends ParseTreeNode
 	}
 
 	@Override
-	protected final Result analyse(List<ParseTree> children) {
+	public final Result analyse(List<ParseTree> children) {
 		return binaryConstructor.construct(leftAnalyser.analyse(children.get(0)), rightAnalyser.analyse(children.get(1)));
 	}
 

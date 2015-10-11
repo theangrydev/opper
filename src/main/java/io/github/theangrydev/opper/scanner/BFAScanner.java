@@ -45,18 +45,18 @@ public class BFAScanner implements Scanner {
 			char character = (char) read;
 			nextCharacters.append(character);
 
-			BinaryDecisionDiagram transitionTo = bfa.transition(frontier, character);
-			if (transitionTo.isZero()) {
+			frontier = bfa.transition(frontier, character);
+			if (frontier.isZero()) {
 				prepareForNextSymbol();
 				continue;
 			}
-			Optional<Symbol> acceptedSymbol = bfa.checkAcceptance(transitionTo);
+			Optional<Symbol> acceptedSymbol = bfa.checkAcceptance(frontier);
 			if (acceptedSymbol.isPresent()) {
 				next = scannedSymbol(acceptedSymbol.get(), nextCharacters.toString());
 				prepareForNextSymbol();
 				return true;
 			}
-			frontier = bfa.relabelToStateToFromState(transitionTo);
+			frontier = bfa.relabelToStateToFromState(frontier);
 		}
 		return false;
 	}

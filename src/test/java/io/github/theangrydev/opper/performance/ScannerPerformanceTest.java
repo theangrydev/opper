@@ -23,7 +23,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class ScannerPerformanceTest implements WithAssertions {
 
-	public static final int NUMBER_OF_CHARACTERS = 100000;
+	public static final int NUMBER_OF_CHARACTERS = 10000;
 
 	@Test
 	public void shouldScanASimpleExpression() {

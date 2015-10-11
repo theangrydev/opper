@@ -2,10 +2,11 @@ package io.github.theangrydev.opper.performance;
 
 import com.google.common.base.Stopwatch;
 import io.github.theangrydev.opper.common.DoNothingLogger;
-import io.github.theangrydev.opper.scanner.Scanner;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import io.github.theangrydev.opper.parser.EarlyParser;
+import io.github.theangrydev.opper.parser.Parser;
+import io.github.theangrydev.opper.scanner.Scanner;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -28,7 +29,7 @@ public class ParserPerformanceTest {
 			.build();
 		Scanner scanner = scanner(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
 
-		EarlyParser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
+		Parser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		parser.parse();
@@ -45,7 +46,7 @@ public class ParserPerformanceTest {
 			.build();
 		Scanner scanner = scanner(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
 
-		EarlyParser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
+		Parser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		parser.parse();
@@ -62,7 +63,7 @@ public class ParserPerformanceTest {
 			.build();
 		Scanner scanner = scanner(nCopies(100, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
 
-		EarlyParser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
+		Parser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 		parser.parse();

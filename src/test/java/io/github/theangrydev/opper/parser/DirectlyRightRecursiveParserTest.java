@@ -23,7 +23,7 @@ public class DirectlyRightRecursiveParserTest {
 			.build();
 		Scanner scanner = scanner(nCopies(10, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
 
-		EarlyParser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
+		Parser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
 
 		assertThat(parser.parse()).isPresent();
 	}

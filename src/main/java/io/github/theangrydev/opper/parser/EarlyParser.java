@@ -1,8 +1,6 @@
 package io.github.theangrydev.opper.parser;
 
 import io.github.theangrydev.opper.common.Logger;
-import io.github.theangrydev.opper.parser.tree.ParseTree;
-import io.github.theangrydev.opper.scanner.Scanner;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.parser.early.*;
@@ -12,14 +10,13 @@ import io.github.theangrydev.opper.parser.precomputed.prediction.RulePrediction;
 import io.github.theangrydev.opper.parser.precomputed.recursion.ComputedRightRecursion;
 import io.github.theangrydev.opper.parser.precomputed.recursion.PrecomputedRightRecursion;
 import io.github.theangrydev.opper.parser.precomputed.recursion.RightRecursion;
-import io.github.theangrydev.opper.parser.early.EarlySet;
-import io.github.theangrydev.opper.parser.early.TransitionsEarlySet;
-import io.github.theangrydev.opper.parser.early.TransitionsEarlySetsBySymbol;
+import io.github.theangrydev.opper.parser.tree.ParseTree;
 import io.github.theangrydev.opper.scanner.ScannedSymbol;
+import io.github.theangrydev.opper.scanner.Scanner;
 
 import java.util.Optional;
 
-public class EarlyParser {
+public class EarlyParser implements Parser {
 
 	private final Logger logger;
 	private final Grammar grammar;
@@ -42,6 +39,7 @@ public class EarlyParser {
 		this.currentEarlySet = new EarlySet(grammar);
 	}
 
+	@Override
 	public Optional<ParseTree> parse() {
 		initialize();
 		for (currentEarlySetIndex = 1; scanner.hasNextSymbol(); currentEarlySetIndex++) {

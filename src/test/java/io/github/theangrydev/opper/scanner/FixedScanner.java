@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import static io.github.theangrydev.opper.scanner.Location.location;
 import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 
 public class FixedScanner implements Scanner {
@@ -22,7 +23,7 @@ public class FixedScanner implements Scanner {
 	}
 
 	public static FixedScanner scanner(Grammar grammar, Iterable<String> symbols) {
-		return new FixedScanner(Streams.stream(symbols).map(symbol -> scannedSymbol(grammar.symbolByName(symbol), symbol)).iterator());
+		return new FixedScanner(Streams.stream(symbols).map(symbol -> scannedSymbol(grammar.symbolByName(symbol), symbol, location(1, 1, 1, 1))).iterator());
 	}
 
 	public static FixedScanner scanner(ScannedSymbol... symbols) {

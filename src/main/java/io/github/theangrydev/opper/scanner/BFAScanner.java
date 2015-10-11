@@ -22,6 +22,7 @@ public class BFAScanner implements Scanner {
 	private BinaryDecisionDiagram frontier;
 	private ScannedSymbol next;
 	private StringBuilder nextCharacters;
+	private Position position;
 
 	public BFAScanner(List<SymbolDefinition> symbolDefinitions, Reader charactersToParse) {
 		this.charactersToParse = charactersToParse;
@@ -31,6 +32,7 @@ public class BFAScanner implements Scanner {
 		nfa.relabelAccordingToFrequencies();
 
 		bfa = BFABuilder.convertToBFA(nfa);
+		position = new Position();
 		prepareForNextSymbol();
 	}
 
@@ -43,6 +45,7 @@ public class BFAScanner implements Scanner {
 	public boolean hasNextSymbol() {
 		for (int read = read(); read != -1; read = read()) {
 			char character = (char) read;
+			position.consider(character);
 			nextCharacters.append(character);
 
 			frontier = bfa.transition(frontier, character);
@@ -52,7 +55,7 @@ public class BFAScanner implements Scanner {
 			}
 			Optional<Symbol> acceptedSymbol = bfa.checkAcceptance(frontier);
 			if (acceptedSymbol.isPresent()) {
-				next = scannedSymbol(acceptedSymbol.get(), nextCharacters.toString());
+				next = acceptedSymbol(acceptedSymbol.get());
 				prepareForNextSymbol();
 				return true;
 			}
@@ -61,9 +64,44 @@ public class BFAScanner implements Scanner {
 		return false;
 	}
 
+	private ScannedSymbol acceptedSymbol(Symbol acceptedSymbol) {
+		return scannedSymbol(acceptedSymbol, nextCharacters.toString(), position.location());
+	}
+
+	private static class Position {
+		private int currentLineNumber;
+		private int currentCharacterNumber;
+		private int markedLineNumber;
+		private int markedCharacterNumber;
+
+		public Position() {
+			currentLineNumber = 1;
+			currentCharacterNumber = 0;
+			markedCharacterNumber = 1;
+		}
+
+		public void mark() {
+			markedLineNumber = currentLineNumber;
+			markedCharacterNumber = currentCharacterNumber + 1;
+		}
+
+		public void consider(char character) {
+			currentCharacterNumber++;
+			if (character == '\n') {
+				currentLineNumber++;
+				currentCharacterNumber = 0;
+			}
+		}
+
+		public Location location() {
+			return Location.location(markedLineNumber, markedCharacterNumber, currentLineNumber, currentCharacterNumber);
+		}
+	}
+
 	private void prepareForNextSymbol() {
 		nextCharacters = new StringBuilder();
 		frontier = bfa.initialState();
+		position.mark();
 	}
 
 	private int read() {

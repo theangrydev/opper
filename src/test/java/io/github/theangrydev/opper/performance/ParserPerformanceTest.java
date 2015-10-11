@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import static io.github.theangrydev.opper.scanner.FixedScanner.scanner;
+import static io.github.theangrydev.opper.scanner.Location.location;
 import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 import static java.util.Collections.nCopies;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -27,7 +28,7 @@ public class ParserPerformanceTest {
 			.withRule("START", "REPEATED", "START")
 			.withRule("START", "REPEATED")
 			.build();
-		Scanner scanner = scanner(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
+		Scanner scanner = scanner(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "", location(1, 1, 1, 1))));
 
 		Parser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
 
@@ -44,7 +45,7 @@ public class ParserPerformanceTest {
 			.withRule("START", "START", "REPEATED")
 			.withRule("START", "REPEATED")
 			.build();
-		Scanner scanner = scanner(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
+		Scanner scanner = scanner(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "", location(1, 1, 1, 1))));
 
 		Parser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
 
@@ -61,7 +62,7 @@ public class ParserPerformanceTest {
 			.withRule("START", "REPEATED", "START", "REPEATED")
 			.withRule("START", "REPEATED", "REPEATED")
 			.build();
-		Scanner scanner = scanner(nCopies(100, scannedSymbol(grammar.symbolByName("REPEATED"), "")));
+		Scanner scanner = scanner(nCopies(100, scannedSymbol(grammar.symbolByName("REPEATED"), "", location(1, 1, 1, 1))));
 
 		Parser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
 

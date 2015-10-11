@@ -9,6 +9,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.github.theangrydev.opper.scanner.Location.location;
 import static io.github.theangrydev.opper.scanner.definition.AlternativeExpression.either;
 import static io.github.theangrydev.opper.scanner.definition.CharacterExpression.character;
 import static io.github.theangrydev.opper.scanner.definition.ConcatenateExpression.concatenate;
@@ -38,6 +39,23 @@ public class ScannerTest implements WithAssertions {
 
 		Scanner scanner = new BFAScanner(singletonList(aDefinition), new StringReader("zzazzazzz"));
 		assertThat(allSymbolsThatCanBeScanned(scanner)).containsExactly(a, a);
+	}
+
+	@Test
+	public void shouldRecordLocationInformation() {
+		Symbol a = new Symbol(1, "a");
+		SymbolDefinition aDefinition = definition(a, either(character('a'), concatenate(character('b'), character('c'))));
+
+		Scanner scanner = new BFAScanner(singletonList(aDefinition), new StringReader("a\nbc\nabc"));
+		assertThat(allLocationsThatCanBeScanned(scanner)).contains(location(1, 1, 1, 1), location(2, 1, 2, 2), location(3, 1, 3, 1), location(3, 2, 3, 3));
+	}
+
+	private List<Location> allLocationsThatCanBeScanned(Scanner scanner) {
+		List<Location> accepted = new ArrayList<>();
+		while (scanner.hasNextSymbol()) {
+			accepted.add(scanner.nextSymbol().location());
+		}
+		return accepted;
 	}
 
 	private List<Symbol> allSymbolsThatCanBeScanned(Scanner scanner) {

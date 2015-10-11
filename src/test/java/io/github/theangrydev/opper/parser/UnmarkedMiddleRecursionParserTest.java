@@ -4,13 +4,14 @@ import com.googlecode.yatspec.junit.Row;
 import com.googlecode.yatspec.junit.Table;
 import com.googlecode.yatspec.junit.TableRunner;
 import io.github.theangrydev.opper.common.DoNothingLogger;
-import io.github.theangrydev.opper.scanner.Scanner;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
+import io.github.theangrydev.opper.scanner.Scanner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static io.github.theangrydev.opper.scanner.FixedScanner.scanner;
+import static io.github.theangrydev.opper.scanner.Location.location;
 import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 import static java.lang.Boolean.valueOf;
 import static java.lang.Integer.parseInt;
@@ -36,7 +37,7 @@ public class UnmarkedMiddleRecursionParserTest {
 			.withRule("START", "REPEATED", "START", "REPEATED")
 			.withRule("START", "REPEATED", "REPEATED")
 			.build();
-		Scanner scanner = scanner(nCopies(parseInt(repetitions), scannedSymbol(grammar.symbolByName("REPEATED"), "")));
+		Scanner scanner = scanner(nCopies(parseInt(repetitions), scannedSymbol(grammar.symbolByName("REPEATED"), "", location(1, 1, 1, 1))));
 
 		Parser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
 

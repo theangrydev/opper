@@ -19,6 +19,7 @@ public class ParseTreeLeafAnalyser<T> implements ParseTreeAnalyser<T> {
 		return leafAnalyser.analyse(parseTree.content());
 	}
 
+	@FunctionalInterface
 	interface LeafAnalyser<T> {
 		T analyse(String content);
 	}

@@ -12,18 +12,21 @@ public class BFATransitions {
 	private final BinaryDecisionDiagram transitions;
 	private final Char2ObjectMap<BinaryDecisionDiagram> characterPresences;
 	private final BinaryDecisionDiagram existsFromStateAndCharacter;
+	private final BinaryDecisionDiagram nothing;
 
-	private BFATransitions(BinaryDecisionDiagram transitions, Char2ObjectMap<BinaryDecisionDiagram> characterPresences, BinaryDecisionDiagram existsFromStateAndCharacter) {
+	private BFATransitions(BinaryDecisionDiagram transitions, Char2ObjectMap<BinaryDecisionDiagram> characterPresences, BinaryDecisionDiagram existsFromStateAndCharacter, BinaryDecisionDiagram nothing) {
 		this.transitions = transitions;
 		this.characterPresences = characterPresences;
 		this.existsFromStateAndCharacter = existsFromStateAndCharacter;
+		this.nothing = nothing;
 	}
 
 	public static BFATransitions bfaTransitions(NFA nfa, TransitionTable transitionTable, AllVariables allVariables) {
 		BinaryDecisionDiagram transitions = transitions(allVariables, transitionTable);
 		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = characterPresence(nfa.characterTransitions(), allVariables);
 		BinaryDecisionDiagram existsFromStateAndCharacter = allVariables.existsFromStateAndCharacter();
-		return new BFATransitions(transitions, characterPresences, existsFromStateAndCharacter);
+		BinaryDecisionDiagram nothing = allVariables.nothing();
+		return new BFATransitions(transitions, characterPresences, existsFromStateAndCharacter, nothing);
 	}
 
 	private static BinaryDecisionDiagram transitions(AllVariables allVariables, TransitionTable transitionTable) {
@@ -43,7 +46,15 @@ public class BFATransitions {
 	}
 
 	public BinaryDecisionDiagram transition(BinaryDecisionDiagram frontier, char character) {
-		frontier = frontier.andTo(characterPresences.get(character));
+		frontier = frontier.andTo(characterPresence(character));
 		return frontier.relativeProductTo(transitions, existsFromStateAndCharacter);
+	}
+
+	private BinaryDecisionDiagram characterPresence(char character) {
+		BinaryDecisionDiagram characterPresence = characterPresences.get(character);
+		if (characterPresence != null) {
+			return characterPresence;
+		}
+		return nothing;
 	}
 }

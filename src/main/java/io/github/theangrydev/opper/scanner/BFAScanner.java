@@ -31,8 +31,7 @@ public class BFAScanner implements Scanner {
 		nfa.relabelAccordingToFrequencies();
 
 		bfa = BFABuilder.convertToBFA(nfa);
-		frontier = bfa.initialState();
-		nextCharacters = new StringBuilder();
+		prepareForNextSymbol();
 	}
 
 	@Override
@@ -47,17 +46,24 @@ public class BFAScanner implements Scanner {
 			nextCharacters.append(character);
 
 			BinaryDecisionDiagram transitionTo = bfa.transition(frontier, character);
+			if (transitionTo.isZero()) {
+				prepareForNextSymbol();
+				continue;
+			}
 			Optional<Symbol> acceptedSymbol = bfa.checkAcceptance(transitionTo);
 			if (acceptedSymbol.isPresent()) {
 				next = scannedSymbol(acceptedSymbol.get(), nextCharacters.toString());
-				nextCharacters = new StringBuilder();
-				frontier = bfa.initialState();
+				prepareForNextSymbol();
 				return true;
-			} else {
-				frontier = bfa.relabelToStateToFromState(transitionTo);
 			}
+			frontier = bfa.relabelToStateToFromState(transitionTo);
 		}
 		return false;
+	}
+
+	private void prepareForNextSymbol() {
+		nextCharacters = new StringBuilder();
+		frontier = bfa.initialState();
 	}
 
 	private int read() {

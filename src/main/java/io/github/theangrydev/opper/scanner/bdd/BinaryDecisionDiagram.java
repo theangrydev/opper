@@ -61,6 +61,10 @@ public class BinaryDecisionDiagram {
 		return id != bdd.getZero();
 	}
 
+	public boolean isZero() {
+		return id == bdd.getZero();
+	}
+
 	public int[] oneSatisfyingAssignment(int[] buffer) {
 		return bdd.oneSat(id, buffer);
 	}

@@ -6,11 +6,11 @@ import io.github.theangrydev.opper.parser.tree.ParseTree;
 import io.github.theangrydev.opper.parser.tree.ParseTreeNode;
 import org.junit.Test;
 
-import java.util.List;
-
 import static io.github.theangrydev.opper.parser.FixedParser.parser;
 import static io.github.theangrydev.opper.parser.tree.ParseTreeLeaf.leaf;
 import static io.github.theangrydev.opper.parser.tree.ParseTreeNode.node;
+import static io.github.theangrydev.opper.semantics.BinaryExpressionAnalyser.binaryExpression;
+import static io.github.theangrydev.opper.semantics.ParseTreeLeafAnalyser.value;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
@@ -23,9 +23,9 @@ public class SemanticAnalyserTest {
 		Rule number = rule();
 
 		ParseTreeAnalysers<Numeric> numericAnalysers = new ParseTreeAnalysers<>();
-		numericAnalysers.addAnalyser(times, new MultiplicationAnalyser(numericAnalysers));
-		numericAnalysers.addAnalyser(add, new AdditionAnalyser(numericAnalysers));
-		numericAnalysers.addAnalyser(number, new NumberAnalyser());
+		numericAnalysers.add(times, binaryExpression(Multiplication::new, numericAnalysers));
+		numericAnalysers.add(add, binaryExpression(Addition::new, numericAnalysers));
+		numericAnalysers.add(number, value(Number::number));
 
 		Parser parser = parser(parseTree(add, parseTree(add, parseTree(add, parseTree(number, "2"), parseTree(number, "3")), parseTree(number, "2")), parseTree(times, parseTree(number, "3"), parseTree(number, "4"))));
 
@@ -46,23 +46,15 @@ public class SemanticAnalyserTest {
 		return parseTree;
 	}
 
-	private static class NumberAnalyser extends ParseTreeLeafAnalyser<Number> {
-
-		@Override
-		protected Number analyse(String content) {
-			return new Number(Integer.parseInt(content));
-		}
-	}
-
 	private static class Number implements Numeric {
 		private final int value;
 
-		public Number(int value) {
+		private Number(int value) {
 			this.value = value;
 		}
 
-		public int value() {
-			return value;
+		public static Number number(String content) {
+			return new Number(Integer.parseInt(content));
 		}
 
 		@Override
@@ -70,22 +62,6 @@ public class SemanticAnalyserTest {
 			return "Number{" +
 				"value=" + value +
 				'}';
-		}
-	}
-
-	private static class AdditionAnalyser extends ParseTreeNodeAnalyser<Addition> {
-
-		private final ParseTreeAnalysers<Numeric> numericAnalysers;
-
-		private AdditionAnalyser(ParseTreeAnalysers<Numeric> numericAnalysers) {
-			this.numericAnalysers = numericAnalysers;
-		}
-
-		@Override
-		protected Addition analyse(List<ParseTree> children) {
-			Numeric left = numericAnalysers.analyse(children.get(0));
-			Numeric right = numericAnalysers.analyse(children.get(1));
-			return new Addition(left, right);
 		}
 	}
 
@@ -98,35 +74,12 @@ public class SemanticAnalyserTest {
 			this.right = right;
 		}
 
-		public Numeric left() {
-			return left;
-		}
-		public Numeric right() {
-			return right;
-		}
-
 		@Override
 		public String toString() {
 			return "Addition{" +
 				"left=" + left +
 				", right=" + right +
 				'}';
-		}
-	}
-
-	private static class MultiplicationAnalyser extends ParseTreeNodeAnalyser<Multiplication> {
-
-		private final ParseTreeAnalysers<Numeric> numericAnalysers;
-
-		private MultiplicationAnalyser(ParseTreeAnalysers<Numeric> numericAnalysers) {
-			this.numericAnalysers = numericAnalysers;
-		}
-
-		@Override
-		protected Multiplication analyse(List<ParseTree> children) {
-			Numeric left = numericAnalysers.analyse(children.get(0));
-			Numeric right = numericAnalysers.analyse(children.get(1));
-			return new Multiplication(left, right);
 		}
 	}
 
@@ -137,13 +90,6 @@ public class SemanticAnalyserTest {
 		public Multiplication(Numeric left, Numeric right) {
 			this.left = left;
 			this.right = right;
-		}
-
-		public Numeric left() {
-			return left;
-		}
-		public Numeric right() {
-			return right;
 		}
 
 		@Override

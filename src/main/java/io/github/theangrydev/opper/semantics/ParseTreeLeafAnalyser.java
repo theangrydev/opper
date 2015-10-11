@@ -2,12 +2,24 @@ package io.github.theangrydev.opper.semantics;
 
 import io.github.theangrydev.opper.parser.tree.ParseTree;
 
-public abstract class ParseTreeLeafAnalyser<T> implements ParseTreeAnalyser<T> {
+public class ParseTreeLeafAnalyser<T> implements ParseTreeAnalyser<T> {
 
-	@Override
-	public T analyse(ParseTree parseTree) {
-		return analyse(parseTree.content());
+	private final LeafAnalyser<T> leafAnalyser;
+
+	private ParseTreeLeafAnalyser(LeafAnalyser<T> leafAnalyser) {
+		this.leafAnalyser = leafAnalyser;
 	}
 
-	protected abstract T analyse(String content);
+	public static <T> ParseTreeLeafAnalyser<T> value(LeafAnalyser<T> leafAnalyser) {
+		return new ParseTreeLeafAnalyser<>(leafAnalyser);
+	}
+
+	@Override
+	public final T analyse(ParseTree parseTree) {
+		return leafAnalyser.analyse(parseTree.content());
+	}
+
+	interface LeafAnalyser<T> {
+		T analyse(String content);
+	}
 }

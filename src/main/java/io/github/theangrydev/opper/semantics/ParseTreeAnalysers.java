@@ -6,7 +6,7 @@ import io.github.theangrydev.opper.parser.tree.ParseTree;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ParseTreeAnalysers<T> {
+public class ParseTreeAnalysers<T> implements ParseTreeAnalyser<T> {
 
 	private Map<Rule, ParseTreeAnalyser<? extends T>> parseTreeAnalysers;
 
@@ -14,10 +14,11 @@ public class ParseTreeAnalysers<T> {
 		this.parseTreeAnalysers = new HashMap<>();
 	}
 
-	public void addAnalyser(Rule rule, ParseTreeAnalyser<? extends T> parseTreeAnalyser) {
+	public void add(Rule rule, ParseTreeAnalyser<? extends T> parseTreeAnalyser) {
 		parseTreeAnalysers.put(rule, parseTreeAnalyser);
 	}
 
+	@Override
 	public T analyse(ParseTree parseTree) {
 		return parseTreeAnalysers.get(parseTree.rule()).analyse(parseTree);
 	}

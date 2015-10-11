@@ -7,7 +7,7 @@ import java.util.List;
 public abstract class ParseTreeNodeAnalyser<T> implements ParseTreeAnalyser<T> {
 
 	@Override
-	public T analyse(ParseTree parseTree) {
+	public final T analyse(ParseTree parseTree) {
 		return analyse(parseTree.children());
 	}
 

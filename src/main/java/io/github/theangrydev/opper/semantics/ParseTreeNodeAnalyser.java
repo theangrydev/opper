@@ -4,25 +4,25 @@ import io.github.theangrydev.opper.parser.tree.ParseTree;
 
 import java.util.List;
 
-public class ParseTreeNodeAnalyser<T> implements ParseTreeAnalyser<T> {
+public class ParseTreeNodeAnalyser<Result> implements ParseTreeAnalyser<Result> {
 
-	private final NodeAnalyser<T> nodeAnalyser;
+	private final NodeAnalyser<Result> nodeAnalyser;
 
-	private ParseTreeNodeAnalyser(NodeAnalyser<T> nodeAnalyser) {
+	private ParseTreeNodeAnalyser(NodeAnalyser<Result> nodeAnalyser) {
 		this.nodeAnalyser = nodeAnalyser;
 	}
 
-	public static <T> ParseTreeAnalyser<T> analyser(NodeAnalyser<T> nodeAnalyser) {
+	public static <Result> ParseTreeAnalyser<Result> analyser(NodeAnalyser<Result> nodeAnalyser) {
 		return new ParseTreeNodeAnalyser<>(nodeAnalyser);
 	}
 
 	@Override
-	public final T analyse(ParseTree parseTree) {
+	public final Result analyse(ParseTree parseTree) {
 		return nodeAnalyser.analyse(parseTree.children());
 	}
 
 	@FunctionalInterface
-	interface NodeAnalyser<T> {
-		T analyse(List<ParseTree> children);
+	interface NodeAnalyser<Result> {
+		Result analyse(List<ParseTree> children);
 	}
 }

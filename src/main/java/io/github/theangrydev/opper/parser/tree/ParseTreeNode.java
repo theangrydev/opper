@@ -31,6 +31,12 @@ public class ParseTreeNode extends ParseTree {
 		children.add(child);
 	}
 
+	@Override
+	public String content() {
+		return "";
+	}
+
+	@Override
 	public List<ParseTree> children() {
 		return children;
 	}
@@ -38,10 +44,5 @@ public class ParseTreeNode extends ParseTree {
 	@Override
 	public String toString() {
 		return children.toString();
-	}
-
-	@Override
-	public <T> T visit(Visitor<T> visitor) {
-		return visitor.visit(this);
 	}
 }

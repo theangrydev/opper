@@ -1,16 +1,14 @@
 package io.github.theangrydev.opper.semantics;
 
 import io.github.theangrydev.opper.grammar.Rule;
-import io.github.theangrydev.opper.parser.FixedParser;
 import io.github.theangrydev.opper.parser.Parser;
 import io.github.theangrydev.opper.parser.tree.ParseTree;
 import io.github.theangrydev.opper.parser.tree.ParseTreeNode;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.List;
 
+import static io.github.theangrydev.opper.parser.FixedParser.parser;
 import static io.github.theangrydev.opper.parser.tree.ParseTreeLeaf.leaf;
 import static io.github.theangrydev.opper.parser.tree.ParseTreeNode.node;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,18 +22,16 @@ public class SemanticAnalyserTest {
 		Rule times = rule();
 		Rule number = rule();
 
-		Map<Rule, RuleEvaluator> ruleEvaluators = new HashMap<>();
-		ruleEvaluators.put(add, arguments -> new Addition((Numeric) arguments.get(0), (Numeric) arguments.get(1)));
-		ruleEvaluators.put(times, arguments -> new Multiplication((Numeric) arguments.get(0), (Numeric) arguments.get(1)));
-		ruleEvaluators.put(number, arguments -> new Number(Integer.parseInt((String) arguments.get(0))));
+		ParseTreeAnalysers<Numeric> numericAnalysers = new ParseTreeAnalysers<>();
+		numericAnalysers.addAnalyser(times, new MultiplicationAnalyser(numericAnalysers));
+		numericAnalysers.addAnalyser(add, new AdditionAnalyser(numericAnalysers));
+		numericAnalysers.addAnalyser(number, new NumberAnalyser());
 
-		Parser parser = FixedParser.parser(parseTree(add, parseTree(add, parseTree(add, parseTree(number, "2"), parseTree(number, "3")), parseTree(number, "2")), parseTree(times, parseTree(number, "3"), parseTree(number, "4"))));
+		Parser parser = parser(parseTree(add, parseTree(add, parseTree(add, parseTree(number, "2"), parseTree(number, "3")), parseTree(number, "2")), parseTree(times, parseTree(number, "3"), parseTree(number, "4"))));
 
-		SemanticAnalyser semanticAnalyser = new SemanticAnalyser(ruleEvaluators, parser);
+		Numeric parsed = numericAnalysers.analyse(parser.parse().get());
 
-		Optional<Object> parse = semanticAnalyser.analyse();
-
-		assertThat(parse.get()).hasToString("Addition{left=Addition{left=Addition{left=Number{value=2}, right=Number{value=3}}, right=Number{value=2}}, right=Multiplication{left=Number{value=3}, right=Number{value=4}}}");
+		assertThat(parsed).hasToString("Addition{left=Addition{left=Addition{left=Number{value=2}, right=Number{value=3}}, right=Number{value=2}}, right=Multiplication{left=Number{value=3}, right=Number{value=4}}}");
 	}
 
 	private ParseTree parseTree(Rule rule, String content) {
@@ -48,6 +44,14 @@ public class SemanticAnalyserTest {
 			parseTree.withChild(child);
 		}
 		return parseTree;
+	}
+
+	private static class NumberAnalyser extends ParseTreeLeafAnalyser<Number> {
+
+		@Override
+		protected Number analyse(String content) {
+			return new Number(Integer.parseInt(content));
+		}
 	}
 
 	private static class Number implements Numeric {
@@ -66,6 +70,22 @@ public class SemanticAnalyserTest {
 			return "Number{" +
 				"value=" + value +
 				'}';
+		}
+	}
+
+	private static class AdditionAnalyser extends ParseTreeNodeAnalyser<Addition> {
+
+		private final ParseTreeAnalysers<Numeric> numericAnalysers;
+
+		private AdditionAnalyser(ParseTreeAnalysers<Numeric> numericAnalysers) {
+			this.numericAnalysers = numericAnalysers;
+		}
+
+		@Override
+		protected Addition analyse(List<ParseTree> children) {
+			Numeric left = numericAnalysers.analyse(children.get(0));
+			Numeric right = numericAnalysers.analyse(children.get(1));
+			return new Addition(left, right);
 		}
 	}
 
@@ -93,6 +113,23 @@ public class SemanticAnalyserTest {
 				'}';
 		}
 	}
+
+	private static class MultiplicationAnalyser extends ParseTreeNodeAnalyser<Multiplication> {
+
+		private final ParseTreeAnalysers<Numeric> numericAnalysers;
+
+		private MultiplicationAnalyser(ParseTreeAnalysers<Numeric> numericAnalysers) {
+			this.numericAnalysers = numericAnalysers;
+		}
+
+		@Override
+		protected Multiplication analyse(List<ParseTree> children) {
+			Numeric left = numericAnalysers.analyse(children.get(0));
+			Numeric right = numericAnalysers.analyse(children.get(1));
+			return new Multiplication(left, right);
+		}
+	}
+
 	private static class Multiplication implements Numeric {
 		private final Numeric left;
 		private final Numeric right;

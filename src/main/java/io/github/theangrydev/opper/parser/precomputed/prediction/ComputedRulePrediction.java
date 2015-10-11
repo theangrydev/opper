@@ -4,7 +4,6 @@ import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Rule;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.parser.item.DottedRule;
-import io.github.theangrydev.opper.parser.item.DottedRuleFactory;
 import io.github.theangrydev.opper.parser.precomputed.DerivationConsequences;
 
 import java.util.List;

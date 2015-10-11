@@ -25,7 +25,7 @@ public class RepeatedPredictionParserTest {
 			.build();
 		Scanner scanner = FixedScanner.scanner(grammar, "BEGIN", "END");
 
-		Parser parser = new Parser(new DoNothingLogger(), grammar, scanner);
+		EarlyParser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
 
 		assertThat(parser.parse()).isPresent();
 		assertThat(parser.finalEarlySetSize()).isEqualTo(6);

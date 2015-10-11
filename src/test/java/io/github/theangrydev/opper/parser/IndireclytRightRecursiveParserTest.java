@@ -23,7 +23,7 @@ public class IndireclytRightRecursiveParserTest {
 			.build();
 		Scanner scanner = FixedScanner.scanner(grammar, "REPEATED", "MIDDLE", "REPEATED", "MIDDLE", "REPEATED");
 
-		Parser parser = new Parser(new DoNothingLogger(), grammar, scanner);
+		EarlyParser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
 
 		assertThat(parser.parse()).isPresent();
 	}

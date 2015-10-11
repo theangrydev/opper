@@ -45,7 +45,7 @@ public class BNFParserTest {
 			.build();
 		Scanner scanner = FixedScanner.scanner(grammar, Splitter.on(' ').split(spaceSeperatedCorpus));
 
-		Parser parser = new Parser(new DoNothingLogger(), grammar, scanner);
+		EarlyParser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
 
 		assertThat(parser.parse().isPresent()).isEqualTo(valueOf(shouldParse));
 	}

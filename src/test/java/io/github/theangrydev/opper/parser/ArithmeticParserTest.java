@@ -37,7 +37,7 @@ public class ArithmeticParserTest {
 
 		Scanner scanner = FixedScanner.scanner(grammar, "2", "+", "3", "+", "2", "+", "3", "*", "4");
 
-		Parser parser = new Parser(new DoNothingLogger(), grammar, scanner);
+		EarlyParser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
 
 		assertThat(parser.parse()).isPresent();
 	}

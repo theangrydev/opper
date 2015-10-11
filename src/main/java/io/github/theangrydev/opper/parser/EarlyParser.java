@@ -19,7 +19,7 @@ import io.github.theangrydev.opper.scanner.ScannedSymbol;
 
 import java.util.Optional;
 
-public class Parser {
+public class EarlyParser {
 
 	private final Logger logger;
 	private final Grammar grammar;
@@ -33,7 +33,7 @@ public class Parser {
 	private EarlySet currentEarlySet;
 	private int currentEarlySetIndex;
 
-	public Parser(Logger logger, Grammar grammar, Scanner scanner) {
+	public EarlyParser(Logger logger, Grammar grammar, Scanner scanner) {
 		this.logger = logger;
 		this.grammar = grammar;
 		this.scanner = scanner;

@@ -21,7 +21,7 @@ public class ParserTest {
 			.build();
 		Scanner scanner = FixedScanner.scanner(grammar, "MIDDLE", "SECOND", "DUMMY");
 
-		Parser parser = new Parser(new DoNothingLogger(), grammar, scanner);
+		EarlyParser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
 
 		assertThat(parser.parse()).isPresent();
 	}

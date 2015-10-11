@@ -1,10 +1,7 @@
-package io.github.theangrydev.opper.parser.progress;
+package io.github.theangrydev.opper.parser.early;
 
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;
-import io.github.theangrydev.opper.parser.item.DottedRule;
-import io.github.theangrydev.opper.parser.item.EarlyItem;
-import io.github.theangrydev.opper.parser.transition.TransitionsEarlySetsBySymbol;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import java.util.Iterator;

@@ -1,6 +1,4 @@
-package io.github.theangrydev.opper.parser.item;
-
-import io.github.theangrydev.opper.parser.transition.TransitionsEarlySetsBySymbol;
+package io.github.theangrydev.opper.parser.early;
 
 public class LeoItem extends EarlyItem {
 

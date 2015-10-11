@@ -1,8 +1,6 @@
-package io.github.theangrydev.opper.parser.progress;
+package io.github.theangrydev.opper.parser.early;
 
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
-import io.github.theangrydev.opper.parser.item.EarlyItem;
-import io.github.theangrydev.opper.parser.item.TraditionalEarlyItem;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 

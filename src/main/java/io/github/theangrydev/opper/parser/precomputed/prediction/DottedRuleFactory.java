@@ -2,7 +2,7 @@ package io.github.theangrydev.opper.parser.precomputed.prediction;
 
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Rule;
-import io.github.theangrydev.opper.parser.item.DottedRule;
+import io.github.theangrydev.opper.parser.early.DottedRule;
 
 public class DottedRuleFactory {
 

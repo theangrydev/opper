@@ -1,7 +1,6 @@
-package io.github.theangrydev.opper.parser.item;
+package io.github.theangrydev.opper.parser.early;
 
 import io.github.theangrydev.opper.parser.tree.ParseTreeNode;
-import io.github.theangrydev.opper.parser.transition.TransitionsEarlySetsBySymbol;
 
 public class TraditionalEarlyItem extends EarlyItem {
 

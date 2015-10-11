@@ -1,10 +1,8 @@
-package io.github.theangrydev.opper.parser.item;
+package io.github.theangrydev.opper.parser.early;
 
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.parser.tree.ParseTree;
 import io.github.theangrydev.opper.parser.tree.ParseTreeNode;
-import io.github.theangrydev.opper.parser.transition.TransitionsEarlySet;
-import io.github.theangrydev.opper.parser.transition.TransitionsEarlySetsBySymbol;
 
 import static io.github.theangrydev.opper.parser.tree.ParseTreeNode.node;
 

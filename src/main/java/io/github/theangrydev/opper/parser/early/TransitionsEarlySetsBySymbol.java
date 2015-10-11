@@ -1,4 +1,4 @@
-package io.github.theangrydev.opper.parser.transition;
+package io.github.theangrydev.opper.parser.early;
 
 import io.github.theangrydev.opper.grammar.Symbol;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;

@@ -1,12 +1,15 @@
 package io.github.theangrydev.opper.semantics;
 
 import io.github.theangrydev.opper.grammar.Rule;
+import io.github.theangrydev.opper.parser.FixedParser;
+import io.github.theangrydev.opper.parser.Parser;
 import io.github.theangrydev.opper.parser.tree.ParseTree;
 import io.github.theangrydev.opper.parser.tree.ParseTreeNode;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static io.github.theangrydev.opper.parser.tree.ParseTreeLeaf.leaf;
 import static io.github.theangrydev.opper.parser.tree.ParseTreeNode.node;
@@ -26,13 +29,13 @@ public class SemanticAnalyserTest {
 		ruleEvaluators.put(times, arguments -> new Multiplication((Numeric) arguments.get(0), (Numeric) arguments.get(1)));
 		ruleEvaluators.put(number, arguments -> new Number(Integer.parseInt((String) arguments.get(0))));
 
-		SemanticAnalyser semanticAnalyser = new SemanticAnalyser(ruleEvaluators);
+		Parser parser = FixedParser.parser(parseTree(add, parseTree(add, parseTree(add, parseTree(number, "2"), parseTree(number, "3")), parseTree(number, "2")), parseTree(times, parseTree(number, "3"), parseTree(number, "4"))));
 
-		ParseTree parseTree = parseTree(add, parseTree(add, parseTree(add, parseTree(number, "2"), parseTree(number, "3")), parseTree(number, "2")), parseTree(times, parseTree(number, "3"), parseTree(number, "4")));
+		SemanticAnalyser semanticAnalyser = new SemanticAnalyser(ruleEvaluators, parser);
 
-		Object parse = semanticAnalyser.analyse(parseTree);
+		Optional<Object> parse = semanticAnalyser.analyse();
 
-		assertThat(parse).hasToString("Addition{left=Addition{left=Addition{left=Number{value=2}, right=Number{value=3}}, right=Number{value=2}}, right=Multiplication{left=Number{value=3}, right=Number{value=4}}}");
+		assertThat(parse.get()).hasToString("Addition{left=Addition{left=Addition{left=Number{value=2}, right=Number{value=3}}, right=Number{value=2}}, right=Multiplication{left=Number{value=3}, right=Number{value=4}}}");
 	}
 
 	private ParseTree parseTree(Rule rule, String content) {

@@ -1,11 +1,11 @@
-package io.github.theangrydev.opper.parser;
+package io.github.theangrydev.opper.parser.tree;
 
 import io.github.theangrydev.opper.grammar.Rule;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.github.theangrydev.opper.parser.ParseTreeLeaf.leaf;
+import static io.github.theangrydev.opper.parser.tree.ParseTreeLeaf.leaf;
 
 public class ParseTreeNode extends ParseTree {
 	private List<ParseTree> children;

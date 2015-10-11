@@ -1,9 +1,9 @@
 package io.github.theangrydev.opper.semantics;
 
 import io.github.theangrydev.opper.grammar.Rule;
-import io.github.theangrydev.opper.parser.ParseTree;
-import io.github.theangrydev.opper.parser.ParseTreeLeaf;
-import io.github.theangrydev.opper.parser.ParseTreeNode;
+import io.github.theangrydev.opper.parser.tree.ParseTree;
+import io.github.theangrydev.opper.parser.tree.ParseTreeLeaf;
+import io.github.theangrydev.opper.parser.tree.ParseTreeNode;
 
 import java.util.List;
 import java.util.Map;

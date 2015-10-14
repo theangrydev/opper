@@ -20,7 +20,7 @@ public class ParseTreeLeafAnalyser<Result> implements ParseTreeAnalyser<Result> 
 	}
 
 	@FunctionalInterface
-	interface LeafAnalyser<Result> {
+	public interface LeafAnalyser<Result> {
 		Result analyse(String content);
 	}
 }

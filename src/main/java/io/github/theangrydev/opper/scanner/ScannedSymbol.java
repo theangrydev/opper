@@ -28,4 +28,13 @@ public class ScannedSymbol {
 	public Location location() {
 		return location;
 	}
+
+	@Override
+	public String toString() {
+		return "ScannedSymbol{" +
+			"symbol=" + symbol +
+			", location=" + location +
+			", content='" + content + '\'' +
+			'}';
+	}
 }

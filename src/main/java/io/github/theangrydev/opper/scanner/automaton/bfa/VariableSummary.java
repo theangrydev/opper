@@ -59,8 +59,8 @@ public class VariableSummary {
 		return bitsPerRow;
 	}
 
-	public int toStateBitPositionForVariableId(int variableId) {
-		return variableId - minToStateVariable;
+	public int fromStateBitPositionForVariableId(int variableId) {
+		return variableId - MIN_FROM_STATE_VARIABLE;
 	}
 
 	public boolean isCharacter(Variable variable) {

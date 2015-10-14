@@ -121,17 +121,17 @@ public class AllVariables {
 		return binaryDecisionDiagramFactory.createPermutation(toVariables, fromVariables);
 	}
 
-	public int toStateId(int[] toStateAssignment) {
-		int toStateId = 0;
-		for (int i = toStateAssignment.length - 1; i >= 0; i--) {
-			if (toStateAssignment[i] != 1) {
+	public int fromStateId(int[] fromStateAssignment) {
+		int fromStateId = 0;
+		for (int i = fromStateAssignment.length - 1; i >= 0; i--) {
+			if (fromStateAssignment[i] != 1) {
 				continue;
 			}
 			int variableId = variableOrdering.variableId(i);
-			int bitPosition = variableSummary.toStateBitPositionForVariableId(variableId);
-			toStateId |= 1 << bitPosition;
+			int bitPosition = variableSummary.fromStateBitPositionForVariableId(variableId);
+			fromStateId |= 1 << bitPosition;
 		}
-		return toStateId;
+		return fromStateId;
 	}
 
 	public int[] assignmentBuffer() {

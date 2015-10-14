@@ -13,6 +13,7 @@ public class GrammarBuilder {
 	private final RuleFactory ruleFactory;
 
 	private Map<String, Symbol> symbolsByName;
+	private Map<String[], Rule> rulesByDefinition;
 	private List<Symbol> symbols;
 	private List<Rule> rules;
 	private Symbol startSymbol;
@@ -24,6 +25,7 @@ public class GrammarBuilder {
 		this.symbols = new ObjectArrayList<>();
 		this.rules = new ObjectArrayList<>();
 		this.symbolsByName = new Object2ObjectArrayMap<>();
+		this.rulesByDefinition = new Object2ObjectArrayMap<>();
 	}
 
 	public Grammar build() {
@@ -45,17 +47,32 @@ public class GrammarBuilder {
 	public GrammarBuilder withRule(String left, String... right) {
 		Symbol leftSymbol = symbolByName(left);
 		Symbol[] rightSymbols = Arrays.stream(right).map(this::symbolByName).toArray(Symbol[]::new);
-		Rule rule = ruleFactory.createRule(leftSymbol, rightSymbols);
+		Rule rule = createRule(leftSymbol, rightSymbols);
 		rules.add(rule);
 		return this;
 	}
 
-	private Symbol symbolByName(String name) {
+	private Rule createRule(Symbol leftSymbol, Symbol[] rightSymbols) {
+		Rule rule = ruleFactory.createRule(leftSymbol, rightSymbols);
+		String[] definition = new String[rightSymbols.length + 1];
+		definition[0] = leftSymbol.toString();
+		for (int i = 0; i < rightSymbols.length; i++) {
+			definition[i + 1] = rightSymbols[i].toString();
+		}
+		rulesByDefinition.put(definition, rule);
+		return rule;
+	}
+
+	public Symbol symbolByName(String name) {
 		Symbol symbol = symbolsByName.get(name);
 		if (symbol == null) {
 			return createSymbol(name);
 		}
 		return symbol;
+	}
+
+	public Rule ruleByDefinition(String... definition) {
+		return rulesByDefinition.get(definition);
 	}
 
 	private Symbol createSymbol(String name) {

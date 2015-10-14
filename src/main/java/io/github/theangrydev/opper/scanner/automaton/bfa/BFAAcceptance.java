@@ -30,7 +30,7 @@ public class BFAAcceptance {
 	private static BinaryDecisionDiagram acceptingStates(NFA nfa, AllVariables allVariables) {
 		BinaryDecisionDiagram acceptingStates = allVariables.nothing();
 		for (State specifiedAcceptingState : nfa.acceptanceStates()) {
-			BinaryDecisionDiagram acceptingState = allVariables.specifyToVariables(specifiedAcceptingState);
+			BinaryDecisionDiagram acceptingState = allVariables.specifyFromVariables(specifiedAcceptingState);
 			acceptingStates = acceptingStates.orTo(acceptingState);
 		}
 		return acceptingStates;
@@ -38,8 +38,7 @@ public class BFAAcceptance {
 
 	public Optional<Symbol> checkAcceptance(BinaryDecisionDiagram frontier) {
 		BinaryDecisionDiagram acceptCheck = acceptingStates.and(frontier, acceptCheckBuffer);
-		boolean accepted = acceptCheck.isNotZero();
-		if (!accepted) {
+		if (acceptCheck.isZero()) {
 			return Optional.empty();
 		}
 		int[] toStateAssignment = acceptCheck.oneSatisfyingAssignment(toStateAssignmentBuffer);

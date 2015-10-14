@@ -9,6 +9,7 @@ import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 
 import java.io.IOException;
+import java.io.PushbackReader;
 import java.io.Reader;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 
 public class BFAScanner implements Scanner {
 
-	private final Reader charactersToParse;
+	private final PushbackReader charactersToParse;
 	private final BFA bfa;
 	private BinaryDecisionDiagram frontier;
 	private ScannedSymbol next;
@@ -25,7 +26,7 @@ public class BFAScanner implements Scanner {
 	private Position position;
 
 	public BFAScanner(List<SymbolDefinition> symbolDefinitions, Reader charactersToParse) {
-		this.charactersToParse = charactersToParse;
+		this.charactersToParse = new PushbackReader(charactersToParse, 1);
 		NFA nfa = NFABuilder.convertToNFA(symbolDefinitions);
 		nfa.removeEpsilionTransitions();
 		nfa.removeUnreachableStates();
@@ -43,25 +44,43 @@ public class BFAScanner implements Scanner {
 
 	@Override
 	public boolean hasNextSymbol() {
-		for (int read = read(); read != -1; read = read()) {
-			char character = (char) read;
-			position.consider(character);
-			nextCharacters.append(character);
+		int read;
+		do {
+			BinaryDecisionDiagram previousFrontier = null;
+			do {
+				read = read();
+				char character = (char) read;
+				frontier = bfa.transition(frontier, character);
+				frontier = bfa.relabelToStateToFromState(frontier);
+				position.consider(character);
+				if (!frontier.isZero()) {
+					nextCharacters.append(character);
+					previousFrontier = frontier.copy();
+				}
+			} while (!frontier.isZero() && read != -1);
 
-			frontier = bfa.transition(frontier, character);
-			if (frontier.isZero()) {
-				prepareForNextSymbol();
-				continue;
+			if (previousFrontier != null) {
+				Optional<Symbol> accepted = bfa.checkAcceptance(previousFrontier);
+				previousFrontier.discard();
+				if (accepted.isPresent()) {
+					pushback((char) read);
+					next = acceptedSymbol(accepted.get());
+					prepareForNextSymbol();
+					return true;
+				}
 			}
-			Optional<Symbol> acceptedSymbol = bfa.checkAcceptance(frontier);
-			if (acceptedSymbol.isPresent()) {
-				next = acceptedSymbol(acceptedSymbol.get());
-				prepareForNextSymbol();
-				return true;
-			}
-			frontier = bfa.relabelToStateToFromState(frontier);
-		}
+			prepareForNextSymbol();
+		} while (read != -1);
 		return false;
+	}
+
+	private void pushback(char character) {
+		position.unconsider(character);
+		try {
+			charactersToParse.unread(character);
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	private ScannedSymbol acceptedSymbol(Symbol acceptedSymbol) {
@@ -73,6 +92,7 @@ public class BFAScanner implements Scanner {
 		private int currentCharacterNumber;
 		private int markedLineNumber;
 		private int markedCharacterNumber;
+		private int previousLineCharacterNumber;
 
 		public Position() {
 			currentLineNumber = 1;
@@ -86,10 +106,19 @@ public class BFAScanner implements Scanner {
 		}
 
 		public void consider(char character) {
+			previousLineCharacterNumber = currentCharacterNumber;
 			currentCharacterNumber++;
 			if (character == '\n') {
 				currentLineNumber++;
 				currentCharacterNumber = 0;
+			}
+		}
+
+		public void unconsider(char character) {
+			currentCharacterNumber--;
+			if (character == '\n') {
+				currentLineNumber--;
+				currentCharacterNumber = previousLineCharacterNumber;
 			}
 		}
 

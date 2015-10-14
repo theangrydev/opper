@@ -29,7 +29,7 @@ public class ScannerTest implements WithAssertions {
 
 		Scanner scanner = new BFAScanner(asList(aDefinition, bDefinition), new StringReader("cd01cdab"));
 
-		assertThat(allSymbolsThatCanBeScanned(scanner)).containsExactly(a, b, b, a, a, a);
+		assertThat(allSymbolsThatCanBeScanned(scanner)).containsExactly(a, b, a);
 	}
 
 	@Test
@@ -42,12 +42,42 @@ public class ScannerTest implements WithAssertions {
 	}
 
 	@Test
+	public void shouldRecordLocationInformation1() {
+		Symbol a = new Symbol(1, "a");
+		SymbolDefinition aDefinition = definition(a, either(character('a'), concatenate(character('b'), character('c'))));
+
+		Scanner scanner = new BFAScanner(singletonList(aDefinition), new StringReader("a\nbc\nabcd"));
+		assertThat(allSymbolsThatCanBeScanned(scanner)).containsExactly(a, a, a, a);
+	}
+
+	@Test
 	public void shouldRecordLocationInformation() {
 		Symbol a = new Symbol(1, "a");
 		SymbolDefinition aDefinition = definition(a, either(character('a'), concatenate(character('b'), character('c'))));
 
-		Scanner scanner = new BFAScanner(singletonList(aDefinition), new StringReader("a\nbc\nabc"));
-		assertThat(allLocationsThatCanBeScanned(scanner)).contains(location(1, 1, 1, 1), location(2, 1, 2, 2), location(3, 1, 3, 1), location(3, 2, 3, 3));
+		Scanner scanner = new BFAScanner(singletonList(aDefinition), new StringReader("a\nbc\nabcd"));
+		assertThat(allLocationsThatCanBeScanned(scanner)).containsExactly(
+			location(startLine(1), startCharacter(1), endLine(1), endCharacter(1)),
+			location(startLine(2), startCharacter(1), endLine(2), endCharacter(2)),
+			location(startLine(3), startCharacter(1), endLine(3), endCharacter(1)),
+			location(startLine(3), startCharacter(2), endLine(3), endCharacter(3))
+		);
+	}
+
+	private int startLine(int startLine) {
+		return startLine;
+	}
+
+	private int startCharacter(int startCharacter) {
+		return startCharacter;
+	}
+
+	private int endLine(int endLine) {
+		return endLine;
+	}
+
+	private int endCharacter(int endCharacter) {
+		return endCharacter;
 	}
 
 	private List<Location> allLocationsThatCanBeScanned(Scanner scanner) {

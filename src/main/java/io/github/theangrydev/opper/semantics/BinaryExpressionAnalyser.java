@@ -26,11 +26,11 @@ public class BinaryExpressionAnalyser<Result, Left, Right> implements ParseTreeN
 
 	@Override
 	public final Result analyse(List<ParseTree> children) {
-		return binaryConstructor.construct(leftAnalyser.analyse(children.get(0)), rightAnalyser.analyse(children.get(1)));
+		return binaryConstructor.construct(leftAnalyser.analyse(children.get(0)), rightAnalyser.analyse(children.get(2)));
 	}
 
 	@FunctionalInterface
-	interface BinaryConstructor<Result, Left, Right> {
+	public interface BinaryConstructor<Result, Left, Right> {
 		Result construct(Left left, Right right);
 	}
 }

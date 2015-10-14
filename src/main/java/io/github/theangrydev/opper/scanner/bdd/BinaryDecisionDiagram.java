@@ -57,10 +57,6 @@ public class BinaryDecisionDiagram {
 		return buffer;
 	}
 
-	public boolean isNotZero() {
-		return id != bdd.getZero();
-	}
-
 	public boolean isZero() {
 		return id == bdd.getZero();
 	}
@@ -69,7 +65,7 @@ public class BinaryDecisionDiagram {
 		return bdd.oneSat(id, buffer);
 	}
 
-	private void discard() {
+	public void discard() {
 		discard(id);
 	}
 

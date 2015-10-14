@@ -28,11 +28,15 @@ public class SemanticAnalyserTest {
 		numericAnalysers.add(add, analyser(binaryExpression(Addition::new, numericAnalysers)));
 		numericAnalysers.add(number, analyser(Number::number));
 
-		Parser parser = parser(parseTree(add, parseTree(add, parseTree(add, parseTree(number, "2"), parseTree(number, "3")), parseTree(number, "2")), parseTree(times, parseTree(number, "3"), parseTree(number, "4"))));
+		Parser parser = parser(parseTree(add, parseTree(add, parseTree(add, parseTree(number, "2"), parseTree("+"), parseTree(number, "3")), parseTree("+"), parseTree(number, "2")), parseTree("+"), parseTree(times, parseTree(number, "3"), parseTree("*"), parseTree(number, "4"))));
 
 		SemanticAnalyser<Numeric> semanticAnalyser = new SemanticAnalyser<>(parser, numericAnalysers);
 
 		assertThat(semanticAnalyser.analyse().get()).hasToString("Addition{left=Addition{left=Addition{left=Number{value=2}, right=Number{value=3}}, right=Number{value=2}}, right=Multiplication{left=Number{value=3}, right=Number{value=4}}}");
+	}
+
+	private ParseTree parseTree(String content) {
+		return leaf(null, content);
 	}
 
 	private ParseTree parseTree(Rule rule, String content) {

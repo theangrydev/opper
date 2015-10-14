@@ -20,7 +20,7 @@ public class SymbolForAssignment {
 	}
 
 	public Symbol symbolForToState(int[] toStateAssignment) {
-		return symbolsByStateId.get(allVariables.toStateId(toStateAssignment));
+		return symbolsByStateId.get(allVariables.fromStateId(toStateAssignment));
 	}
 
 }

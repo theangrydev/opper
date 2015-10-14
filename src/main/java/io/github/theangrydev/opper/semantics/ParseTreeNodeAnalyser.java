@@ -22,7 +22,7 @@ public class ParseTreeNodeAnalyser<Result> implements ParseTreeAnalyser<Result> 
 	}
 
 	@FunctionalInterface
-	interface NodeAnalyser<Result> {
+	public interface NodeAnalyser<Result> {
 		Result analyse(List<ParseTree> children);
 	}
 }

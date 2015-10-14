@@ -55,4 +55,14 @@ public class Location {
 		result = 31 * result + endCharacter;
 		return result;
 	}
+
+	@Override
+	public String toString() {
+		return "Location{" +
+			"startLine=" + startLine +
+			", startCharacter=" + startCharacter +
+			", endLine=" + endLine +
+			", endCharacter=" + endCharacter +
+			'}';
+	}
 }

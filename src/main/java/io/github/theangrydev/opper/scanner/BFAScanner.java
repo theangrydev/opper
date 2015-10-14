@@ -69,11 +69,11 @@ public class BFAScanner implements Scanner {
 			frontier = bfa.transition(frontier, character);
 			position.consider(character);
 			if (!frontier.isZero()) {
-				lastNonZeroFrontier = frontier.copy();
-				nextCharacters.append(character);
 				if (lastNonZeroFrontier != null) {
 					lastNonZeroFrontier.discard();
 				}
+				lastNonZeroFrontier = frontier.copy();
+				nextCharacters.append(character);
 			}
 		} while (!frontier.isZero() && read != -1);
 		return lastNonZeroFrontier;

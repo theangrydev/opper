@@ -24,6 +24,7 @@ public class BFAScanner implements Scanner {
 	private ScannedSymbol next;
 	private StringBuilder nextCharacters;
 	private Position position;
+	private int read;
 
 	public BFAScanner(List<SymbolDefinition> symbolDefinitions, Reader charactersToParse) {
 		this.charactersToParse = new PushbackReader(charactersToParse, 1);
@@ -34,7 +35,6 @@ public class BFAScanner implements Scanner {
 
 		bfa = BFABuilder.convertToBFA(nfa);
 		position = new Position();
-		prepareForNextSymbol();
 	}
 
 	@Override
@@ -44,34 +44,39 @@ public class BFAScanner implements Scanner {
 
 	@Override
 	public boolean hasNextSymbol() {
-		int read;
 		do {
-			BinaryDecisionDiagram previousFrontier = null;
-			do {
-				read = read();
-				char character = (char) read;
-				frontier = bfa.transition(frontier, character);
-				frontier = bfa.relabelToStateToFromState(frontier);
-				position.consider(character);
-				if (!frontier.isZero()) {
-					nextCharacters.append(character);
-					previousFrontier = frontier.copy();
-				}
-			} while (!frontier.isZero() && read != -1);
-
-			if (previousFrontier != null) {
-				Optional<Symbol> accepted = bfa.checkAcceptance(previousFrontier);
-				previousFrontier.discard();
-				if (accepted.isPresent()) {
-					pushback((char) read);
-					next = acceptedSymbol(accepted.get());
-					prepareForNextSymbol();
-					return true;
-				}
-			}
 			prepareForNextSymbol();
+			BinaryDecisionDiagram lastNonZeroFrontier = scanUntilFrontierIsZero();
+			if (lastNonZeroFrontier == null) {
+				continue;
+			}
+			Optional<Symbol> accepted = bfa.checkAcceptance(lastNonZeroFrontier);
+			lastNonZeroFrontier.discard();
+			if (accepted.isPresent()) {
+				pushback((char) read);
+				next = acceptedSymbol(accepted.get());
+				return true;
+			}
 		} while (read != -1);
 		return false;
+	}
+
+	private BinaryDecisionDiagram scanUntilFrontierIsZero() {
+		BinaryDecisionDiagram lastNonZeroFrontier = null;
+		do {
+			read = read();
+			char character = (char) read;
+			frontier = bfa.transition(frontier, character);
+			position.consider(character);
+			if (!frontier.isZero()) {
+				lastNonZeroFrontier = frontier.copy();
+				nextCharacters.append(character);
+				if (lastNonZeroFrontier != null) {
+					lastNonZeroFrontier.discard();
+				}
+			}
+		} while (!frontier.isZero() && read != -1);
+		return lastNonZeroFrontier;
 	}
 
 	private void pushback(char character) {

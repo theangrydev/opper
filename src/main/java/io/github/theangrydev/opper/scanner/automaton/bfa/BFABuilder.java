@@ -2,7 +2,6 @@ package io.github.theangrydev.opper.scanner.automaton.bfa;
 
 import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
-import jdd.bdd.Permutation;
 
 public class BFABuilder {
 
@@ -18,9 +17,6 @@ public class BFABuilder {
 
 		BinaryDecisionDiagram startingFrom = allVariables.specifyFromVariables(nfa.initialState());
 
-		Permutation relabelToStateToFromState = allVariables.relabelToStateToFromState();
-
-		return new BFA(bfaTransitions, bfaAcceptance, startingFrom, relabelToStateToFromState);
+		return new BFA(bfaTransitions, bfaAcceptance, startingFrom);
 	}
-
 }

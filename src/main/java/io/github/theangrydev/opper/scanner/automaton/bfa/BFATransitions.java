@@ -5,6 +5,7 @@ import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 import it.unimi.dsi.fastutil.chars.Char2ObjectArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
+import jdd.bdd.Permutation;
 
 import java.util.List;
 
@@ -13,12 +14,14 @@ public class BFATransitions {
 	private final Char2ObjectMap<BinaryDecisionDiagram> characterPresences;
 	private final BinaryDecisionDiagram existsFromStateAndCharacter;
 	private final BinaryDecisionDiagram nothing;
+	private final Permutation relabelToStateToFromState;
 
-	private BFATransitions(BinaryDecisionDiagram transitions, Char2ObjectMap<BinaryDecisionDiagram> characterPresences, BinaryDecisionDiagram existsFromStateAndCharacter, BinaryDecisionDiagram nothing) {
+	private BFATransitions(BinaryDecisionDiagram transitions, Char2ObjectMap<BinaryDecisionDiagram> characterPresences, BinaryDecisionDiagram existsFromStateAndCharacter, BinaryDecisionDiagram nothing, Permutation relabelToStateToFromState) {
 		this.transitions = transitions;
 		this.characterPresences = characterPresences;
 		this.existsFromStateAndCharacter = existsFromStateAndCharacter;
 		this.nothing = nothing;
+		this.relabelToStateToFromState = relabelToStateToFromState;
 	}
 
 	public static BFATransitions bfaTransitions(NFA nfa, TransitionTable transitionTable, AllVariables allVariables) {
@@ -26,7 +29,8 @@ public class BFATransitions {
 		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = characterPresence(nfa.characterTransitions(), allVariables);
 		BinaryDecisionDiagram existsFromStateAndCharacter = allVariables.existsFromStateAndCharacter();
 		BinaryDecisionDiagram nothing = allVariables.nothing();
-		return new BFATransitions(transitions, characterPresences, existsFromStateAndCharacter, nothing);
+		Permutation relabelToStateToFromState = allVariables.relabelToStateToFromState();
+		return new BFATransitions(transitions, characterPresences, existsFromStateAndCharacter, nothing, relabelToStateToFromState);
 	}
 
 	private static BinaryDecisionDiagram transitions(AllVariables allVariables, TransitionTable transitionTable) {
@@ -47,7 +51,8 @@ public class BFATransitions {
 
 	public BinaryDecisionDiagram transition(BinaryDecisionDiagram frontier, char character) {
 		frontier = frontier.andTo(characterPresence(character));
-		return frontier.relativeProductTo(transitions, existsFromStateAndCharacter);
+		frontier = frontier.relativeProductTo(transitions, existsFromStateAndCharacter);
+		return frontier.replaceTo(relabelToStateToFromState);
 	}
 
 	private BinaryDecisionDiagram characterPresence(char character) {

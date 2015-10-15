@@ -71,6 +71,6 @@ public class NFA {
 	}
 
 	public List<Symbol> symbolsByStateId() {
-		return concat(Stream.of((Symbol) null), states.stream().sorted(comparing(State::id)).map(State::symbol)).collect(toList());
+		return concat(Stream.of((Symbol) null), states.stream().sorted(comparing(State::id)).map(State::reachableBy)).collect(toList());
 	}
 }

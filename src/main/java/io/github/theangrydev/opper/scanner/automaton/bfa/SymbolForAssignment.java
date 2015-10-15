@@ -19,8 +19,8 @@ public class SymbolForAssignment {
 		return new SymbolForAssignment(allVariables, nfa.symbolsByStateId());
 	}
 
-	public Symbol symbolForToState(int[] toStateAssignment) {
-		return symbolsByStateId.get(allVariables.fromStateId(toStateAssignment));
+	public Symbol symbolForFromState(int[] fromStateAssignment) {
+		return symbolsByStateId.get(allVariables.fromStateId(fromStateAssignment));
 	}
 
 }

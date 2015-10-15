@@ -12,13 +12,13 @@ public class BFAAcceptance {
 	private final SymbolForAssignment symbolForAssignment;
 	private final BinaryDecisionDiagram acceptingStates;
 	private final BinaryDecisionDiagram acceptCheckBuffer;
-	private final int[] toStateAssignmentBuffer;
+	private final int[] fromStateAssignmentBuffer;
 
-	private BFAAcceptance(BinaryDecisionDiagram acceptCheckBuffer, BinaryDecisionDiagram acceptingStates, SymbolForAssignment symbolForAssignment, int[] toStateAssignmentBuffer) {
+	private BFAAcceptance(BinaryDecisionDiagram acceptCheckBuffer, BinaryDecisionDiagram acceptingStates, SymbolForAssignment symbolForAssignment, int[] fromStateAssignmentBuffer) {
 		this.acceptCheckBuffer = acceptCheckBuffer;
 		this.acceptingStates = acceptingStates;
 		this.symbolForAssignment = symbolForAssignment;
-		this.toStateAssignmentBuffer = toStateAssignmentBuffer;
+		this.fromStateAssignmentBuffer = fromStateAssignmentBuffer;
 	}
 
 	public static BFAAcceptance bfaAcceptance(NFA nfa, AllVariables allVariables) {
@@ -36,13 +36,13 @@ public class BFAAcceptance {
 		return acceptingStates;
 	}
 
-	public Optional<Symbol> checkAcceptance(BinaryDecisionDiagram frontier) {
-		BinaryDecisionDiagram acceptCheck = acceptingStates.and(frontier, acceptCheckBuffer);
+	public Optional<Symbol> checkAcceptance(BinaryDecisionDiagram fromFrontier) {
+		BinaryDecisionDiagram acceptCheck = acceptingStates.and(fromFrontier, acceptCheckBuffer);
 		if (acceptCheck.isZero()) {
 			return Optional.empty();
 		}
-		int[] toStateAssignment = acceptCheck.oneSatisfyingAssignment(toStateAssignmentBuffer);
-		Symbol acceptedSymbol = symbolForAssignment.symbolForToState(toStateAssignment);
+		int[] fromStateAssignment = acceptCheck.oneSatisfyingAssignment(fromStateAssignmentBuffer);
+		Symbol acceptedSymbol = symbolForAssignment.symbolForFromState(fromStateAssignment);
 		return Optional.of(acceptedSymbol);
 	}
 

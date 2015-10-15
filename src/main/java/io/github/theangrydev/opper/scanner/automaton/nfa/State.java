@@ -6,16 +6,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class State implements Identifiable {
-	private final Symbol createdBy;
+	private final Set<Symbol> reachedBySymbols;
 	private int id;
 	private Map<Transition, List<State>> transitions;
 	private List<State> epsilonTransitions;
 	private boolean isAccepting;
-	private Set<State> reachable;
+	private Set<State> reachableStates;
 	private boolean reached;
 
-	public State(Symbol createdBy, int id, boolean isAccepting) {
-		this.createdBy = createdBy;
+	public State(Symbol reachedBySymbols, int id, boolean isAccepting) {
+		this.reachedBySymbols = new HashSet<>();
+		if (reachedBySymbols != null) {
+			this.reachedBySymbols.add(reachedBySymbols);
+		}
 		this.id = id;
 		this.isAccepting = isAccepting;
 		transitions = new HashMap<>();
@@ -31,8 +34,8 @@ public class State implements Identifiable {
 		return id;
 	}
 
-	public Symbol symbol() {
-		return createdBy;
+	public Symbol reachableBy() {
+		return reachedBySymbols.iterator().next();
 	}
 
 	public void visitTransitions(TransitionVisitor transitionVisitor) {
@@ -104,23 +107,24 @@ public class State implements Identifiable {
 
 	private void addReachableTransitions(Set<State> reachableStates) {
 		for (State reachableState : reachableStates) {
+			reachedBySymbols.addAll(reachableState.reachedBySymbols);
 			transitions.putAll(reachableState.transitions);
 		}
 	}
 
 	private Set<State> reachableByEpsilonTransitions() {
-		if (reachable != null) {
-			return reachable;
+		if (reachableStates != null) {
+			return reachableStates;
 		}
-		reachable = new HashSet<>();
-		reachable.addAll(epsilonTransitions);
-		epsilonTransitions.stream().map(State::reachableByEpsilonTransitions).forEach(reachable::addAll);
-		return reachable;
+		reachableStates = new HashSet<>();
+		reachableStates.addAll(epsilonTransitions);
+		epsilonTransitions.stream().map(State::reachableByEpsilonTransitions).forEach(reachableStates::addAll);
+		return reachableStates;
 	}
 
 	@Override
 	public String toString() {
-		return "S[" + id + "], createdBy=" + createdBy + ", characterTransitions=" + printCharacterTransitions() + ", nullTransitions=" + print(epsilonTransitions) + ", isAccepting=" + isAccepting;
+		return "S[" + id + "], createdBy=" + reachedBySymbols + ", characterTransitions=" + printCharacterTransitions() + ", nullTransitions=" + print(epsilonTransitions) + ", isAccepting=" + isAccepting;
 	}
 
 	private String print(List<State> states) {

@@ -37,9 +37,9 @@ public class ScannerPerformanceTest implements WithAssertions {
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("&&"), concatenate(character('&'), character('&'))));
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("||"), concatenate(character('|'), character('|'))));
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("if"), concatenate(character('i'), character('f'))));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("else"), concatenate(character('e'), character('l'), character('s'), character('e'))));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("code"), concatenate(character('c'), character('o'), character('d'), character('e'))));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("api"), concatenate(character('a'), character('p'), character('i'))));
+		symbolDefinitions.add(definition(symbolFactory.createSymbol("else"), concatenate(concatenate(concatenate(character('e'), character('l')), character('s')), character('e'))));
+		symbolDefinitions.add(definition(symbolFactory.createSymbol("code"), concatenate(concatenate(concatenate(character('c'), character('o')), character('d')), character('e'))));
+		symbolDefinitions.add(definition(symbolFactory.createSymbol("api"), concatenate(concatenate(character('a'), character('p')), character('i'))));
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("*"), character('*')));
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("+"), character('+')));
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("-"), character('-')));
@@ -59,7 +59,7 @@ public class ScannerPerformanceTest implements WithAssertions {
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("."), character('.')));
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("Identifier"), concatenate(uppercase, repeat(either(lowercase, uppercase, digit)))));
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("Integer"), integer));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("Real"), concatenate(integer, character('.'), integer)));
+		symbolDefinitions.add(definition(symbolFactory.createSymbol("Real"), concatenate(concatenate(integer, character('.')), integer)));
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("Whitespace"), either(character(' '), character('\n'), character('\t'))));
 
 		Scanner scanner = new BFAScanner(symbolDefinitions, characters(NUMBER_OF_CHARACTERS));

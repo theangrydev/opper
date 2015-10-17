@@ -1,5 +1,6 @@
 package io.github.theangrydev.opper.scanner.automaton.nfa;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multiset;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.scanner.automaton.bfa.VariableSummary;
@@ -12,27 +13,28 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 
 public class NFA {
-	private final State initialState;
+	private List<State> initialStates;
 	private final List<CharacterTransition> characterTransitions;
 	private List<State> states;
 
 	public NFA(State initialState, List<State> states, List<CharacterTransition> characterTransitions) {
-		this.initialState = initialState;
+		this.initialStates = Lists.newArrayList(initialState);
 		this.states = states;
 		this.characterTransitions = characterTransitions;
 	}
 
 	public void removeEpsilionTransitions() {
+		initialStates = Lists.newArrayList(initialStates.get(0).reachableByEpsilonTransitions());
 		states.forEach(State::eliminateEpsilonTransitions);
 	}
 
 	public void removeUnreachableStates() {
-		initialState.markReachableStates();
+		initialStates.forEach(State::markReachableStates);
 		states = states.stream().filter(State::wasReached).collect(toList());
 	}
 
-	public State initialState() {
-		return initialState;
+	public List<State> initialStates() {
+		return initialStates;
 	}
 
 	public VariableSummary variableSummary() {

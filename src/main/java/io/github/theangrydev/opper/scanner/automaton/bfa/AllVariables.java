@@ -107,12 +107,16 @@ public class AllVariables {
 		return specifyVariablePresence(variableOrdering.characterVariables(), variableSummary.variablesSetForCharacter(characterTransition));
 	}
 
-	public BinaryDecisionDiagram specifyToVariables(State toState) {
-		return specifyVariablePresence(variableOrdering.toStateVariables(), variableSummary.variablesSetForToState(toState));
-	}
-
 	public BinaryDecisionDiagram specifyFromVariables(State fromState) {
 		return specifyVariablePresence(variableOrdering.fromStateVariables(), variableSummary.variablesSetForFromState(fromState));
+	}
+
+	public BinaryDecisionDiagram specifyFromVariables(List<State> fromStates) {
+		BinaryDecisionDiagram fromVariables = nothing();
+		for (State fromState : fromStates) {
+			fromVariables = fromVariables.orTo(specifyFromVariables(fromState));
+		}
+		return fromVariables;
 	}
 
 	public Permutation relabelToStateToFromState() {

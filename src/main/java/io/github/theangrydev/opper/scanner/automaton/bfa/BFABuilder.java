@@ -15,7 +15,7 @@ public class BFABuilder {
 
 		BFATransitions bfaTransitions = BFATransitions.bfaTransitions(nfa, transitionTable, allVariables);
 
-		BinaryDecisionDiagram startingFrom = allVariables.specifyFromVariables(nfa.initialState());
+		BinaryDecisionDiagram startingFrom = allVariables.specifyFromVariables(nfa.initialStates());
 
 		return new BFA(bfaTransitions, bfaAcceptance, startingFrom);
 	}

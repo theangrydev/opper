@@ -112,7 +112,7 @@ public class State implements Identifiable {
 		}
 	}
 
-	private Set<State> reachableByEpsilonTransitions() {
+	public Set<State> reachableByEpsilonTransitions() {
 		if (reachableStates != null) {
 			return reachableStates;
 		}

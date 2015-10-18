@@ -4,11 +4,7 @@ import io.github.theangrydev.opper.common.Logger;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.parser.early.*;
-import io.github.theangrydev.opper.parser.precomputed.prediction.ComputedRulePrediction;
-import io.github.theangrydev.opper.parser.precomputed.prediction.PrecomputedRulePrediction;
 import io.github.theangrydev.opper.parser.precomputed.prediction.RulePrediction;
-import io.github.theangrydev.opper.parser.precomputed.recursion.ComputedRightRecursion;
-import io.github.theangrydev.opper.parser.precomputed.recursion.PrecomputedRightRecursion;
 import io.github.theangrydev.opper.parser.precomputed.recursion.RightRecursion;
 import io.github.theangrydev.opper.parser.tree.ParseTree;
 import io.github.theangrydev.opper.parser.tree.ParseTreeNode;
@@ -31,12 +27,12 @@ public class EarlyParser implements Parser {
 	private EarlySet currentEarlySet;
 	private int currentEarlySetIndex;
 
-	public EarlyParser(Logger logger, Grammar grammar, Scanner scanner) {
+	public EarlyParser(Logger logger, Grammar grammar, RightRecursion rightRecursion, RulePrediction rulePrediction, Scanner scanner) {
 		this.logger = logger;
 		this.grammar = grammar;
 		this.scanner = scanner;
-		this.rightRecursion = new PrecomputedRightRecursion(grammar, new ComputedRightRecursion(grammar));
-		this.rulePrediction = new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(grammar));
+		this.rightRecursion = rightRecursion;
+		this.rulePrediction = rulePrediction;
 		this.currentEarlySet = new EarlySet(grammar);
 	}
 

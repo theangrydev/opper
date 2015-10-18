@@ -1,13 +1,12 @@
 package io.github.theangrydev.opper.parser;
 
 import io.github.theangrydev.opper.common.DoNothingLogger;
-import io.github.theangrydev.opper.scanner.FixedScanner;
-import io.github.theangrydev.opper.scanner.Scanner;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
+import io.github.theangrydev.opper.scanner.FixedScanner;
+import io.github.theangrydev.opper.scanner.Scanner;
 import org.junit.Test;
 
-import static io.github.theangrydev.opper.scanner.FixedScanner.scanner;
 import static org.assertj.core.api.StrictAssertions.assertThat;
 
 public class RepeatedPredictionParserTest {
@@ -25,7 +24,7 @@ public class RepeatedPredictionParserTest {
 			.build();
 		Scanner scanner = FixedScanner.scanner(grammar, "BEGIN", "END");
 
-		EarlyParser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
+		EarlyParser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
 
 		assertThat(parser.parse()).isPresent();
 		assertThat(parser.finalEarlySetSize()).isEqualTo(6);

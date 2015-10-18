@@ -39,7 +39,7 @@ public class UnmarkedMiddleRecursionParserTest {
 			.build();
 		Scanner scanner = scanner(nCopies(parseInt(repetitions), scannedSymbol(grammar.symbolByName("REPEATED"), "", location(1, 1, 1, 1))));
 
-		Parser parser = new EarlyParser(new DoNothingLogger(), grammar, scanner);
+		Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
 
 		assertThat(parser.parse().isPresent()).describedAs(repetitions + " should be " + shouldParse).isEqualTo(valueOf(shouldParse));
 	}

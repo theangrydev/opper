@@ -2,16 +2,11 @@ package io.github.theangrydev.opper.scanner;
 
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.scanner.automaton.bfa.BFA;
-import io.github.theangrydev.opper.scanner.automaton.bfa.BFABuilder;
-import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
-import io.github.theangrydev.opper.scanner.automaton.nfa.NFABuilder;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
-import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Reader;
-import java.util.List;
 import java.util.Optional;
 
 import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
@@ -26,15 +21,10 @@ public class BFAScanner implements Scanner {
 	private Position position;
 	private int read;
 
-	public BFAScanner(List<SymbolDefinition> symbolDefinitions, Reader charactersToParse) {
+	public BFAScanner(BFA bfa, Reader charactersToParse) {
+		this.bfa = bfa;
 		this.charactersToParse = new PushbackReader(charactersToParse, 1);
-		NFA nfa = NFABuilder.convertToNFA(symbolDefinitions);
-		nfa.removeEpsilionTransitions();
-		nfa.removeUnreachableStates();
-		nfa.relabelAccordingToFrequencies();
-
-		bfa = BFABuilder.convertToBFA(nfa);
-		position = new Position();
+		this.position = new Position();
 	}
 
 	@Override
@@ -145,7 +135,7 @@ public class BFAScanner implements Scanner {
 		try {
 			return charactersToParse.read();
 		} catch (IOException e) {
-			return -1;
+			throw new IllegalStateException(e);
 		}
 	}
 }

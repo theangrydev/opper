@@ -29,7 +29,7 @@ public class ScannerTest implements WithAssertions {
 		Symbol a = new Symbol(1, "a");
 		SymbolDefinition aDefinition = definition(a, character('a'));
 
-		Scanner scanner = new BFAScanner(singletonList(aDefinition), new StringReader("zzazzazzz"));
+		Scanner scanner = new BFAScannerFactory(singletonList(aDefinition)).scanner(new StringReader("zzazzazzz"));
 		assertThat(allSymbolsThatCanBeScanned(scanner)).containsExactly(a, a);
 	}
 
@@ -38,7 +38,7 @@ public class ScannerTest implements WithAssertions {
 		Symbol a = new Symbol(1, "a");
 		SymbolDefinition aDefinition = definition(a, either(character('a'), concatenate(character('b'), character('c'))));
 
-		Scanner scanner = new BFAScanner(singletonList(aDefinition), new StringReader("a\nbc\nabcd"));
+		Scanner scanner = new BFAScannerFactory(singletonList(aDefinition)).scanner(new StringReader("a\nbc\nabcd"));
 		assertThat(allLocationsThatCanBeScanned(scanner)).containsExactly(
 			location(startLine(1), startCharacter(1), endLine(1), endCharacter(1)),
 			location(startLine(2), startCharacter(1), endLine(2), endCharacter(2)),
@@ -61,7 +61,7 @@ public class ScannerTest implements WithAssertions {
 		symbolDefinitions.add(definition(real, real()));
 		symbolDefinitions.add(definition(whitespace, whitespace()));
 
-		Scanner scanner = new BFAScanner(symbolDefinitions, new StringReader("Ab 20645 9.1"));
+		Scanner scanner = new BFAScannerFactory(symbolDefinitions).scanner(new StringReader("Ab 20645 9.1"));
 		assertThat(allSymbolsThatCanBeScanned(scanner)).containsExactly(identifier, whitespace, integer, whitespace, real);
 	}
 
@@ -70,7 +70,7 @@ public class ScannerTest implements WithAssertions {
 		Symbol a = new Symbol(1, "a");
 		SymbolDefinition aDefinition = definition(a, characterClass(anyCharacter()));
 
-		Scanner scanner = new BFAScanner(singletonList(aDefinition), new StringReader("1234"));
+		Scanner scanner = new BFAScannerFactory(singletonList(aDefinition)).scanner(new StringReader("1234"));
 		assertThat(allSymbolsThatCanBeScanned(scanner)).containsExactly(a, a, a, a);
 	}
 
@@ -79,7 +79,7 @@ public class ScannerTest implements WithAssertions {
 		Symbol a = new Symbol(1, "a");
 		SymbolDefinition aDefinition = definition(a, characterClass(notCharacaters("abcd")));
 
-		Scanner scanner = new BFAScanner(singletonList(aDefinition), new StringReader("1abc23d4"));
+		Scanner scanner = new BFAScannerFactory(singletonList(aDefinition)).scanner(new StringReader("1abc23d4"));
 		assertThat(allSymbolsThatCanBeScanned(scanner)).containsExactly(a, a, a, a);
 	}
 

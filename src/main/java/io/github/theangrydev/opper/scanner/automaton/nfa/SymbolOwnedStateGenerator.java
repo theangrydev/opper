@@ -1,6 +1,7 @@
 package io.github.theangrydev.opper.scanner.automaton.nfa;
 
 import io.github.theangrydev.opper.grammar.Symbol;
+import io.github.theangrydev.opper.scanner.definition.CharacterClass;
 
 public class SymbolOwnedStateGenerator {
 
@@ -22,4 +23,7 @@ public class SymbolOwnedStateGenerator {
 		return transitionFactory.characterTransition(character);
 	}
 
+	public Transition characterClassTransition(CharacterClass characterClass) {
+		return transitionFactory.characterClassTransition(characterClass);
+	}
 }

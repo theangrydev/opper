@@ -5,6 +5,7 @@ import com.google.common.collect.Multiset;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.scanner.automaton.bfa.VariableSummary;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -13,11 +14,13 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 
 public class NFA {
+	private final Collection<CharacterClassTransition> characterClassTransitions;
+	private final Collection<CharacterTransition> characterTransitions;
 	private List<State> initialStates;
-	private final List<CharacterTransition> characterTransitions;
 	private List<State> states;
 
-	public NFA(State initialState, List<State> states, List<CharacterTransition> characterTransitions) {
+	public NFA(State initialState, List<State> states, Collection<CharacterClassTransition> characterClassTransitions, Collection<CharacterTransition> characterTransitions) {
+		this.characterClassTransitions = characterClassTransitions;
 		this.initialStates = Lists.newArrayList(initialState);
 		this.states = states;
 		this.characterTransitions = characterTransitions;
@@ -38,11 +41,15 @@ public class NFA {
 	}
 
 	public VariableSummary variableSummary() {
-		return new VariableSummary(states.size(), characterTransitions.size());
+		return new VariableSummary(states.size(), characterTransitions.size() + characterClassTransitions.size());
 	}
 
-	public List<CharacterTransition> characterTransitions() {
+	public Collection<CharacterTransition> characterTransitions() {
 		return characterTransitions;
+	}
+
+	public Collection<CharacterClassTransition> characterClassTransitions() {
+		return characterClassTransitions;
 	}
 
 	public void visitTransitions(State.TransitionVisitor transitionVisitor) {

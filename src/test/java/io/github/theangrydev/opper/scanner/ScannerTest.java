@@ -13,8 +13,11 @@ import java.util.List;
 
 import static io.github.theangrydev.opper.scanner.Location.location;
 import static io.github.theangrydev.opper.scanner.definition.AlternativeExpression.either;
+import static io.github.theangrydev.opper.scanner.definition.AnyCharacter.anyCharacter;
+import static io.github.theangrydev.opper.scanner.definition.CharacterClassExpression.characterClass;
 import static io.github.theangrydev.opper.scanner.definition.CharacterExpression.character;
 import static io.github.theangrydev.opper.scanner.definition.ConcatenateExpression.concatenate;
+import static io.github.theangrydev.opper.scanner.definition.NotCharacters.notCharacaters;
 import static io.github.theangrydev.opper.scanner.definition.RepeatExpression.repeat;
 import static io.github.theangrydev.opper.scanner.definition.SymbolDefinition.definition;
 import static java.util.Collections.singletonList;
@@ -60,6 +63,24 @@ public class ScannerTest implements WithAssertions {
 
 		Scanner scanner = new BFAScanner(symbolDefinitions, new StringReader("Ab 20645 9.1"));
 		assertThat(allSymbolsThatCanBeScanned(scanner)).containsExactly(identifier, whitespace, integer, whitespace, real);
+	}
+
+	@Test
+	public void shouldHandleAnyCharacter() {
+		Symbol a = new Symbol(1, "a");
+		SymbolDefinition aDefinition = definition(a, characterClass(anyCharacter()));
+
+		Scanner scanner = new BFAScanner(singletonList(aDefinition), new StringReader("1234"));
+		assertThat(allSymbolsThatCanBeScanned(scanner)).containsExactly(a, a, a, a);
+	}
+
+	@Test
+	public void shouldHandleNotCharacters() {
+		Symbol a = new Symbol(1, "a");
+		SymbolDefinition aDefinition = definition(a, characterClass(notCharacaters("abcd")));
+
+		Scanner scanner = new BFAScanner(singletonList(aDefinition), new StringReader("1abc23d4"));
+		assertThat(allSymbolsThatCanBeScanned(scanner)).containsExactly(a, a, a, a);
 	}
 
 	private Expression identifier() {

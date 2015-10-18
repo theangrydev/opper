@@ -1,7 +1,6 @@
 package io.github.theangrydev.opper.scanner.automaton.bfa;
 
 import com.google.common.math.IntMath;
-import io.github.theangrydev.opper.scanner.automaton.nfa.CharacterTransition;
 import io.github.theangrydev.opper.scanner.automaton.nfa.State;
 import io.github.theangrydev.opper.scanner.automaton.nfa.Transition;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -51,7 +50,7 @@ public class VariableSummary {
 		return new VariablesSet(BitSet.valueOf(new long[]{projectFromId(state)}));
 	}
 
-	public VariablesSet variablesSetForCharacter(CharacterTransition characterTransition) {
+	public VariablesSet variablesSetForTransition(Transition characterTransition) {
 		return new VariablesSet(BitSet.valueOf(new long[]{projectCharacterId(characterTransition)}));
 	}
 

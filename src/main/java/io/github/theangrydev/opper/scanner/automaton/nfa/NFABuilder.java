@@ -19,6 +19,6 @@ public class NFABuilder {
 			symbolDefinition.populate(generator, from, to);
 			to.addNullTransition(accepting);
 		}
-		return new NFA(initial, stateFactory.states(), transitionFactory.characterTransitions());
+		return new NFA(initial, stateFactory.states(), transitionFactory.characterClassTransitions(), transitionFactory.characterTransitions());
 	}
 }

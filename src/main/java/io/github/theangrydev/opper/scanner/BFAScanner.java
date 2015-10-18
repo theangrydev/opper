@@ -44,7 +44,7 @@ public class BFAScanner implements Scanner {
 
 	@Override
 	public boolean hasNextSymbol() {
-		do {
+		while (read != -1) {
 			prepareForNextSymbol();
 			BinaryDecisionDiagram lastNonZeroFromFrontier = scanUntilFrontierIsZero();
 			if (lastNonZeroFromFrontier == null) {
@@ -57,13 +57,13 @@ public class BFAScanner implements Scanner {
 				next = acceptedSymbol(accepted.get());
 				return true;
 			}
-		} while (read != -1);
+		}
 		return false;
 	}
 
 	private BinaryDecisionDiagram scanUntilFrontierIsZero() {
 		BinaryDecisionDiagram lastNonZeroFromFrontier = null;
-		do {
+	    while (!frontier.isZero() && read != -1) {
 			read = read();
 			if (read == -1) {
 				break;
@@ -78,7 +78,7 @@ public class BFAScanner implements Scanner {
 				lastNonZeroFromFrontier = frontier.copy();
 				nextCharacters.append(character);
 			}
-		} while (!frontier.isZero() && read != -1);
+		}
 		return lastNonZeroFromFrontier;
 	}
 

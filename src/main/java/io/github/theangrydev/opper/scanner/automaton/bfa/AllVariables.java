@@ -1,7 +1,7 @@
 package io.github.theangrydev.opper.scanner.automaton.bfa;
 
-import io.github.theangrydev.opper.scanner.automaton.nfa.CharacterTransition;
 import io.github.theangrydev.opper.scanner.automaton.nfa.State;
+import io.github.theangrydev.opper.scanner.automaton.nfa.Transition;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagramFactory;
 import jdd.bdd.Permutation;
@@ -103,8 +103,8 @@ public class AllVariables {
 		return specifyVariablePresence(variableOrdering.allVariables(), variablesSet);
 	}
 
-	public BinaryDecisionDiagram specifyCharacterVariables(CharacterTransition characterTransition) {
-		return specifyVariablePresence(variableOrdering.characterVariables(), variableSummary.variablesSetForCharacter(characterTransition));
+	public BinaryDecisionDiagram specifyCharacterVariables(Transition transition) {
+		return specifyVariablePresence(variableOrdering.characterVariables(), variableSummary.variablesSetForTransition(transition));
 	}
 
 	public BinaryDecisionDiagram specifyFromVariables(State fromState) {

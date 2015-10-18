@@ -32,7 +32,7 @@ public class GrammarBuilder {
 	public Grammar build() {
 		Rule acceptanceRule = ruleFactory.createRule(acceptanceSymbol, startSymbol);
 		rules.add(acceptanceRule);
-		return new SpecifiedGrammar(symbols, symbolsByName, rules, acceptanceRule, acceptanceSymbol);
+		return new SpecifiedGrammar(symbols, symbolsByName, rulesByDefinition, rules, acceptanceRule, acceptanceSymbol);
 	}
 
 	public GrammarBuilder withAcceptanceSymbol(String name) {

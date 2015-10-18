@@ -8,4 +8,5 @@ public interface Grammar {
 	Rule acceptanceRule();
 	Symbol acceptanceSymbol();
 	Symbol symbolByName(String name);
+	Rule ruleByDefinition(String... definition);
 }

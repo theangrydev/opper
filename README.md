@@ -4,4 +4,4 @@ opper is a parser that implements a variation of the [Marpa](https://jeffreykegl
 [![Build Status](https://drone.io/github.com/theangrydev/opper/status.png)](https://drone.io/github.com/theangrydev/opper/latest) 
 
 ##### This project is supported by:
-![Java profiler](https://www.ej-technologies.com/images/product_banners/jprofiler_small.png "Java profiler")
+[![Java profiler](https://www.ej-technologies.com/images/product_banners/jprofiler_small.png "Java profiler")](http://www.ej-technologies.com/products/jprofiler/overview.html)

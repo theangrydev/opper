@@ -11,6 +11,7 @@ import io.github.theangrydev.opper.parser.precomputed.recursion.ComputedRightRec
 import io.github.theangrydev.opper.parser.precomputed.recursion.PrecomputedRightRecursion;
 import io.github.theangrydev.opper.parser.precomputed.recursion.RightRecursion;
 import io.github.theangrydev.opper.parser.tree.ParseTree;
+import io.github.theangrydev.opper.parser.tree.ParseTreeNode;
 import io.github.theangrydev.opper.scanner.ScannedSymbol;
 import io.github.theangrydev.opper.scanner.Scanner;
 
@@ -53,7 +54,7 @@ public class EarlyParser implements Parser {
 			memoizeTransitions();
 			debug();
 		}
-		return currentEarlySet.completedAcceptanceRule(initialTransitions).map(EarlyItem::parseTree).map(ParseTree::firstChild);
+		return currentEarlySet.completedAcceptanceRule(initialTransitions).map(EarlyItem::parseTree).map(ParseTreeNode::firstChild);
 	}
 
 	public int finalEarlySetSize() {
@@ -77,10 +78,9 @@ public class EarlyParser implements Parser {
 	private void scanNextSymbol() {
 		ScannedSymbol scannedSymbol = scanner.nextSymbol();
 		Symbol symbol = scannedSymbol.symbol();
-		String content = scannedSymbol.content();
 		logger.log(() -> "Reading " + symbol);
 		for (EarlyItem itemThatCanAdvance : previousTransitions.itemsThatCanAdvanceGiven(symbol)) {
-			addEarlyItem(itemThatCanAdvance.advance(content));
+			addEarlyItem(itemThatCanAdvance.advance(scannedSymbol.content(), scannedSymbol.location()));
 		}
 	}
 

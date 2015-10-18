@@ -1,20 +1,23 @@
 package io.github.theangrydev.opper.parser.tree;
 
 import io.github.theangrydev.opper.grammar.Rule;
+import io.github.theangrydev.opper.scanner.Location;
 
 import java.util.Collections;
 import java.util.List;
 
 public class ParseTreeLeaf extends ParseTree {
+	private final Location location;
 	private final String content;
 
-	private ParseTreeLeaf(Rule rule, String content) {
+	private ParseTreeLeaf(Rule rule, String content, Location location) {
 		super(rule);
 		this.content = content;
+		this.location = location;
 	}
 
-	public static ParseTreeLeaf leaf(Rule rule, String content) {
-		return new ParseTreeLeaf(rule, content);
+	public static ParseTreeLeaf leaf(Rule rule, String content, Location location) {
+		return new ParseTreeLeaf(rule, content, location);
 	}
 
 	@Override
@@ -25,6 +28,11 @@ public class ParseTreeLeaf extends ParseTree {
 	@Override
 	public List<ParseTree> children() {
 		return Collections.emptyList();
+	}
+
+	@Override
+	public Location location() {
+		return location;
 	}
 
 	@Override

@@ -40,4 +40,8 @@ public class TransitionsEarlySet implements Iterable<EarlyItem> {
 	public String toString() {
 		return earlyItems.toString();
 	}
+
+	public boolean hasLeoItem() {
+		return leoItem().isPresent();
+	}
 }

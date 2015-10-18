@@ -106,9 +106,12 @@ public class EarlyParser implements Parser {
 		DottedRule dottedRule = earlyItem.dottedRule();
 		Symbol postdot = dottedRule.postDot();
 		TransitionsEarlySet transitions = currentTransitions.itemsThatCanAdvanceGiven(postdot);
+		if (transitions.hasLeoItem()) {
+			return;
+		}
 		if (isLeoEligible(dottedRule)) {
 			transitions.addLeoItem(leoItemToMemoize(earlyItem, dottedRule));
-		} else if (!transitions.leoItem().isPresent()){
+		} else {
 			transitions.addEarlyItem(earlyItem);
 		}
 	}

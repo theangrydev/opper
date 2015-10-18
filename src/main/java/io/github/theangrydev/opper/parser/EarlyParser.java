@@ -53,7 +53,7 @@ public class EarlyParser implements Parser {
 			memoizeTransitions();
 			debug();
 		}
-		return currentEarlySet.completedAcceptanceRule(initialTransitions).map(EarlyItem::parseTree);
+		return currentEarlySet.completedAcceptanceRule(initialTransitions).map(EarlyItem::parseTree).map(ParseTree::firstChild);
 	}
 
 	public int finalEarlySetSize() {
@@ -108,7 +108,7 @@ public class EarlyParser implements Parser {
 		TransitionsEarlySet transitions = currentTransitions.itemsThatCanAdvanceGiven(postdot);
 		if (isLeoEligible(dottedRule)) {
 			transitions.addLeoItem(leoItemToMemoize(earlyItem, dottedRule));
-		} else {
+		} else if (!transitions.leoItem().isPresent()){
 			transitions.addEarlyItem(earlyItem);
 		}
 	}
@@ -122,7 +122,7 @@ public class EarlyParser implements Parser {
 		if (predecessor.isPresent()) {
 			return predecessor.get();
 		} else {
-			return new LeoItem(dottedRule.advance(), earlyItem.origin());
+			return new LeoItem(dottedRule.advance(), earlyItem);
 		}
 	}
 

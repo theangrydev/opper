@@ -17,4 +17,8 @@ public abstract class ParseTree {
 
 	public abstract String content();
 	public abstract List<ParseTree> children();
+
+	public ParseTree firstChild() {
+		return children().get(0);
+	}
 }

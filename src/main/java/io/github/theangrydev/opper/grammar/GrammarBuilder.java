@@ -3,6 +3,7 @@ package io.github.theangrydev.opper.grammar;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ public class GrammarBuilder {
 	private final RuleFactory ruleFactory;
 
 	private Map<String, Symbol> symbolsByName;
-	private Map<String[], Rule> rulesByDefinition;
+	private Map<List<String>, Rule> rulesByDefinition;
 	private List<Symbol> symbols;
 	private List<Rule> rules;
 	private Symbol startSymbol;
@@ -54,10 +55,10 @@ public class GrammarBuilder {
 
 	private Rule createRule(Symbol leftSymbol, Symbol[] rightSymbols) {
 		Rule rule = ruleFactory.createRule(leftSymbol, rightSymbols);
-		String[] definition = new String[rightSymbols.length + 1];
-		definition[0] = leftSymbol.toString();
-		for (int i = 0; i < rightSymbols.length; i++) {
-			definition[i + 1] = rightSymbols[i].toString();
+		List<String> definition = new ArrayList<>(rightSymbols.length + 1);
+		definition.add(leftSymbol.toString());
+		for (Symbol rightSymbol : rightSymbols) {
+			definition.add(rightSymbol.toString());
 		}
 		rulesByDefinition.put(definition, rule);
 		return rule;
@@ -72,7 +73,11 @@ public class GrammarBuilder {
 	}
 
 	public Rule ruleByDefinition(String... definition) {
-		return rulesByDefinition.get(definition);
+		Rule rule = rulesByDefinition.get(Arrays.asList(definition));
+		if (rule == null) {
+			throw new IllegalStateException("Could not find rule defined by " + Arrays.toString(definition));
+		}
+		return rule;
 	}
 
 	private Symbol createSymbol(String name) {

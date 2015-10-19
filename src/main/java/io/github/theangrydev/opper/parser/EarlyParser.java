@@ -84,9 +84,7 @@ public class EarlyParser implements Parser {
 
 		Location location = scannedSymbol.location();
 		addItemsThatCanAdvanceGivenSymbol(symbol, scannedSymbol.content(), location);
-
-		Location emptyLocation = Location.location(location.startLine(), location.startCharacter(), location.startLine(), location.startCharacter());
-		addItemsThatCanAdvanceGivenSymbol(grammar.emptySymbol(), "", emptyLocation);
+		addItemsThatCanAdvanceGivenSymbol(grammar.emptySymbol(), "", location);
 	}
 
 	private void addItemsThatCanAdvanceGivenSymbol(Symbol symbol, String content, Location location) {

@@ -36,10 +36,6 @@ public class EmptyParserTest {
 			.withRule("NAME", "cow")
 			.build();
 
-//		StatementList ::= StatementList:statementList StatementWithSemicolon:statement  {: statementList.add(statement); RESULT=statementList; :}
-//		| /* Empty StatementList */                                                 {: RESULT=new LinkedList<Statement>(); :}
-//		;
-
 		Scanner scanner = FixedScanner.scanner(grammar, Splitter.on(' ').omitEmptyStrings().split(spaceSeperatedCorpus));
 
 		Parser parser = new EarlyParserFactory(new SystemOutLogger(), grammar).parser( scanner);

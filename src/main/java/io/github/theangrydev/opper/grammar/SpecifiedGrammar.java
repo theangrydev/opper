@@ -12,14 +12,16 @@ public class SpecifiedGrammar implements Grammar {
 	private final List<Rule> rules;
 	private final Rule acceptanceRule;
 	private final Symbol acceptanceSymbol;
+	private final Symbol emptySymbol;
 
-	public SpecifiedGrammar(List<Symbol> symbols, Map<String, Symbol> symbolsByName, Map<List<String>, Rule> rulesByDefinition, List<Rule> rules, Rule acceptanceRule, Symbol acceptanceSymbol) {
+	public SpecifiedGrammar(List<Symbol> symbols, Map<String, Symbol> symbolsByName, Map<List<String>, Rule> rulesByDefinition, List<Rule> rules, Rule acceptanceRule, Symbol acceptanceSymbol, Symbol emptySymbol) {
 		this.symbols = symbols;
 		this.symbolsByName = symbolsByName;
 		this.rulesByDefinition = rulesByDefinition;
 		this.rules = rules;
 		this.acceptanceRule = acceptanceRule;
 		this.acceptanceSymbol = acceptanceSymbol;
+		this.emptySymbol = emptySymbol;
 	}
 
 	@Override
@@ -50,5 +52,10 @@ public class SpecifiedGrammar implements Grammar {
 	@Override
 	public Rule ruleByDefinition(String... definition) {
 		return rulesByDefinition.get(Arrays.asList(definition));
+	}
+
+	@Override
+	public Symbol emptySymbol() {
+		return emptySymbol;
 	}
 }

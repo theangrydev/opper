@@ -9,4 +9,5 @@ public interface Grammar {
 	Symbol acceptanceSymbol();
 	Symbol symbolByName(String name);
 	Rule ruleByDefinition(String... definition);
+	Symbol emptySymbol();
 }

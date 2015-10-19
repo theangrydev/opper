@@ -8,6 +8,7 @@ import io.github.theangrydev.opper.parser.precomputed.prediction.RulePrediction;
 import io.github.theangrydev.opper.parser.precomputed.recursion.RightRecursion;
 import io.github.theangrydev.opper.parser.tree.ParseTree;
 import io.github.theangrydev.opper.parser.tree.ParseTreeNode;
+import io.github.theangrydev.opper.scanner.Location;
 import io.github.theangrydev.opper.scanner.ScannedSymbol;
 import io.github.theangrydev.opper.scanner.Scanner;
 
@@ -60,7 +61,12 @@ public class EarlyParser implements Parser {
 	private void initialize() {
 		prepareIteration();
 		initialTransitions = currentTransitions;
+		previousTransitions = currentTransitions;
 		addEarlyItem(new TraditionalEarlyItem(currentTransitions, rulePrediction.initial()));
+		memoizeTransitions();
+
+		addItemsThatCanAdvanceGivenSymbol(grammar.emptySymbol(), "", Location.location(0, 0, 0, 0));
+		advanceItemsThatWereWaitingOnCompletions();
 		memoizeTransitions();
 		debug();
 	}
@@ -75,8 +81,17 @@ public class EarlyParser implements Parser {
 		ScannedSymbol scannedSymbol = scanner.nextSymbol();
 		Symbol symbol = scannedSymbol.symbol();
 		logger.log(() -> "Reading " + symbol);
+
+		Location location = scannedSymbol.location();
+		addItemsThatCanAdvanceGivenSymbol(symbol, scannedSymbol.content(), location);
+
+		Location emptyLocation = Location.location(location.startLine(), location.startCharacter(), location.startLine(), location.startCharacter());
+		addItemsThatCanAdvanceGivenSymbol(grammar.emptySymbol(), "", emptyLocation);
+	}
+
+	private void addItemsThatCanAdvanceGivenSymbol(Symbol symbol, String content, Location location) {
 		for (EarlyItem itemThatCanAdvance : previousTransitions.itemsThatCanAdvanceGiven(symbol)) {
-			addEarlyItem(itemThatCanAdvance.advance(scannedSymbol.content(), scannedSymbol.location()));
+			addEarlyItem(itemThatCanAdvance.advance(content, location));
 		}
 	}
 

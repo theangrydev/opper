@@ -19,6 +19,7 @@ public class GrammarBuilder {
 	private List<Rule> rules;
 	private Symbol startSymbol;
 	private Symbol acceptanceSymbol;
+	private Symbol emptySymbol;
 
 	public GrammarBuilder() {
 		this.symbolFactory = new SymbolFactory();
@@ -32,7 +33,15 @@ public class GrammarBuilder {
 	public Grammar build() {
 		Rule acceptanceRule = ruleFactory.createRule(acceptanceSymbol, startSymbol);
 		rules.add(acceptanceRule);
-		return new SpecifiedGrammar(symbols, symbolsByName, rulesByDefinition, rules, acceptanceRule, acceptanceSymbol);
+		if (emptySymbol == null) {
+			withEmptySymbol("");
+		}
+		return new SpecifiedGrammar(symbols, symbolsByName, rulesByDefinition, rules, acceptanceRule, acceptanceSymbol, emptySymbol);
+	}
+
+	public GrammarBuilder withEmptySymbol(String name) {
+		emptySymbol = createSymbol(name);
+		return this;
 	}
 
 	public GrammarBuilder withAcceptanceSymbol(String name) {

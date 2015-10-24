@@ -91,8 +91,10 @@
 					<configuration>
 						<source>${java.language.level}</source>
 						<target>${java.language.level}</target>
-						<compilerArgument>-Werror</compilerArgument>
-						<compilerArgument>-Xlint:all</compilerArgument>
+						<compilerArguments>
+							<Werror/>
+							<Xlint/>
+						</compilerArguments>
 					</configuration>
 				</plugin>
 

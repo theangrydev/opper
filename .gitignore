@@ -36,5 +36,7 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 
+### Local research
+research/
 
 # Created by .ignore support plugin (hsz.mobi)

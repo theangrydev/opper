@@ -377,6 +377,7 @@
 			<id>release</id>
 			<build>
 				<plugins>
+					<!-- Package sources -->
 					<plugin>
 						<artifactId>maven-source-plugin</artifactId>
 						<executions>
@@ -388,6 +389,7 @@
 							</execution>
 						</executions>
 					</plugin>
+					<!-- Generate Javadoc -->
 					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<executions>

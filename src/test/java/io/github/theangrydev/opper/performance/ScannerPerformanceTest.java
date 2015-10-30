@@ -72,7 +72,7 @@ public class ScannerPerformanceTest implements WithAssertions {
 	}
 
 	private int numberOfCharacters() {
-		return ofNullable(System.getProperty("ScannerPerformanceTest.numberOfCharacters")).map(Integer::parseInt).orElseGet(() -> NUMBER_OF_CHARACTERS);
+		return ofNullable(System.getProperty("ScannerPerformanceTest_numberOfCharacters")).map(Integer::parseInt).orElseGet(() -> NUMBER_OF_CHARACTERS);
 	}
 
 	private CharArrayReader characters(int numberOfCharacters) {

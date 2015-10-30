@@ -13,14 +13,12 @@ import java.io.CharArrayReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static io.github.theangrydev.opper.scanner.definition.AlternativeExpression.either;
 import static io.github.theangrydev.opper.scanner.definition.CharacterExpression.character;
 import static io.github.theangrydev.opper.scanner.definition.ConcatenateExpression.concatenate;
 import static io.github.theangrydev.opper.scanner.definition.RepeatExpression.repeat;
 import static io.github.theangrydev.opper.scanner.definition.SymbolDefinition.definition;
-import static java.util.Optional.ofNullable;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class ScannerPerformanceTest implements WithAssertions {
@@ -64,18 +62,15 @@ public class ScannerPerformanceTest implements WithAssertions {
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("Real"), concatenate(concatenate(integer, character('.')), integer)));
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("Whitespace"), either(character(' '), character('\n'), character('\t'))));
 
-		Scanner scanner = new BFAScannerFactory(symbolDefinitions).scanner(characters(numberOfCharacters()));
+		Scanner scanner = new BFAScannerFactory(symbolDefinitions).scanner(characters(NUMBER_OF_CHARACTERS));
+		scanAllSymbols(scanner);
+
+		scanner = new BFAScannerFactory(symbolDefinitions).scanner(characters(NUMBER_OF_CHARACTERS));
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		scanAllSymbols(scanner);
 
 		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
-	}
-
-	private int numberOfCharacters() {
-		Optional<String> numberOfCharacters = ofNullable(System.getProperty("ScannerPerformanceTest_numberOfCharacters"));
-		System.out.println("ScannerPerformanceTest_numberOfCharacters=" + numberOfCharacters);
-		return numberOfCharacters.map(Integer::parseInt).orElseGet(() -> NUMBER_OF_CHARACTERS);
 	}
 
 	private CharArrayReader characters(int numberOfCharacters) {

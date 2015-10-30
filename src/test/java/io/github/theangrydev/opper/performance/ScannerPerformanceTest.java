@@ -19,6 +19,7 @@ import static io.github.theangrydev.opper.scanner.definition.CharacterExpression
 import static io.github.theangrydev.opper.scanner.definition.ConcatenateExpression.concatenate;
 import static io.github.theangrydev.opper.scanner.definition.RepeatExpression.repeat;
 import static io.github.theangrydev.opper.scanner.definition.SymbolDefinition.definition;
+import static java.util.Optional.ofNullable;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class ScannerPerformanceTest implements WithAssertions {
@@ -62,12 +63,16 @@ public class ScannerPerformanceTest implements WithAssertions {
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("Real"), concatenate(concatenate(integer, character('.')), integer)));
 		symbolDefinitions.add(definition(symbolFactory.createSymbol("Whitespace"), either(character(' '), character('\n'), character('\t'))));
 
-		Scanner scanner = new BFAScannerFactory(symbolDefinitions).scanner(characters(NUMBER_OF_CHARACTERS));
+		Scanner scanner = new BFAScannerFactory(symbolDefinitions).scanner(characters(numberOfCharacters()));
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		scanAllSymbols(scanner);
 
 		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
+	}
+
+	private int numberOfCharacters() {
+		return ofNullable(System.getProperty("ScannerPerformanceTest.numberOfCharacters")).map(Integer::parseInt).orElseGet(() -> NUMBER_OF_CHARACTERS);
 	}
 
 	private CharArrayReader characters(int numberOfCharacters) {

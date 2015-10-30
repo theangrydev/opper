@@ -13,6 +13,7 @@ import java.io.CharArrayReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static io.github.theangrydev.opper.scanner.definition.AlternativeExpression.either;
 import static io.github.theangrydev.opper.scanner.definition.CharacterExpression.character;
@@ -72,7 +73,9 @@ public class ScannerPerformanceTest implements WithAssertions {
 	}
 
 	private int numberOfCharacters() {
-		return ofNullable(System.getProperty("ScannerPerformanceTest_numberOfCharacters")).map(Integer::parseInt).orElseGet(() -> NUMBER_OF_CHARACTERS);
+		Optional<String> numberOfCharacters = ofNullable(System.getProperty("ScannerPerformanceTest_numberOfCharacters"));
+		System.out.println("ScannerPerformanceTest_numberOfCharacters=" + numberOfCharacters);
+		return numberOfCharacters.map(Integer::parseInt).orElseGet(() -> NUMBER_OF_CHARACTERS);
 	}
 
 	private CharArrayReader characters(int numberOfCharacters) {

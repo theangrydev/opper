@@ -19,7 +19,6 @@
 
 	<scm>
 		<connection>scm:git:https://github.com/${github.username}/${project.artifactId}.git</connection>
-		<developerConnection>scm:git:https://github.com/${github.username}/${project.artifactId}.git</developerConnection>
 		<url>https://github.com/${github.username}/${project.artifactId}</url>
 		<tag>HEAD</tag>
 	</scm>

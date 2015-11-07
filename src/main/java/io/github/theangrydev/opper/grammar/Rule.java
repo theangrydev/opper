@@ -1,5 +1,6 @@
 package io.github.theangrydev.opper.grammar;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public class Rule {
@@ -36,6 +37,10 @@ public class Rule {
 
 	public Symbol derivation(int dotPosition) {
 		return derivation.symbolAt(dotPosition);
+	}
+
+	public List<Symbol> derivation() {
+		return derivation.symbols();
 	}
 
 	public Symbol derivationPrefix() {

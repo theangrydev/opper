@@ -18,6 +18,10 @@ public class Location {
 		return new Location(startLine, startCharacter, endLine, endCharacter);
 	}
 
+	public Location end() {
+		return location(endLine, endCharacter, endLine, endCharacter);
+	}
+
 	public static Location between(Location start, Location end) {
 		return location(start.startLine, start.startCharacter, end.endLine, end.endCharacter);
 	}

@@ -44,6 +44,9 @@ public class ParseTreeNode extends ParseTree {
 
 	@Override
 	public Location location() {
+		if (children.isEmpty()) {
+			return Location.location(0, 0, 0, 0);
+		}
 		return Location.between(firstChild().location(), lastChild().location());
 	}
 

@@ -21,10 +21,10 @@ public class EmptyParserTest {
 	@Table({
 		@Row({"", "true"}),
 		@Row({"ant", "true"}),
-		@Row({"ant bat", "true"}),
+		@Row({"ant bat", "true"})
 	})
 	@Test
-	public void shouldRecogniseABNFGrammar(String spaceSeperatedCorpus, String shouldParse) {
+	public void shouldRecogniseAGrammarWithAnEmptySymbol(String spaceSeperatedCorpus, String shouldParse) {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("LIST")
@@ -38,8 +38,49 @@ public class EmptyParserTest {
 
 		Scanner scanner = FixedScanner.scanner(grammar, Splitter.on(' ').omitEmptyStrings().split(spaceSeperatedCorpus));
 
-		Parser parser = new EarlyParserFactory(new SystemOutLogger(), grammar).parser( scanner);
+		Parser parser = new EarlyParserFactory(new SystemOutLogger(), grammar).parser(scanner);
 
-		assertThat(parser.parse().isPresent()).isEqualTo(valueOf(shouldParse));
+		assertThat(parser.parse().isPresent()).describedAs(spaceSeperatedCorpus + " should parse as " + shouldParse).isEqualTo(valueOf(shouldParse));
+	}
+
+	@Table({
+		@Row({"( A B ; A B ; A B )", "true"}),
+		@Row({"( A ; A B ; A B )", "false"}),
+		@Row({"( A B ; A ; A B )", "false"}),
+		@Row({"( A B ; A B ; A )", "false"}),
+		@Row({"( A B ; A B ; )", "true"}),
+		@Row({"( A ; A B ; )", "false"}),
+		@Row({"( A B ; A ; )", "false"}),
+		@Row({"( ; A B ; A B )", "true"}),
+		@Row({"( ; A ; A B )", "false"}),
+		@Row({"( ; A B ; A )", "false"}),
+		@Row({"( A B ; ; A B )", "true"}),
+		@Row({"( A ; ; A B )", "false"}),
+		@Row({"( A B ; ; A )", "false"}),
+		@Row({"( A B ; ; )", "true"}),
+		@Row({"( A ; ; )", "false"}),
+		@Row({"(  ; A B ; )", "true"}),
+		@Row({"(  ; A ; )", "false"}),
+		@Row({"(  ; ; A B )", "true"}),
+		@Row({"(  ; ; A )", "false"}),
+		@Row({"( ; ; )", "true"})
+	})
+	@Test
+	public void shouldRecogniseAGrammarWithMultipleEmptySymbols(String spaceSeperatedCorpus, String shouldParse) {
+		Grammar grammar = new GrammarBuilder()
+			.withAcceptanceSymbol("ACCEPT")
+			.withStartSymbol("PROGRAM")
+			.withEmptySymbol("EMPTY")
+			.withRule("PROGRAM", "(", "LIST", ";", "LIST", ";", "LIST", ")")
+			.withRule("LIST", "EMPTY")
+			.withRule("LIST", "LIST", "ITEM")
+			.withRule("ITEM", "A", "B")
+			.build();
+
+		Scanner scanner = FixedScanner.scanner(grammar, Splitter.on(' ').omitEmptyStrings().split(spaceSeperatedCorpus));
+
+		Parser parser = new EarlyParserFactory(new SystemOutLogger(), grammar).parser(scanner);
+
+		assertThat(parser.parse().isPresent()).describedAs(spaceSeperatedCorpus + " should parse as " + shouldParse).isEqualTo(valueOf(shouldParse));
 	}
 }

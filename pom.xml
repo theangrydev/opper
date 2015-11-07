@@ -84,7 +84,7 @@
 		<!-- Dependencies -->
 		<assertj.core.version>3.1.0</assertj.core.version>
 		<mockito.version>1.10.19</mockito.version>
-		<yatspec.version>1.11</yatspec.version>
+		<yatspec.version>1.14</yatspec.version>
 		<junit.version>4.12</junit.version>
 		<guava.version>18.0</guava.version>
 		<fastutil.version>7.0.7</fastutil.version>

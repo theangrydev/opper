@@ -88,10 +88,10 @@ public class DottedRule {
 			string.append(rule.derivation(i));
 			string.append(" ");
 		}
-		string.append(". ");
+		string.append(".");
 		for (int i = dotPosition; i < rule.derivationLength(); i++) {
-			string.append(rule.derivation(i));
 			string.append(" ");
+			string.append(rule.derivation(i));
 		}
 		return string.toString();
 	}

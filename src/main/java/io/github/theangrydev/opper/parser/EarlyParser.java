@@ -4,6 +4,7 @@ import io.github.theangrydev.opper.common.Logger;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.parser.early.*;
+import io.github.theangrydev.opper.parser.precomputed.nullable.NullableSymbols;
 import io.github.theangrydev.opper.parser.precomputed.prediction.RulePrediction;
 import io.github.theangrydev.opper.parser.precomputed.recursion.RightRecursion;
 import io.github.theangrydev.opper.parser.tree.ParseTree;
@@ -12,6 +13,7 @@ import io.github.theangrydev.opper.scanner.Location;
 import io.github.theangrydev.opper.scanner.ScannedSymbol;
 import io.github.theangrydev.opper.scanner.Scanner;
 
+import java.util.List;
 import java.util.Optional;
 
 public class EarlyParser implements Parser {
@@ -21,6 +23,7 @@ public class EarlyParser implements Parser {
 	private final Scanner scanner;
 	private final RulePrediction rulePrediction;
 	private final RightRecursion rightRecursion;
+	private final NullableSymbols nullableSymbols;
 
 	private TransitionsEarlySetsBySymbol initialTransitions;
 	private TransitionsEarlySetsBySymbol previousTransitions;
@@ -28,9 +31,10 @@ public class EarlyParser implements Parser {
 	private EarlySet currentEarlySet;
 	private int currentEarlySetIndex;
 
-	public EarlyParser(Logger logger, Grammar grammar, RightRecursion rightRecursion, RulePrediction rulePrediction, Scanner scanner) {
+	public EarlyParser(Logger logger, Grammar grammar, RightRecursion rightRecursion, RulePrediction rulePrediction, NullableSymbols nullableSymbols, Scanner scanner) {
 		this.logger = logger;
 		this.grammar = grammar;
+		this.nullableSymbols = nullableSymbols;
 		this.scanner = scanner;
 		this.rightRecursion = rightRecursion;
 		this.rulePrediction = rulePrediction;
@@ -64,10 +68,6 @@ public class EarlyParser implements Parser {
 		previousTransitions = currentTransitions;
 		addEarlyItem(new TraditionalEarlyItem(currentTransitions, rulePrediction.initial()));
 		memoizeTransitions();
-
-		addItemsThatCanAdvanceGivenSymbol(grammar.emptySymbol(), "", Location.location(0, 0, 0, 0));
-		advanceItemsThatWereWaitingOnCompletions();
-		memoizeTransitions();
 		debug();
 	}
 
@@ -84,7 +84,6 @@ public class EarlyParser implements Parser {
 
 		Location location = scannedSymbol.location();
 		addItemsThatCanAdvanceGivenSymbol(symbol, scannedSymbol.content(), location);
-		addItemsThatCanAdvanceGivenSymbol(grammar.emptySymbol(), "", location);
 	}
 
 	private void addItemsThatCanAdvanceGivenSymbol(Symbol symbol, String content, Location location) {
@@ -143,15 +142,21 @@ public class EarlyParser implements Parser {
 	}
 
 	private void addEarlyItem(EarlyItem earlyItem) {
-		currentEarlySet.addIfNew(earlyItem);
-		if (!earlyItem.isComplete()) {
-			predict(earlyItem);
+		if (!currentEarlySet.contains(earlyItem)) {
+			currentEarlySet.add(earlyItem);
+			if (!earlyItem.isComplete()) {
+				predict(earlyItem);
+			}
 		}
 	}
 
 	private void predict(EarlyItem earlyItem) {
-		for (DottedRule predicted : rulePrediction.rulesThatCanBeTriggeredBy(earlyItem.postDot())) {
-			currentEarlySet.addIfNew(new TraditionalEarlyItem(currentTransitions, predicted));
+		List<DottedRule> dottedRules = rulePrediction.rulesThatCanBeTriggeredBy(earlyItem.postDot());
+		for (DottedRule predicted : dottedRules) {
+			addEarlyItem(new TraditionalEarlyItem(currentTransitions, predicted));
+			if (nullableSymbols.isNullable(predicted.trigger())) {
+				addEarlyItem(earlyItem.advanceEmpty());
+			}
 		}
 	}
 

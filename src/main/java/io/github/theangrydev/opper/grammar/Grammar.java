@@ -8,6 +8,7 @@ public interface Grammar {
 	Rule acceptanceRule();
 	Symbol acceptanceSymbol();
 	Symbol symbolByName(String name);
+	List<Symbol> symbolsByName(String... names);
 	Rule ruleByDefinition(String... definition);
 	Symbol emptySymbol();
 }

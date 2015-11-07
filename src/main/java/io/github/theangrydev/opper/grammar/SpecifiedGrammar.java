@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
+
 public class SpecifiedGrammar implements Grammar {
 
 	private final List<Symbol> symbols;
@@ -47,6 +50,11 @@ public class SpecifiedGrammar implements Grammar {
 	@Override
 	public Symbol symbolByName(String name) {
 		return symbolsByName.get(name);
+	}
+
+	@Override
+	public List<Symbol> symbolsByName(String... names) {
+		return stream(names).map(this::symbolByName).collect(toList());
 	}
 
 	@Override

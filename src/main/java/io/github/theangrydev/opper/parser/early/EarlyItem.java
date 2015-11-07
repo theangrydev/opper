@@ -51,6 +51,10 @@ public abstract class EarlyItem {
 
 	protected abstract EarlyItem advance();
 
+	public EarlyItem advanceEmpty() {
+		return advance("", parseTree.location().end());
+	}
+
 	public EarlyItem advance(String content, Location location) {
 		EarlyItem advance = advance();
 		advance.parseTree.withContent(content, location);

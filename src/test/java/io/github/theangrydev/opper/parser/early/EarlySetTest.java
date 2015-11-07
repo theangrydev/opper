@@ -17,13 +17,13 @@ public class EarlySetTest implements WithAssertions {
 		TraditionalEarlyItem newItem = createEarlyItem();
 
 		EarlySet earlySet = new EarlySet(new GrammarBuilder().build());
-		earlySet.addIfNew(oldItem);
+		earlySet.add(oldItem);
 
 		List<EarlyItem> itemsSeen = new ArrayList<>();
 		boolean addedNewItem = false;
 		for (EarlyItem earlyItem : earlySet) {
 			if (!addedNewItem) {
-				earlySet.addIfNew(newItem);
+				earlySet.add(newItem);
 				addedNewItem = true;
 			}
 			itemsSeen.add(earlyItem);

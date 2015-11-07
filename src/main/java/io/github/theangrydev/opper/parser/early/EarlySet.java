@@ -18,10 +18,8 @@ public class EarlySet implements Iterable<EarlyItem> {
 		this.earlyItems = new ObjectArrayList<>();
 	}
 
-	public void addIfNew(EarlyItem earlyItem) {
-		if (!contains(earlyItem)) {
-			earlyItems.add(earlyItem);
-		}
+	public void add(EarlyItem earlyItem) {
+		earlyItems.add(earlyItem);
 	}
 
 	public boolean isEmpty() {
@@ -69,7 +67,7 @@ public class EarlySet implements Iterable<EarlyItem> {
 		return contains;
 	}
 
-	private boolean contains(EarlyItem earlyItem) {
+	public boolean contains(EarlyItem earlyItem) {
 		for (int i = earlyItems.size() - 1; i >= 0; i--) {
 			if (earlyItems.get(i).sameAs(earlyItem)) {
 				return true;

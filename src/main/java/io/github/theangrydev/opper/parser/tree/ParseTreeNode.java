@@ -70,7 +70,7 @@ public class ParseTreeNode extends ParseTree {
 
 	@Override
 	public String toString() {
-		return children.toString();
+		return rule().toString() + children.toString();
 	}
 
 	public ParseTree firstChild() {

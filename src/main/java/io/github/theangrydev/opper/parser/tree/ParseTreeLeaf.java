@@ -55,6 +55,6 @@ public class ParseTreeLeaf extends ParseTree {
 
 	@Override
 	public String toString() {
-		return content;
+		return rule().toString() + content;
 	}
 }

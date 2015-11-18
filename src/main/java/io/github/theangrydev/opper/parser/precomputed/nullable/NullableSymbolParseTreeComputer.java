@@ -18,8 +18,11 @@
  */
 package io.github.theangrydev.opper.parser.precomputed.nullable;
 
-import io.github.theangrydev.opper.grammar.Rule;
+import io.github.theangrydev.opper.grammar.Symbol;
+import io.github.theangrydev.opper.parser.tree.ParseTree;
 
-public interface NullableRuleComputer {
-	boolean isNullable(Rule rule);
+import java.util.Optional;
+
+public interface NullableSymbolParseTreeComputer {
+	Optional<ParseTree> nullParseTree(Symbol symbol);
 }

@@ -22,7 +22,7 @@ import io.github.theangrydev.opper.common.Logger;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.parser.early.*;
-import io.github.theangrydev.opper.parser.precomputed.nullable.NullableSymbols;
+import io.github.theangrydev.opper.parser.precomputed.nullable.NullableSymbolParseTrees;
 import io.github.theangrydev.opper.parser.precomputed.prediction.RulePrediction;
 import io.github.theangrydev.opper.parser.precomputed.recursion.RightRecursion;
 import io.github.theangrydev.opper.parser.tree.ParseTree;
@@ -41,7 +41,7 @@ public class EarlyParser implements Parser {
 	private final Scanner scanner;
 	private final RulePrediction rulePrediction;
 	private final RightRecursion rightRecursion;
-	private final NullableSymbols nullableSymbols;
+	private final NullableSymbolParseTrees nullableSymbolParseTrees;
 
 	private TransitionsEarlySetsBySymbol initialTransitions;
 	private TransitionsEarlySetsBySymbol previousTransitions;
@@ -49,11 +49,11 @@ public class EarlyParser implements Parser {
 	private EarlySet currentEarlySet;
 	private int currentEarlySetIndex;
 
-	public EarlyParser(Logger logger, Grammar grammar, RightRecursion rightRecursion, RulePrediction rulePrediction, NullableSymbols nullableSymbols, Scanner scanner) {
+	public EarlyParser(Logger logger, Grammar grammar, RightRecursion rightRecursion, RulePrediction rulePrediction, NullableSymbolParseTrees nullableSymbolParseTrees, Scanner scanner) {
 		this.logger = logger;
 		this.grammar = grammar;
-		this.nullableSymbols = nullableSymbols;
 		this.scanner = scanner;
+		this.nullableSymbolParseTrees = nullableSymbolParseTrees;
 		this.rightRecursion = rightRecursion;
 		this.rulePrediction = rulePrediction;
 		this.currentEarlySet = new EarlySet(grammar);
@@ -172,10 +172,12 @@ public class EarlyParser implements Parser {
 		List<DottedRule> dottedRules = rulePrediction.rulesThatCanBeTriggeredBy(earlyItem.postDot());
 		for (DottedRule predicted : dottedRules) {
 			addEarlyItem(new TraditionalEarlyItem(currentTransitions, predicted));
-			if (nullableSymbols.isNullable(predicted.trigger())) {
-				addEarlyItem(earlyItem.advanceEmpty());
-			}
+			advanceEarlyItemIfPredictedIsNullable(earlyItem, predicted);
 		}
+	}
+
+	private void advanceEarlyItemIfPredictedIsNullable(EarlyItem earlyItem, DottedRule predicted) {
+		nullableSymbolParseTrees.nullableSymbolParseTree(predicted.trigger()).ifPresent(parseTree -> addEarlyItem(earlyItem.advance(parseTree)));
 	}
 
 	private void debug() {

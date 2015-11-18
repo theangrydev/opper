@@ -20,8 +20,6 @@ package io.github.theangrydev.opper.parser.precomputed.nullable;
 
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
-import io.github.theangrydev.opper.parser.precomputed.prediction.ComputedRulePrediction;
-import io.github.theangrydev.opper.parser.precomputed.prediction.PrecomputedRulePrediction;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
@@ -40,25 +38,38 @@ public class NullableSymbolComputerTest implements WithAssertions {
 			.withRule("D", "SOME")
 			.build();
 
-		NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new CachingNullableRuleComputer(grammar, new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(grammar))));
+		NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar));
 
-		assertThat(computer.computeNullableSymbols()).containsOnlyElementsOf(grammar.symbolsByName("A'", "C"));
+		assertThat(computer.computeNullableSymbols().keySet()).containsOnlyElementsOf(grammar.symbolsByName("A'", "C"));
 	}
 
 	@Test
 	public void computesNullableSymbolsForRightRecursiveGrammar() {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
-			.withStartSymbol("START")
+			.withStartSymbol("LIST")
 			.withEmptySymbol("NONE")
-			.withRule("START", "REPEATED", "START")
-			.withRule("START", "REPEATED")
-			.withRule("REPEATED", "NONE")
-			.withRule("REPEATED", "SOME")
+			.withRule("LIST", "STATEMENT", "LIST")
+			.withRule("LIST", "NONE")
 			.build();
 
-		NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new CachingNullableRuleComputer(grammar, new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(grammar))));
+		NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar));
 
-		assertThat(computer.computeNullableSymbols()).containsOnlyElementsOf(grammar.symbolsByName("REPEATED"));
+		assertThat(computer.computeNullableSymbols().keySet()).containsOnlyElementsOf(grammar.symbolsByName("ACCEPT", "LIST"));
+	}
+
+	@Test
+	public void computesNullableSymbolsForLeftRecursiveGrammar() {
+		Grammar grammar = new GrammarBuilder()
+			.withAcceptanceSymbol("ACCEPT")
+			.withStartSymbol("LIST")
+			.withEmptySymbol("NONE")
+			.withRule("LIST", "LIST", "STATEMENT")
+			.withRule("LIST", "NONE")
+			.build();
+
+		NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar));
+
+		assertThat(computer.computeNullableSymbols().keySet()).containsOnlyElementsOf(grammar.symbolsByName("ACCEPT", "LIST"));
 	}
 }

@@ -19,6 +19,7 @@
 package io.github.theangrydev.opper.parser.early;
 
 import io.github.theangrydev.opper.grammar.Symbol;
+import io.github.theangrydev.opper.parser.tree.ParseTree;
 import io.github.theangrydev.opper.parser.tree.ParseTreeNode;
 import io.github.theangrydev.opper.scanner.Location;
 
@@ -69,10 +70,6 @@ public abstract class EarlyItem {
 
 	protected abstract EarlyItem advance();
 
-	public EarlyItem advanceEmpty() {
-		return advance("", parseTree.location().end());
-	}
-
 	public EarlyItem advance(String content, Location location) {
 		EarlyItem advance = advance();
 		advance.parseTree.withContent(content, location);
@@ -80,8 +77,12 @@ public abstract class EarlyItem {
 	}
 
 	public EarlyItem advance(EarlyItem earlyItem) {
+		return advance(earlyItem.parseTree);
+	}
+
+	public EarlyItem advance(ParseTree parseTree) {
 		EarlyItem advance = advance();
-		advance.parseTree.withChild(earlyItem.parseTree);
+		advance.parseTree.withChild(parseTree);
 		return advance;
 	}
 

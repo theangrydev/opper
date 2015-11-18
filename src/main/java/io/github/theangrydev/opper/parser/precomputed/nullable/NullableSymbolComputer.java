@@ -19,24 +19,30 @@
 package io.github.theangrydev.opper.parser.precomputed.nullable;
 
 import io.github.theangrydev.opper.grammar.Grammar;
-import io.github.theangrydev.opper.grammar.Rule;
 import io.github.theangrydev.opper.grammar.Symbol;
+import io.github.theangrydev.opper.parser.tree.ParseTree;
 
-import java.util.Set;
+import java.util.Map;
+import java.util.Optional;
 
-import static java.util.stream.Collectors.toSet;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 
 public class NullableSymbolComputer {
 
 	private final Grammar grammar;
-	private final NullableRuleComputer nullableRuleComputer;
+	private final NullableSymbolParseTreeComputer nullableSymbolParseTreeComputer;
 
-	public NullableSymbolComputer(Grammar grammar, NullableRuleComputer nullableRuleComputer) {
+	public NullableSymbolComputer(Grammar grammar, NullableSymbolParseTreeComputer nullableSymbolParseTreeComputer) {
 		this.grammar = grammar;
-		this.nullableRuleComputer = nullableRuleComputer;
+		this.nullableSymbolParseTreeComputer = nullableSymbolParseTreeComputer;
 	}
 
-	public Set<Symbol> computeNullableSymbols() {
-		return grammar.rules().stream().filter(nullableRuleComputer::isNullable).map(Rule::trigger).collect(toSet());
+	public Map<Symbol, ParseTree> computeNullableSymbols() {
+		return grammar.symbols().stream()
+			.map(nullableSymbolParseTreeComputer::nullParseTree)
+			.filter(Optional::isPresent)
+			.map(Optional::get)
+			.collect(toMap(ParseTree::trigger, identity()));
 	}
 }

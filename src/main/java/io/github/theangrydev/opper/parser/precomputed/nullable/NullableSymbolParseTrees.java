@@ -20,23 +20,28 @@ package io.github.theangrydev.opper.parser.precomputed.nullable;
 
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.Symbol;
+import io.github.theangrydev.opper.parser.tree.ParseTree;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 
-import java.util.Set;
+import java.util.Map;
+import java.util.Optional;
 
-public class NullableSymbols {
+public class NullableSymbolParseTrees {
 
-	private final boolean[] nullableSymbols;
+	private final ObjectList<Optional<ParseTree>> nullableSymbols;
 
-	public NullableSymbols(Grammar grammar, NullableSymbolComputer nullableSymbolComputer) {
+	public NullableSymbolParseTrees(Grammar grammar, NullableSymbolComputer nullableSymbolComputer) {
 		int symbols = grammar.symbols().size();
-		this.nullableSymbols = new boolean[symbols];
-		Set<Symbol> computedNullableSymbols = nullableSymbolComputer.computeNullableSymbols();
+		this.nullableSymbols = new ObjectArrayList<>(symbols);
+		nullableSymbols.size(symbols);
+		Map<Symbol, ParseTree> computedNullableSymbols = nullableSymbolComputer.computeNullableSymbols();
 		for (Symbol symbol : grammar.symbols()) {
-			nullableSymbols[symbol.id()] = computedNullableSymbols.contains(symbol);
+			nullableSymbols.set(symbol.id(), Optional.ofNullable(computedNullableSymbols.get(symbol)));
 		}
 	}
 
-	public boolean isNullable(Symbol symbol) {
-		return nullableSymbols[symbol.id()];
+	public Optional<ParseTree> nullableSymbolParseTree(Symbol symbol) {
+		return nullableSymbols.get(symbol.id());
 	}
 }

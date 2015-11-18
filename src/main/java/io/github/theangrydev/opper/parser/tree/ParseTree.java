@@ -19,6 +19,7 @@
 package io.github.theangrydev.opper.parser.tree;
 
 import io.github.theangrydev.opper.grammar.Rule;
+import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.scanner.Location;
 
 import java.util.List;
@@ -37,4 +38,8 @@ public abstract class ParseTree {
 	public abstract String content();
 	public abstract List<ParseTree> children();
 	public abstract Location location();
+
+	public Symbol trigger() {
+		return rule().trigger();
+	}
 }

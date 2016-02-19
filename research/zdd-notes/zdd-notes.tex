@@ -1,0 +1,62 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\title{ZDD Notes}
+\author{Liam Williams}
+
+\newcommand*\negation[1]{\bar{#1}}
+\newcommand*\union[1]{\cup{#1}}
+
+\begin{document}
+
+\section{Definitions}
+
+\begin{definition}
+The \textit{Boolean space} $B$ is the set with elements $\{0,1\}$.
+\end{definition}
+
+\begin{definition}
+A \textit{Boolean variable} is either the constant $0 \in B$ or $1 \in B$.
+\end{definition}
+
+\begin{definition}
+The \textit{negation} of a Boolean variable $b$ is denoted $\negation{b}$ and is such that: $\negation{0} = 1$ and $\negation{1} = 0$.
+\end{definition}
+
+\begin{definition}
+A \textit{literal} is a Boolean variable or its negation, e.g. $a$, $\negation{b}$.
+\end{definition}
+
+\begin{definition}
+A \textit{product}, or \textit{cube} is a Boolean product of literals, e.g. $b\negation{c} \in B^2$.
+\end{definition}
+
+\begin{definition}
+A \textit{cover} is a set of products, e.g. $\{b\negation{c}, b\} \subset B^2$.
+\end{definition}
+
+\begin{definition}
+The \textit{cardinality} of a cover $C$ is the number of cubes in the cover. It is denoted $|C|$, e.g. $|\{ab\negation{c}, b\}| = 2$.
+\end{definition}
+
+\begin{definition}
+A \textit{completely specified Boolean function (CSF)} is a function of the form $f:B^k \rightarrow B$ for some $k \in \mathbb{N}$.
+\end{definition}
+
+\begin{definition}
+The Boolean function $1$ is the constant boolean function that always maps to $1 \in B$.
+\end{definition}
+
+\begin{definition}
+A \textit{complement}, or a negative phase, of a cover $C$ is a cover $D$ such that $C \union D$ is a \textit{tautology}, that is, the Boolean function $1$.
+\end{definition}
+
+
+\end{document}

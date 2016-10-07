@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015 Liam Williams <liam.williams@zoho.com>.
  *
  * This file is part of opper.

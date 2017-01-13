@@ -42,7 +42,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class ScannerPerformanceTest implements WithAssertions {
 
-	public static final int NUMBER_OF_CHARACTERS = 10000;
+	private static final int NUMBER_OF_CHARACTERS = 100000;
 
 	@Test
 	public void shouldScanASimpleExpression() throws IOException {
@@ -89,7 +89,10 @@ public class ScannerPerformanceTest implements WithAssertions {
 
 		scanAllSymbols(scanner);
 
-		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
+		long elapsed = stopwatch.elapsed(MILLISECONDS);
+		System.out.println("Took " + elapsed + "ms");
+
+		assertThat(elapsed).describedAs("Time taken should be less than 100ms").isLessThan(100);
 	}
 
 	private CharArrayReader characters(int numberOfCharacters) {

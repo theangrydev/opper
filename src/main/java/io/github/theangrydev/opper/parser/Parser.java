@@ -20,8 +20,9 @@ package io.github.theangrydev.opper.parser;
 
 import io.github.theangrydev.opper.parser.tree.ParseTree;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public interface Parser {
-	Optional<ParseTree> parse();
+	Optional<ParseTree> parse() throws IOException;
 }

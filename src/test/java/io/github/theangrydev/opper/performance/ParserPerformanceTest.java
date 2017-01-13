@@ -28,6 +28,8 @@ import io.github.theangrydev.opper.scanner.Scanner;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import java.io.IOException;
+
 import static io.github.theangrydev.opper.scanner.FixedScanner.scanner;
 import static io.github.theangrydev.opper.scanner.Location.location;
 import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
@@ -39,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ParserPerformanceTest {
 
 	@Test
-	public void shouldRecogniseADirectlyRightRecursiveGrammarInGoodTime() {
+	public void shouldRecogniseADirectlyRightRecursiveGrammarInGoodTime() throws IOException {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")
@@ -56,7 +58,7 @@ public class ParserPerformanceTest {
 	}
 
 	@Test
-	public void shouldRecogniseALeftRecursiveGrammarInGoodTime() {
+	public void shouldRecogniseALeftRecursiveGrammarInGoodTime() throws IOException {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")
@@ -73,7 +75,7 @@ public class ParserPerformanceTest {
 	}
 
 	@Test
-	public void shouldRecogniseAGrammarWithAnUnmarkedMiddleRecursionInGoodTime() {
+	public void shouldRecogniseAGrammarWithAnUnmarkedMiddleRecursionInGoodTime() throws IOException {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")

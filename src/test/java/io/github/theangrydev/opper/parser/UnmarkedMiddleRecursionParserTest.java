@@ -29,6 +29,8 @@ import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
+
 import static io.github.theangrydev.opper.scanner.FixedScanner.scanner;
 import static io.github.theangrydev.opper.scanner.Location.location;
 import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
@@ -48,7 +50,7 @@ public class UnmarkedMiddleRecursionParserTest implements WithAssertions {
 		@Row({"6", "true"})
 	})
 	@Test
-	public void shouldRecogniseAGrammarWithAnUnmarkedMiddleRecursion(String repetitions, String shouldParse) {
+	public void shouldRecogniseAGrammarWithAnUnmarkedMiddleRecursion(String repetitions, String shouldParse) throws IOException {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")

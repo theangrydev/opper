@@ -25,6 +25,7 @@ import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,17 +46,19 @@ import static java.util.Collections.singletonList;
 public class ScannerTest implements WithAssertions {
 
 	@Test
-	public void shouldBlowUpWhenAnUnsupportedCharacterIsScanned() {
+	public void shouldBlowUpWhenAnUnsupportedCharacterIsScanned() throws IOException {
 		Symbol a = new Symbol(1, "a");
 		SymbolDefinition aDefinition = definition(a, character('a'));
 
 		Scanner scanner = new BFAScannerFactory(singletonList(aDefinition)).scanner(new StringReader("zzazzazzz"));
 
-		assertThatThrownBy(() -> allSymbolsThatCanBeScanned(scanner)).isInstanceOf(UnsupportedOperationException.class);
+		assertThatThrownBy(() -> allSymbolsThatCanBeScanned(scanner))
+				.hasMessage("TODO: handle character sequences that are not scannable")
+				.isInstanceOf(UnsupportedOperationException.class);
 	}
 
 	@Test
-	public void shouldRecordLocationInformation() {
+	public void shouldRecordLocationInformation() throws IOException {
 		Symbol content = new Symbol(1, "content");
 		SymbolDefinition aDefinition = definition(content, either(character('a'), concatenate(character('b'), character('c'))));
 
@@ -74,7 +77,7 @@ public class ScannerTest implements WithAssertions {
 	}
 
 	@Test
-	public void shouldHandleMultipleSymbolDefinitions() {
+	public void shouldHandleMultipleSymbolDefinitions() throws IOException {
 		GrammarBuilder grammarBuilder = new GrammarBuilder();
 		Symbol identifier = grammarBuilder.symbolByName("Identifier");
 		Symbol integer = grammarBuilder.symbolByName("Integer");
@@ -92,7 +95,7 @@ public class ScannerTest implements WithAssertions {
 	}
 
 	@Test
-	public void shouldHandleAnyCharacter() {
+	public void shouldHandleAnyCharacter() throws IOException {
 		Symbol a = new Symbol(1, "a");
 		SymbolDefinition aDefinition = definition(a, characterClass(anyCharacter()));
 
@@ -101,7 +104,7 @@ public class ScannerTest implements WithAssertions {
 	}
 
 	@Test
-	public void shouldHandleNotCharacters() {
+	public void shouldHandleNotCharacters() throws IOException {
 		Symbol a = new Symbol(1, "a");
 		SymbolDefinition aDefinition = definition(a, characterClass(notCharacaters("abcd")));
 
@@ -156,7 +159,7 @@ public class ScannerTest implements WithAssertions {
 		return endCharacter;
 	}
 
-	private List<Location> allLocationsThatCanBeScanned(Scanner scanner) {
+	private List<Location> allLocationsThatCanBeScanned(Scanner scanner) throws IOException {
 		List<Location> accepted = new ArrayList<>();
 		while (scanner.hasNextSymbol()) {
 			accepted.add(scanner.nextSymbol().location());
@@ -164,7 +167,7 @@ public class ScannerTest implements WithAssertions {
 		return accepted;
 	}
 
-	private List<Symbol> allSymbolsThatCanBeScanned(Scanner scanner) {
+	private List<Symbol> allSymbolsThatCanBeScanned(Scanner scanner) throws IOException {
 		List<Symbol> accepted = new ArrayList<>();
 		while (scanner.hasNextSymbol()) {
 			accepted.add(scanner.nextSymbol().symbol());

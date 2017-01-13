@@ -25,12 +25,14 @@ import io.github.theangrydev.opper.scanner.FixedScanner;
 import io.github.theangrydev.opper.scanner.Scanner;
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class IndireclytRightRecursiveParserTest {
 
 	@Test
-	public void shouldRecogniseAnIndirectlyRightRecursiveGrammar() {
+	public void shouldRecogniseAnIndirectlyRightRecursiveGrammar() throws IOException {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")

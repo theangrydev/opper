@@ -23,8 +23,6 @@ import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
 import io.github.theangrydev.opper.scanner.automaton.nfa.State;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 
-import java.util.Optional;
-
 public class BFAAcceptance {
 
 	private final SymbolForAssignment symbolForAssignment;
@@ -54,14 +52,12 @@ public class BFAAcceptance {
 		return acceptingStates;
 	}
 
-	public Optional<Symbol> checkAcceptance(BinaryDecisionDiagram fromFrontier) {
+	public Symbol acceptingSymbol(BinaryDecisionDiagram fromFrontier) {
 		BinaryDecisionDiagram acceptCheck = acceptingStates.and(fromFrontier, acceptCheckBuffer);
 		if (acceptCheck.isZero()) {
-			return Optional.empty();
+			throw new IllegalStateException("The given frontier does not correspond to an accepting state!");
 		}
 		int[] fromStateAssignment = acceptCheck.oneSatisfyingAssignment(fromStateAssignmentBuffer);
-		Symbol acceptedSymbol = symbolForAssignment.symbolForFromState(fromStateAssignment);
-		return Optional.of(acceptedSymbol);
+		return symbolForAssignment.symbolForFromState(fromStateAssignment);
 	}
-
 }

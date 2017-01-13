@@ -31,6 +31,7 @@ import io.github.theangrydev.opper.scanner.Location;
 import io.github.theangrydev.opper.scanner.ScannedSymbol;
 import io.github.theangrydev.opper.scanner.Scanner;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,7 +61,7 @@ public class EarlyParser implements Parser {
 	}
 
 	@Override
-	public Optional<ParseTree> parse() {
+	public Optional<ParseTree> parse() throws IOException {
 		initialize();
 		for (currentEarlySetIndex = 1; scanner.hasNextSymbol(); currentEarlySetIndex++) {
 			prepareIteration();
@@ -95,7 +96,7 @@ public class EarlyParser implements Parser {
 		currentTransitions = new TransitionsEarlySetsBySymbol(grammar.symbols());
 	}
 
-	private void scanNextSymbol() {
+	private void scanNextSymbol() throws IOException {
 		ScannedSymbol scannedSymbol = scanner.nextSymbol();
 		Symbol symbol = scannedSymbol.symbol();
 		logger.log(() -> "Reading " + symbol);

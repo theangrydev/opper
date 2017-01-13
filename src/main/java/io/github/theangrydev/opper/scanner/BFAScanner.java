@@ -23,86 +23,75 @@ import io.github.theangrydev.opper.scanner.automaton.bfa.BFA;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 
 import java.io.IOException;
-import java.io.PushbackReader;
 import java.io.Reader;
-import java.util.Optional;
 
 import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 
 public class BFAScanner implements Scanner {
 
-	private final PushbackReader charactersToParse;
-	private final BFA bfa;
-	private BinaryDecisionDiagram frontier;
-	private StringBuilder nextCharacters;
-	private Position position;
-	private int read;
+	private static final char READER_END_OF_INPUT_MARKER = '\uFFFF'; // this is the result of (char) -1
 
-	public BFAScanner(BFA bfa, Reader charactersToParse) {
+	private final Reader charactersToParse;
+	private final BFA bfa;
+
+	private PositionTracker positionTracker = new PositionTracker();
+	private char character;
+	private StringBuilder symbolCharacters;
+
+	private BFAScanner(BFA bfa, Reader charactersToParse, char firstCharacter) {
 		this.bfa = bfa;
-		this.charactersToParse = new PushbackReader(charactersToParse, 1);
-		this.position = new Position();
+		this.charactersToParse = charactersToParse;
+		this.positionTracker = new PositionTracker();
+		this.character = firstCharacter;
+		this.symbolCharacters = new StringBuilder();
+	}
+
+	public static BFAScanner createBFAScanner(BFA bfa, Reader charactersToParse) throws IOException {
+		char firstCharacter = (char) charactersToParse.read();
+		return new BFAScanner(bfa, charactersToParse, firstCharacter);
 	}
 
 	@Override
-	public ScannedSymbol nextSymbol() {
-		prepareForNextSymbol();
-		BinaryDecisionDiagram lastNonZeroFromFrontier = scanUntilFrontierIsZero();
-		Optional<Symbol> accepted = bfa.checkAcceptance(lastNonZeroFromFrontier);
-		if (!accepted.isPresent()) {
-			throw new UnsupportedOperationException("TODO: handle last non zero from frontier that is not an accepting state, maybe by making checkAcceptance return a Symbol not an Optional<Symbol> and blowing up internally if it is used with a non accepting frontier");
+	public ScannedSymbol nextSymbol() throws IOException {
+		positionTracker.markSymbolStart();
+		symbolCharacters.setLength(0);
+
+		BinaryDecisionDiagram nextFrontier = bfa.initialState();
+		BinaryDecisionDiagram frontier;
+
+		do {
+			frontier = nextFrontier.copy();
+			nextFrontier = bfa.transition(nextFrontier, character);
+
+            if (!nextFrontier.isZero()) {
+                positionTracker.consider(character);
+                symbolCharacters.append(character);
+                frontier.discard();
+				character = (char) charactersToParse.read();
+            }
+        } while (!nextFrontier.isZero());
+
+		if (symbolCharacters.length() == 0) {
+			throw new UnsupportedOperationException("TODO: handle character sequences that are not scannable");
 		}
-		lastNonZeroFromFrontier.discard();
-		pushback((char) read);
-		return acceptedSymbol(accepted.get());
+
+		Symbol acceptingSymbol = bfa.acceptingSymbol(frontier);
+		frontier.discard();
+		return scannedSymbol(acceptingSymbol, symbolCharacters.toString(), positionTracker.currentLocation());
 	}
 
 	@Override
 	public boolean hasNextSymbol() {
-		return read != -1;
+		return character != READER_END_OF_INPUT_MARKER;
 	}
 
-	private BinaryDecisionDiagram scanUntilFrontierIsZero() {
-		BinaryDecisionDiagram lastNonZeroFromFrontier = null;
-	    while (!frontier.isZero()) {
-			read = read();
-			char character = (char) read;
-			frontier = bfa.transition(frontier, character);
-
-			if (!frontier.isZero()) {
-				if (lastNonZeroFromFrontier != null) {
-					lastNonZeroFromFrontier.discard();
-				}
-				lastNonZeroFromFrontier = frontier.copy();
-				position.consider(character);
-				nextCharacters.append(character);
-			}
-		}
-		if (lastNonZeroFromFrontier == null) {
-	    	throw new UnsupportedOperationException("TODO: handle character sequences that are not scannable");
-		}
-		return lastNonZeroFromFrontier;
-	}
-
-	private void pushback(char character) {
-		try {
-			charactersToParse.unread(character);
-		} catch (IOException e) {
-			throw new IllegalStateException(e);
-		}
-	}
-
-	private ScannedSymbol acceptedSymbol(Symbol acceptedSymbol) {
-		return scannedSymbol(acceptedSymbol, nextCharacters.toString(), position.location());
-	}
-
-	private static class Position {
+	private static class PositionTracker {
 		private int currentLineNumber;
 		private int currentCharacterNumber;
 		private int markedLineNumber;
 		private int markedCharacterNumber;
 
-		public Position() {
+		public PositionTracker() {
 			currentLineNumber = 1;
 			currentCharacterNumber = 0;
 			markedCharacterNumber = 1;
@@ -121,22 +110,9 @@ public class BFAScanner implements Scanner {
 			}
 		}
 
-		public Location location() {
+		public Location currentLocation() {
 			return Location.location(markedLineNumber, markedCharacterNumber, currentLineNumber, currentCharacterNumber);
 		}
 	}
 
-	private void prepareForNextSymbol() {
-		nextCharacters = new StringBuilder();
-		frontier = bfa.initialState();
-		position.markSymbolStart();
-	}
-
-	private int read() {
-		try {
-			return charactersToParse.read();
-		} catch (IOException e) {
-			throw new IllegalStateException(e);
-		}
-	}
 }

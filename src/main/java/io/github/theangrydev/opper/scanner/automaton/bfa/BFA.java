@@ -21,8 +21,6 @@ package io.github.theangrydev.opper.scanner.automaton.bfa;
 import io.github.theangrydev.opper.grammar.Symbol;
 import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 
-import java.util.Optional;
-
 public class BFA {
 
 	private final BFATransitions bfaTransitions;
@@ -39,8 +37,8 @@ public class BFA {
 		return initialState.copy();
 	}
 
-	public Optional<Symbol> checkAcceptance(BinaryDecisionDiagram frontier) {
-		return bfaAcceptance.checkAcceptance(frontier);
+	public Symbol acceptingSymbol(BinaryDecisionDiagram frontier) {
+		return bfaAcceptance.acceptingSymbol(frontier);
 	}
 
 	public BinaryDecisionDiagram transition(BinaryDecisionDiagram frontier, char character) {

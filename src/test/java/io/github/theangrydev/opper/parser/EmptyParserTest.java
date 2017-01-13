@@ -30,6 +30,8 @@ import io.github.theangrydev.opper.scanner.Scanner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
+
 import static java.lang.Boolean.valueOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,7 +44,7 @@ public class EmptyParserTest {
 		@Row({"ant bat", "true"})
 	})
 	@Test
-	public void shouldRecogniseAGrammarWithAnEmptySymbol(String spaceSeperatedCorpus, String shouldParse) {
+	public void shouldRecogniseAGrammarWithAnEmptySymbol(String spaceSeperatedCorpus, String shouldParse) throws IOException {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("LIST")
@@ -84,7 +86,7 @@ public class EmptyParserTest {
 		@Row({"( ; ; )", "true"})
 	})
 	@Test
-	public void shouldRecogniseAGrammarWithMultipleEmptySymbols(String spaceSeperatedCorpus, String shouldParse) {
+	public void shouldRecogniseAGrammarWithMultipleEmptySymbols(String spaceSeperatedCorpus, String shouldParse) throws IOException {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("PROGRAM")

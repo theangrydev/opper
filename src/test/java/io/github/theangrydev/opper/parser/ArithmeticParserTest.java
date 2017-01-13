@@ -26,6 +26,8 @@ import io.github.theangrydev.opper.scanner.Scanner;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
  * <pre>
  * <P> ::= <S> # the start rule
@@ -38,7 +40,7 @@ import org.junit.Test;
 public class ArithmeticParserTest implements WithAssertions {
 
 	@Test
-	public void shouldRecogniseALeftRecursiveGrammar() {
+	public void shouldRecogniseALeftRecursiveGrammar() throws IOException {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("P")
 			.withStartSymbol("S")

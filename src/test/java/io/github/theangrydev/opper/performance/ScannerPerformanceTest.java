@@ -28,6 +28,7 @@ import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
 import java.io.CharArrayReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ScannerPerformanceTest implements WithAssertions {
 	public static final int NUMBER_OF_CHARACTERS = 10000;
 
 	@Test
-	public void shouldScanASimpleExpression() {
+	public void shouldScanASimpleExpression() throws IOException {
 		SymbolFactory symbolFactory = new SymbolFactory();
 		List<SymbolDefinition> symbolDefinitions = new ArrayList<>();
 		Expression uppercase = either(character('A'), character('B'), character('C'), character('D'), character('E'), character('F'), character('G'), character('H'), character('I'), character('J'), character('K'), character('L'), character('M'), character('N'), character('O'), character('P'), character('Q'), character('R'), character('S'), character('T'), character('U'), character('V'), character('W'), character('X'), character('Y'), character('Z'));
@@ -97,7 +98,7 @@ public class ScannerPerformanceTest implements WithAssertions {
 		return new CharArrayReader(chars);
 	}
 
-	private void scanAllSymbols(Scanner scanner) {
+	private void scanAllSymbols(Scanner scanner) throws IOException {
 		while (scanner.hasNextSymbol()) {
 			scanner.nextSymbol();
 		}

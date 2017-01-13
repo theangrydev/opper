@@ -26,10 +26,12 @@ import io.github.theangrydev.opper.scanner.Scanner;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
+import java.io.IOException;
+
 public class ParserTest implements WithAssertions {
 
 	@Test
-	public void shouldRecogniseASimpleGrammar() {
+	public void shouldRecogniseASimpleGrammar() throws IOException {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")

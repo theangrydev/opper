@@ -30,6 +30,8 @@ import io.github.theangrydev.opper.scanner.Scanner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
+
 import static java.lang.Boolean.valueOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,7 +50,7 @@ public class BNFParserTest {
 		@Row({"( ( ant , bat ) , cow )", "true"}),
 	})
 	@Test
-	public void shouldRecogniseABNFGrammar(String spaceSeperatedCorpus, String shouldParse) {
+	public void shouldRecogniseABNFGrammar(String spaceSeperatedCorpus, String shouldParse) throws IOException {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("TREE")

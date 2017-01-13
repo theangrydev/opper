@@ -24,6 +24,7 @@ import io.github.theangrydev.opper.scanner.automaton.nfa.NFA;
 import io.github.theangrydev.opper.scanner.automaton.nfa.NFABuilder;
 import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class BFAScannerFactory implements ScannerFactory {
 	}
 
 	@Override
-	public Scanner scanner(Reader charactersToParse) {
-		return new BFAScanner(bfa, charactersToParse);
+	public Scanner scanner(Reader charactersToParse) throws IOException {
+		return BFAScanner.createBFAScanner(bfa, charactersToParse);
 	}
 }

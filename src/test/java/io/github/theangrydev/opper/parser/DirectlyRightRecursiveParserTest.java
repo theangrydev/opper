@@ -24,6 +24,8 @@ import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import io.github.theangrydev.opper.scanner.Scanner;
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static io.github.theangrydev.opper.scanner.FixedScanner.scanner;
 import static io.github.theangrydev.opper.scanner.Location.location;
 import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
@@ -33,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DirectlyRightRecursiveParserTest {
 
 	@Test
-	public void shouldRecogniseADirectlyRightRecursiveGrammar() {
+	public void shouldRecogniseADirectlyRightRecursiveGrammar() throws IOException {
 		Grammar grammar = new GrammarBuilder()
 			.withAcceptanceSymbol("ACCEPT")
 			.withStartSymbol("START")

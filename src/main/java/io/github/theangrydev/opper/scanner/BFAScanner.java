@@ -68,12 +68,13 @@ public class BFAScanner implements Scanner {
 			read = read();
 			char character = (char) read;
 			frontier = bfa.transition(frontier, character);
-			position.consider(character);
+
 			if (!frontier.isZero()) {
 				if (lastNonZeroFromFrontier != null) {
 					lastNonZeroFromFrontier.discard();
 				}
 				lastNonZeroFromFrontier = frontier.copy();
+				position.consider(character);
 				nextCharacters.append(character);
 			}
 		}
@@ -84,7 +85,6 @@ public class BFAScanner implements Scanner {
 	}
 
 	private void pushback(char character) {
-		position.unconsider(character);
 		try {
 			charactersToParse.unread(character);
 		} catch (IOException e) {
@@ -101,7 +101,6 @@ public class BFAScanner implements Scanner {
 		private int currentCharacterNumber;
 		private int markedLineNumber;
 		private int markedCharacterNumber;
-		private int previousLineCharacterNumber;
 
 		public Position() {
 			currentLineNumber = 1;
@@ -109,25 +108,16 @@ public class BFAScanner implements Scanner {
 			markedCharacterNumber = 1;
 		}
 
-		public void mark() {
+		public void markSymbolStart() {
 			markedLineNumber = currentLineNumber;
 			markedCharacterNumber = currentCharacterNumber + 1;
 		}
 
 		public void consider(char character) {
-			previousLineCharacterNumber = currentCharacterNumber;
 			currentCharacterNumber++;
 			if (character == '\n') {
 				currentLineNumber++;
 				currentCharacterNumber = 0;
-			}
-		}
-
-		public void unconsider(char character) {
-			currentCharacterNumber--;
-			if (character == '\n') {
-				currentLineNumber--;
-				currentCharacterNumber = previousLineCharacterNumber;
 			}
 		}
 
@@ -139,7 +129,7 @@ public class BFAScanner implements Scanner {
 	private void prepareForNextSymbol() {
 		nextCharacters = new StringBuilder();
 		frontier = bfa.initialState();
-		position.mark();
+		position.markSymbolStart();
 	}
 
 	private int read() {

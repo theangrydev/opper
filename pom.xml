@@ -24,7 +24,7 @@
 
 	<groupId>io.github.theangrydev</groupId>
 	<artifactId>opper</artifactId>
-	<version>0.1.5-SNAPSHOT</version>
+	<version>0.1.5</version>
 
 	<licenses>
 		<license>
@@ -40,7 +40,7 @@
 	<scm>
 		<connection>scm:git:https://github.com/${github.username}/${project.artifactId}.git</connection>
 		<url>https://github.com/${github.username}/${project.artifactId}</url>
-		<tag>HEAD</tag>
+		<tag>opper-0.1.5</tag>
 	</scm>
 
 	<distributionManagement>

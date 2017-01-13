@@ -50,7 +50,7 @@ public class BFAScanner implements Scanner {
 		BinaryDecisionDiagram lastNonZeroFromFrontier = scanUntilFrontierIsZero();
 		Optional<Symbol> accepted = bfa.checkAcceptance(lastNonZeroFromFrontier);
 		if (!accepted.isPresent()) {
-			throw new UnsupportedOperationException("TODO: handle last non zero from frontier that is not an accepting state");
+			throw new UnsupportedOperationException("TODO: handle last non zero from frontier that is not an accepting state, maybe by making checkAcceptance return a Symbol not an Optional<Symbol> and blowing up internally if it is used with a non accepting frontier");
 		}
 		lastNonZeroFromFrontier.discard();
 		pushback((char) read);

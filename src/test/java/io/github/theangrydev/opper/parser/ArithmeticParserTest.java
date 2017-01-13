@@ -23,9 +23,8 @@ import io.github.theangrydev.opper.scanner.FixedScanner;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import io.github.theangrydev.opper.scanner.Scanner;
+import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
-
-import static org.assertj.core.api.StrictAssertions.assertThat;
 
 /**
  * <pre>
@@ -36,7 +35,7 @@ import static org.assertj.core.api.StrictAssertions.assertThat;
  * </pre>
  * @see <a href="https://en.wikipedia.org/w/index.php?title=Earley_recogniser&oldid=667926718#Example">Early recogniser example</a>
  */
-public class ArithmeticParserTest {
+public class ArithmeticParserTest implements WithAssertions {
 
 	@Test
 	public void shouldRecogniseALeftRecursiveGrammar() {

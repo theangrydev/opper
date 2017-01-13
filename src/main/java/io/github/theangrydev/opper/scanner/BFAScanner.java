@@ -52,30 +52,25 @@ public class BFAScanner implements Scanner {
 
 	@Override
 	public boolean hasNextSymbol() {
-		while (read != -1) {
-			prepareForNextSymbol();
-			BinaryDecisionDiagram lastNonZeroFromFrontier = scanUntilFrontierIsZero();
-			if (lastNonZeroFromFrontier == null) {
-				continue;
-			}
-			Optional<Symbol> accepted = bfa.checkAcceptance(lastNonZeroFromFrontier);
-			lastNonZeroFromFrontier.discard();
-			if (accepted.isPresent()) {
-				pushback((char) read);
-				next = acceptedSymbol(accepted.get());
-				return true;
-			}
+		if (read == -1) {
+			return false;
 		}
-		return false;
+		prepareForNextSymbol();
+		BinaryDecisionDiagram lastNonZeroFromFrontier = scanUntilFrontierIsZero();
+		Optional<Symbol> accepted = bfa.checkAcceptance(lastNonZeroFromFrontier);
+		if (!accepted.isPresent()) {
+			throw new UnsupportedOperationException("TODO: handle last non zero from frontier that is not an accepting state");
+		}
+		lastNonZeroFromFrontier.discard();
+		pushback((char) read);
+		next = acceptedSymbol(accepted.get());
+		return true;
 	}
 
 	private BinaryDecisionDiagram scanUntilFrontierIsZero() {
 		BinaryDecisionDiagram lastNonZeroFromFrontier = null;
-	    while (!frontier.isZero() && read != -1) {
+	    while (!frontier.isZero()) {
 			read = read();
-			if (read == -1) {
-				break;
-			}
 			char character = (char) read;
 			frontier = bfa.transition(frontier, character);
 			position.consider(character);
@@ -86,6 +81,9 @@ public class BFAScanner implements Scanner {
 				lastNonZeroFromFrontier = frontier.copy();
 				nextCharacters.append(character);
 			}
+		}
+		if (lastNonZeroFromFrontier == null) {
+	    	throw new UnsupportedOperationException("TODO: handle character sequences that are not scannable");
 		}
 		return lastNonZeroFromFrontier;
 	}

@@ -22,6 +22,7 @@ import io.github.theangrydev.opper.common.DoNothingLogger;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import io.github.theangrydev.opper.scanner.Scanner;
+import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -30,9 +31,8 @@ import static io.github.theangrydev.opper.scanner.FixedScanner.scanner;
 import static io.github.theangrydev.opper.scanner.Location.location;
 import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 import static java.util.Collections.nCopies;
-import static org.assertj.core.api.StrictAssertions.assertThat;
 
-public class LeftRecursiveParserTest {
+public class LeftRecursiveParserTest implements WithAssertions {
 
 	@Test
 	public void shouldRecogniseALeftRecursiveGrammar() throws IOException, InterruptedException {

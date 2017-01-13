@@ -21,14 +21,12 @@ package io.github.theangrydev.opper.parser.precomputed.nullable;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import io.github.theangrydev.opper.parser.tree.ParseTree;
+import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.StrictAssertions.assertThatThrownBy;
-
-public class NullableSymbolParseTreesTest {
+public class NullableSymbolParseTreesTest implements WithAssertions {
 
 	@Test
 	public void ambiguousNullParsesResultInAnException() {

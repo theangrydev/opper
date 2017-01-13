@@ -23,11 +23,10 @@ import io.github.theangrydev.opper.scanner.FixedScanner;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import io.github.theangrydev.opper.scanner.Scanner;
+import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
-import static org.assertj.core.api.StrictAssertions.assertThat;
-
-public class ParserTest {
+public class ParserTest implements WithAssertions {
 
 	@Test
 	public void shouldRecogniseASimpleGrammar() {

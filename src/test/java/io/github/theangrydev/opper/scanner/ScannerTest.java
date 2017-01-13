@@ -27,6 +27,7 @@ import org.junit.Test;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static io.github.theangrydev.opper.scanner.Location.location;
@@ -38,30 +39,37 @@ import static io.github.theangrydev.opper.scanner.definition.ConcatenateExpressi
 import static io.github.theangrydev.opper.scanner.definition.NotCharacters.notCharacaters;
 import static io.github.theangrydev.opper.scanner.definition.RepeatExpression.repeat;
 import static io.github.theangrydev.opper.scanner.definition.SymbolDefinition.definition;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 public class ScannerTest implements WithAssertions {
 
 	@Test
-	public void shouldNotBlowUpWhenAnUnsupportedCharacterIsScanned() {
+	public void shouldBlowUpWhenAnUnsupportedCharacterIsScanned() {
 		Symbol a = new Symbol(1, "a");
 		SymbolDefinition aDefinition = definition(a, character('a'));
 
 		Scanner scanner = new BFAScannerFactory(singletonList(aDefinition)).scanner(new StringReader("zzazzazzz"));
-		assertThat(allSymbolsThatCanBeScanned(scanner)).containsExactly(a, a);
+
+		assertThatThrownBy(() -> allSymbolsThatCanBeScanned(scanner)).isInstanceOf(UnsupportedOperationException.class);
 	}
 
 	@Test
 	public void shouldRecordLocationInformation() {
-		Symbol a = new Symbol(1, "a");
-		SymbolDefinition aDefinition = definition(a, either(character('a'), concatenate(character('b'), character('c'))));
+		Symbol content = new Symbol(1, "content");
+		SymbolDefinition aDefinition = definition(content, either(character('a'), concatenate(character('b'), character('c'))));
 
-		Scanner scanner = new BFAScannerFactory(singletonList(aDefinition)).scanner(new StringReader("a\nbc\nabcd"));
+		Symbol newLine = new Symbol(2, "new line");
+		SymbolDefinition newLineDefinition = definition(newLine, character('\n'));
+
+		Scanner scanner = new BFAScannerFactory(asList(aDefinition, newLineDefinition)).scanner(new StringReader("a\nbc\nabc"));
 		assertThat(allLocationsThatCanBeScanned(scanner)).containsExactly(
-			location(startLine(1), startCharacter(1), endLine(1), endCharacter(1)),
-			location(startLine(2), startCharacter(1), endLine(2), endCharacter(2)),
-			location(startLine(3), startCharacter(1), endLine(3), endCharacter(1)),
-			location(startLine(3), startCharacter(2), endLine(3), endCharacter(3))
+			location(startLine(1), startCharacter(1), endLine(1), endCharacter(1)), // line 1 a
+			location(startLine(1), startCharacter(2), endLine(2), endCharacter(0)), // line 1 newline
+			location(startLine(2), startCharacter(1), endLine(2), endCharacter(2)), // line 2 bc
+			location(startLine(2), startCharacter(3), endLine(3), endCharacter(0)), // line 2 newline
+			location(startLine(3), startCharacter(1), endLine(3), endCharacter(1)), // line 3 a
+			location(startLine(3), startCharacter(2), endLine(3), endCharacter(3))  // line 3 bc
 		);
 	}
 
@@ -97,8 +105,11 @@ public class ScannerTest implements WithAssertions {
 		Symbol a = new Symbol(1, "a");
 		SymbolDefinition aDefinition = definition(a, characterClass(notCharacaters("abcd")));
 
-		Scanner scanner = new BFAScannerFactory(singletonList(aDefinition)).scanner(new StringReader("1abc23d4"));
-		assertThat(allSymbolsThatCanBeScanned(scanner)).containsExactly(a, a, a, a);
+		Symbol b = new Symbol(2, "b");
+		SymbolDefinition bDefinition = definition(b, either(character('a'), character('b'), character('c'), character('d')));
+
+		Scanner scanner = new BFAScannerFactory(asList(aDefinition, bDefinition)).scanner(new StringReader("1abc23d4"));
+		assertThat(allSymbolsThatCanBeScanned(scanner)).containsExactly(a, b, b, b, a, a, b, a);
 	}
 
 	private Expression identifier() {

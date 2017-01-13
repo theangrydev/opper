@@ -25,6 +25,7 @@ import io.github.theangrydev.opper.common.DoNothingLogger;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import io.github.theangrydev.opper.scanner.Scanner;
+import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -34,10 +35,9 @@ import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 import static java.lang.Boolean.valueOf;
 import static java.lang.Integer.parseInt;
 import static java.util.Collections.nCopies;
-import static org.assertj.core.api.StrictAssertions.assertThat;
 
 @RunWith(TableRunner.class)
-public class UnmarkedMiddleRecursionParserTest {
+public class UnmarkedMiddleRecursionParserTest implements WithAssertions {
 
 	@Table({
 		@Row({"1", "false"}),

@@ -34,7 +34,6 @@ public class BFAScanner implements Scanner {
 	private final PushbackReader charactersToParse;
 	private final BFA bfa;
 	private BinaryDecisionDiagram frontier;
-	private ScannedSymbol next;
 	private StringBuilder nextCharacters;
 	private Position position;
 	private int read;
@@ -47,14 +46,6 @@ public class BFAScanner implements Scanner {
 
 	@Override
 	public ScannedSymbol nextSymbol() {
-		return next;
-	}
-
-	@Override
-	public boolean hasNextSymbol() {
-		if (read == -1) {
-			return false;
-		}
 		prepareForNextSymbol();
 		BinaryDecisionDiagram lastNonZeroFromFrontier = scanUntilFrontierIsZero();
 		Optional<Symbol> accepted = bfa.checkAcceptance(lastNonZeroFromFrontier);
@@ -63,8 +54,12 @@ public class BFAScanner implements Scanner {
 		}
 		lastNonZeroFromFrontier.discard();
 		pushback((char) read);
-		next = acceptedSymbol(accepted.get());
-		return true;
+		return acceptedSymbol(accepted.get());
+	}
+
+	@Override
+	public boolean hasNextSymbol() {
+		return read != -1;
 	}
 
 	private BinaryDecisionDiagram scanUntilFrontierIsZero() {

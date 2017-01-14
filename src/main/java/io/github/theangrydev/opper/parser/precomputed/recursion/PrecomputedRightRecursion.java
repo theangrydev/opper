@@ -24,12 +24,17 @@ import io.github.theangrydev.opper.grammar.Rule;
 public class PrecomputedRightRecursion implements RightRecursion {
     private final boolean[] rightRecursion;
 
-    public PrecomputedRightRecursion(Grammar grammar, ComputedRightRecursion computedRightRecursion) {
+    private PrecomputedRightRecursion(boolean[] rightRecursion) {
+        this.rightRecursion = rightRecursion;
+    }
+
+    public static PrecomputedRightRecursion precomputedRightRecursion(Grammar grammar, ComputedRightRecursion computedRightRecursion) {
         int rules = grammar.rules().size();
-        this.rightRecursion = new boolean[rules];
+        boolean[] rightRecursion = new boolean[rules];
         for (Rule rule : grammar.rules()) {
             rightRecursion[rule.id()] = computedRightRecursion.isRightRecursive(rule);
         }
+        return new PrecomputedRightRecursion(rightRecursion);
     }
 
     @Override

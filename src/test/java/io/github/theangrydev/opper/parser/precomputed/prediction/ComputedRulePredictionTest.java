@@ -30,6 +30,8 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import static io.github.theangrydev.opper.parser.precomputed.prediction.ComputedRulePrediction.computedRulePrediction;
+
 @RunWith(TableRunner.class)
 public class ComputedRulePredictionTest implements WithAssertions {
 
@@ -77,7 +79,7 @@ public class ComputedRulePredictionTest implements WithAssertions {
                 .withRule("NAME", "cow")
                 .build();
 
-        ComputedRulePrediction prediction = new ComputedRulePrediction(grammar);
+        ComputedRulePrediction prediction = computedRulePrediction(grammar);
 
         List<DottedRule> predictions = prediction.rulesThatCanBeTriggeredBy(grammar.symbolByName(symbol));
 

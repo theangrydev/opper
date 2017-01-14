@@ -33,9 +33,13 @@ public class NullableSymbolComputer {
     private final Grammar grammar;
     private final NullableSymbolParseTreeComputer nullableSymbolParseTreeComputer;
 
-    public NullableSymbolComputer(Grammar grammar, NullableSymbolParseTreeComputer nullableSymbolParseTreeComputer) {
+    private NullableSymbolComputer(Grammar grammar, NullableSymbolParseTreeComputer nullableSymbolParseTreeComputer) {
         this.grammar = grammar;
         this.nullableSymbolParseTreeComputer = nullableSymbolParseTreeComputer;
+    }
+
+    public static NullableSymbolComputer nullableSymbolComputer(Grammar grammar, NullableSymbolParseTreeComputer nullableSymbolParseTreeComputer) {
+        return new NullableSymbolComputer(grammar, nullableSymbolParseTreeComputer);
     }
 
     public Map<Symbol, ParseTree> computeNullableSymbols() {

@@ -43,15 +43,28 @@ public class NullableSymbolParseTreeComputer {
     private final Map<Symbol, List<Rule>> rulesWithTrigger;
     private final ObjectList<NullableRuleCheck> nullableRuleChecks;
 
-    public NullableSymbolParseTreeComputer(Grammar grammar) {
+    private NullableSymbolParseTreeComputer(Grammar grammar, Map<Symbol, List<Rule>> rulesWithTrigger, ObjectList<NullableRuleCheck> nullableRuleChecks) {
         this.grammar = grammar;
+        this.rulesWithTrigger = rulesWithTrigger;
+        this.nullableRuleChecks = nullableRuleChecks;
+    }
+
+    public static NullableSymbolParseTreeComputer nullableSymbolParseTreeComputer(Grammar grammar) {
+        return new NullableSymbolParseTreeComputer(grammar, rulesWithTrigger(grammar), nullableRuleChecks(grammar));
+    }
+
+    private static Map<Symbol, List<Rule>> rulesWithTrigger(Grammar grammar) {
+        return grammar.rules().stream().collect(groupingBy(Rule::trigger));
+    }
+
+    private static ObjectList<NullableRuleCheck> nullableRuleChecks(Grammar grammar) {
         List<Symbol> symbols = grammar.symbols();
-        this.nullableRuleChecks = new ObjectArrayList<>(symbols.size());
+        ObjectList<NullableRuleCheck> nullableRuleChecks = new ObjectArrayList<>(symbols.size());
         nullableRuleChecks.size(symbols.size());
-        for (Symbol symbol : grammar.symbols()) {
+        for (Symbol symbol : symbols) {
             nullableRuleChecks.set(symbol.id(), NullableRuleCheck.nullCheck(symbol));
         }
-        this.rulesWithTrigger = grammar.rules().stream().collect(groupingBy(Rule::trigger));
+        return nullableRuleChecks;
     }
 
     public Optional<ParseTree> nullParseTree(Symbol symbol) {
@@ -64,13 +77,13 @@ public class NullableSymbolParseTreeComputer {
             return Optional.empty();
         }
         nullableRuleCheck.startChecking();
-        Optional<ParseTree> nullParseTree = directNullParseTree(symbol);
+        Optional<ParseTree> nullParseTree = computeNullParseTree(symbol);
         nullableRuleCheck.recordNullParseTree(nullParseTree);
         return nullParseTree;
     }
 
-    private Optional<ParseTree> directNullParseTree(Symbol symbol) {
-        List<ParseTree> nullParseTrees = rulesWithTrigger.getOrDefault(symbol, emptyList()).stream().map(this::nullParseTree).filter(Optional::isPresent).map(Optional::get).collect(toList());
+    private Optional<ParseTree> computeNullParseTree(Symbol symbol) {
+        List<ParseTree> nullParseTrees = rulesWithTrigger.getOrDefault(symbol, emptyList()).stream().map(this::computeNullParseTree).filter(Optional::isPresent).map(Optional::get).collect(toList());
         Preconditions.checkState(nullParseTrees.size() <= 1, "Found more than one null parse tree for symbol '%s': '%s'", symbol, nullParseTrees);
         if (nullParseTrees.isEmpty()) {
             return Optional.empty();
@@ -78,7 +91,7 @@ public class NullableSymbolParseTreeComputer {
         return Optional.of(nullParseTrees.get(0));
     }
 
-    private Optional<ParseTree> nullParseTree(Rule rule) {
+    private Optional<ParseTree> computeNullParseTree(Rule rule) {
         if (derivationIsDirectlyEmpty(rule)) {
             return Optional.of(ParseTreeNode.node(rule));
         }
@@ -133,6 +146,11 @@ public class NullableSymbolParseTreeComputer {
 
         public boolean isChecking() {
             return isChecking;
+        }
+
+        @Override
+        public String toString() {
+            return symbol.toString();
         }
     }
 }

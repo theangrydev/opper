@@ -26,8 +26,12 @@ public class ComputedRightRecursion implements RightRecursion {
 
     private final DerivationConsequences derivationSuffixes;
 
-    public ComputedRightRecursion(Grammar grammar) {
-        this.derivationSuffixes = new DerivationConsequences(grammar, Rule::derivationSuffix);
+    private ComputedRightRecursion(DerivationConsequences derivationSuffixes) {
+        this.derivationSuffixes = derivationSuffixes;
+    }
+
+    public static ComputedRightRecursion computedRightRecursion(Grammar grammar) {
+        return new ComputedRightRecursion(new DerivationConsequences(grammar, Rule::derivationSuffix));
     }
 
     @Override

@@ -31,14 +31,25 @@ public class PrecomputedRulePrediction implements RulePrediction {
     private final DottedRule initial;
     private final ObjectList<List<DottedRule>> predictions;
 
-    public PrecomputedRulePrediction(Grammar grammar, ComputedRulePrediction computedRulePrediction) {
+    private PrecomputedRulePrediction(DottedRule initial, ObjectList<List<DottedRule>> predictions) {
+        this.initial = initial;
+        this.predictions = predictions;
+    }
+
+    public static PrecomputedRulePrediction precomputedRulePrediction(Grammar grammar, ComputedRulePrediction computedRulePrediction) {
+        ObjectList<List<DottedRule>> predictions = computePredictions(grammar, computedRulePrediction);
+        DottedRule initial = computedRulePrediction.initial();
+        return new PrecomputedRulePrediction(initial, predictions);
+    }
+
+    private static ObjectList<List<DottedRule>> computePredictions(Grammar grammar, ComputedRulePrediction computedRulePrediction) {
         int symbols = grammar.symbols().size();
-        this.predictions = new ObjectArrayList<>(symbols);
+        ObjectList<List<DottedRule>> predictions = new ObjectArrayList<>(symbols);
         predictions.size(symbols);
         for (Symbol symbol : grammar.symbols()) {
             predictions.set(symbol.id(), computedRulePrediction.rulesThatCanBeTriggeredBy(symbol));
         }
-        this.initial = computedRulePrediction.initial();
+        return predictions;
     }
 
     @Override

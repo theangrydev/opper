@@ -20,14 +20,18 @@ package io.github.theangrydev.opper.parser;
 
 import io.github.theangrydev.opper.common.Logger;
 import io.github.theangrydev.opper.grammar.Grammar;
-import io.github.theangrydev.opper.parser.precomputed.nullable.NullableSymbolParseTreeComputer;
-import io.github.theangrydev.opper.parser.precomputed.nullable.NullableSymbolComputer;
 import io.github.theangrydev.opper.parser.precomputed.nullable.NullableSymbolParseTrees;
-import io.github.theangrydev.opper.parser.precomputed.prediction.ComputedRulePrediction;
 import io.github.theangrydev.opper.parser.precomputed.prediction.PrecomputedRulePrediction;
-import io.github.theangrydev.opper.parser.precomputed.recursion.ComputedRightRecursion;
 import io.github.theangrydev.opper.parser.precomputed.recursion.PrecomputedRightRecursion;
 import io.github.theangrydev.opper.scanner.Scanner;
+
+import static io.github.theangrydev.opper.parser.precomputed.nullable.NullableSymbolComputer.nullableSymbolComputer;
+import static io.github.theangrydev.opper.parser.precomputed.nullable.NullableSymbolParseTreeComputer.nullableSymbolParseTreeComputer;
+import static io.github.theangrydev.opper.parser.precomputed.nullable.NullableSymbolParseTrees.nullableSymbolParseTrees;
+import static io.github.theangrydev.opper.parser.precomputed.prediction.ComputedRulePrediction.computedRulePrediction;
+import static io.github.theangrydev.opper.parser.precomputed.prediction.PrecomputedRulePrediction.precomputedRulePrediction;
+import static io.github.theangrydev.opper.parser.precomputed.recursion.ComputedRightRecursion.computedRightRecursion;
+import static io.github.theangrydev.opper.parser.precomputed.recursion.PrecomputedRightRecursion.precomputedRightRecursion;
 
 public class EarlyParserFactory implements ParserFactory {
 
@@ -40,9 +44,9 @@ public class EarlyParserFactory implements ParserFactory {
     public EarlyParserFactory(Logger logger, Grammar grammar) {
         this.logger = logger;
         this.grammar = grammar;
-        this.rightRecursion = new PrecomputedRightRecursion(grammar, new ComputedRightRecursion(grammar));
-        this.rulePrediction = new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(grammar));
-        this.nullableSymbolParseTrees = new NullableSymbolParseTrees(grammar, new NullableSymbolComputer(grammar, new NullableSymbolParseTreeComputer(grammar)));
+        this.rightRecursion = precomputedRightRecursion(grammar, computedRightRecursion(grammar));
+        this.rulePrediction = precomputedRulePrediction(grammar, computedRulePrediction(grammar));
+        this.nullableSymbolParseTrees = nullableSymbolParseTrees(grammar, nullableSymbolComputer(grammar, nullableSymbolParseTreeComputer(grammar)));
     }
 
     @Override

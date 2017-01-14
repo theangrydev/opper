@@ -23,6 +23,9 @@ import io.github.theangrydev.opper.grammar.GrammarBuilder;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
+import static io.github.theangrydev.opper.parser.precomputed.nullable.NullableSymbolComputer.nullableSymbolComputer;
+import static io.github.theangrydev.opper.parser.precomputed.nullable.NullableSymbolParseTreeComputer.nullableSymbolParseTreeComputer;
+
 public class NullableSymbolComputerTest implements WithAssertions {
 
     @Test
@@ -38,7 +41,7 @@ public class NullableSymbolComputerTest implements WithAssertions {
                 .withRule("D", "SOME")
                 .build();
 
-        NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new NullableSymbolParseTreeComputer(grammar));
+        NullableSymbolComputer computer = nullableSymbolComputer(grammar, nullableSymbolParseTreeComputer(grammar));
 
         assertThat(computer.computeNullableSymbols().keySet()).containsOnlyElementsOf(grammar.symbolsByName("A'", "C"));
     }
@@ -53,7 +56,7 @@ public class NullableSymbolComputerTest implements WithAssertions {
                 .withRule("LIST", "NONE")
                 .build();
 
-        NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new NullableSymbolParseTreeComputer(grammar));
+        NullableSymbolComputer computer = nullableSymbolComputer(grammar, nullableSymbolParseTreeComputer(grammar));
 
         assertThat(computer.computeNullableSymbols().keySet()).containsOnlyElementsOf(grammar.symbolsByName("ACCEPT", "LIST"));
     }
@@ -68,7 +71,7 @@ public class NullableSymbolComputerTest implements WithAssertions {
                 .withRule("LIST", "NONE")
                 .build();
 
-        NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new NullableSymbolParseTreeComputer(grammar));
+        NullableSymbolComputer computer = nullableSymbolComputer(grammar, nullableSymbolParseTreeComputer(grammar));
 
         assertThat(computer.computeNullableSymbols().keySet()).containsOnlyElementsOf(grammar.symbolsByName("ACCEPT", "LIST"));
     }

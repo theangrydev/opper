@@ -31,14 +31,23 @@ public class NullableSymbolParseTrees {
 
     private final ObjectList<Optional<ParseTree>> nullableSymbols;
 
-    public NullableSymbolParseTrees(Grammar grammar, NullableSymbolComputer nullableSymbolComputer) {
+    private NullableSymbolParseTrees(ObjectList<Optional<ParseTree>> nullableSymbols) {
+        this.nullableSymbols = nullableSymbols;
+    }
+
+    public static NullableSymbolParseTrees nullableSymbolParseTrees(Grammar grammar, NullableSymbolComputer nullableSymbolComputer) {
+        return new NullableSymbolParseTrees(nullableSymbols(grammar, nullableSymbolComputer));
+    }
+
+    private static ObjectList<Optional<ParseTree>> nullableSymbols(Grammar grammar, NullableSymbolComputer nullableSymbolComputer) {
         int symbols = grammar.symbols().size();
-        this.nullableSymbols = new ObjectArrayList<>(symbols);
+        ObjectList<Optional<ParseTree>> nullableSymbols = new ObjectArrayList<>(symbols);
         nullableSymbols.size(symbols);
         Map<Symbol, ParseTree> computedNullableSymbols = nullableSymbolComputer.computeNullableSymbols();
         for (Symbol symbol : grammar.symbols()) {
             nullableSymbols.set(symbol.id(), Optional.ofNullable(computedNullableSymbols.get(symbol)));
         }
+        return nullableSymbols;
     }
 
     public Optional<ParseTree> nullableSymbolParseTree(Symbol symbol) {

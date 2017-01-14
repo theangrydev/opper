@@ -36,10 +36,16 @@ public class ComputedRulePrediction implements RulePrediction {
     private final DerivationConsequences derivationPrefixes;
     private final Grammar grammar;
 
-    public ComputedRulePrediction(Grammar grammar) {
-        this.dottedRuleFactory = new DottedRuleFactory(grammar);
-        this.derivationPrefixes = new DerivationConsequences(grammar, Rule::derivationPrefix);
+    private ComputedRulePrediction(Grammar grammar, DottedRuleFactory dottedRuleFactory, DerivationConsequences derivationPrefixes) {
         this.grammar = grammar;
+        this.dottedRuleFactory = dottedRuleFactory;
+        this.derivationPrefixes = derivationPrefixes;
+    }
+
+    public static ComputedRulePrediction computedRulePrediction(Grammar grammar) {
+        DottedRuleFactory dottedRuleFactory = new DottedRuleFactory(grammar);
+        DerivationConsequences derivationPrefixes = new DerivationConsequences(grammar, Rule::derivationPrefix);
+        return new ComputedRulePrediction(grammar, dottedRuleFactory, derivationPrefixes);
     }
 
     @Override

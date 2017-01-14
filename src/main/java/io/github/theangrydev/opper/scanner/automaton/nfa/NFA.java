@@ -80,6 +80,10 @@ public class NFA {
         relabel(stateStatistics.transitionFrequencies());
     }
 
+    /**
+     * More frequently used things get a smaller id. This is in preperation for the bit encoding in
+     * {@link VariableSummary}, where we want as much reuse of the BDD variables as possible.
+     */
     private void relabel(Multiset<? extends Identifiable> frequencies) {
         int idSequence = 1;
         for (Multiset.Entry<? extends Identifiable> entry : frequencies.entrySet()) {

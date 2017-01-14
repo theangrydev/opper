@@ -68,6 +68,9 @@ public class VariableSummary {
         return new VariablesSet(BitSet.valueOf(new long[]{projectCharacterId(characterTransition)}));
     }
 
+    /**
+     * This is approximately 2 * log2(S) + log2(T) where S is the number of states and T is the number of transitions.
+     */
     public int bitsPerRow() {
         return bitsPerRow;
     }

@@ -30,6 +30,25 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 
+/**
+ * The original variable ordering can be reordered to optimize the size of the BDDs that will be expressed in terms
+ * of those variables.
+ * <p>
+ * Each row in the transition table uses {@link VariableSummary#bitsPerRow()} bits to represent which from/to/transition
+ * variables are present, encoded as F | C | T where F is the from id, C is the transition id and T is the character id.
+ * <p>
+ * Each bit within the encoded value corresponds to a BDD variable.
+ * <p>
+ * The heuristic implemented here aims to order the BDD variables according to how much discriminatory power each
+ * variable provides in the transition table.
+ * <p>
+ * For example, if partitioning by a variable being present or not amongst all the elements of the transition table
+ * results in a 50/50 split, this indicates that this variable has bad discriminatory power, no better than guessing.
+ * This makes it a bad candidate for an early variable, since it will not cut down the total number of
+ * nodes needed to represent the transition table.
+ * Conversely, if splitting results in a 99/1 split, this indicates very good discriminatory power, then it is a good
+ * candidate for splitting, since it should reduce the total number of nodes.
+ */
 public class VariableOrderingComputer {
 
     public static VariableOrdering determineOrdering(VariableSummary variableSummary, TransitionTable transitionTable) {
@@ -58,16 +77,16 @@ public class VariableOrderingComputer {
     }
 
     private static int determineNext(List<TransitionTable> frontier, IntSet remainingVariableIds, int countPerSplit) {
-        double maxEntropy = -Double.MAX_VALUE;
-        int maxVariable = remainingVariableIds.iterator().nextInt();
+        double minEntropy = Double.MAX_VALUE;
+        int minVariable = remainingVariableIds.iterator().nextInt();
         for (int variable : remainingVariableIds) {
             double entropy = frontierEntropy(frontier, variable, countPerSplit);
-            if (entropy > maxEntropy) {
-                maxEntropy = entropy;
-                maxVariable = variable;
+            if (entropy < minEntropy) {
+                minEntropy = entropy;
+                minVariable = variable;
             }
         }
-        return maxVariable;
+        return minVariable;
     }
 
     private static double frontierEntropy(List<TransitionTable> frontier, int variable, int countPerSplit) {
@@ -87,6 +106,6 @@ public class VariableOrderingComputer {
         int negativeExamples = countPerSplit - positiveExamples;
         double positiveProportion = (double) positiveExamples / countPerSplit;
         double negativeProportion = (double) negativeExamples / countPerSplit;
-        return positiveProportion * log2(positiveProportion) + negativeProportion * log2(negativeProportion);
+        return -(positiveProportion * log2(positiveProportion) + negativeProportion * log2(negativeProportion));
     }
 }

@@ -31,6 +31,12 @@ import java.util.Collection;
 public class BFATransitions {
 	private final BinaryDecisionDiagram transitions;
 	private final Collection<CharacterClassTransition> characterClassTransitions;
+
+    /**
+     * This map gives the BDD for each character that represents all the possible ways that this character can
+     * contribute to a transition, in terms of the direct character transition and all the indirrect character classes,
+     * if any exist for this character.
+     */
 	private final Char2ObjectMap<BinaryDecisionDiagram> characterPresences;
 	private final BinaryDecisionDiagram existsFromStateAndCharacter;
 	private final Permutation relabelToStateToFromState;
@@ -48,7 +54,7 @@ public class BFATransitions {
 	public static BFATransitions bfaTransitions(NFA nfa, TransitionTable transitionTable, AllVariables allVariables) {
 		Collection<CharacterClassTransition> characterClassTransitions = nfa.characterClassTransitions();
 		BinaryDecisionDiagram transitions = transitions(allVariables, transitionTable);
-		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = characterPresence(nfa.characterTransitions(), characterClassTransitions, allVariables);
+		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = knownCharacterPresences(nfa.characterTransitions(), characterClassTransitions, allVariables);
 		BinaryDecisionDiagram existsFromStateAndCharacter = allVariables.existsFromStateAndCharacter();
 		Permutation relabelToStateToFromState = allVariables.relabelToStateToFromState();
 		return new BFATransitions(transitions, characterClassTransitions, characterPresences, existsFromStateAndCharacter, relabelToStateToFromState, allVariables);
@@ -62,15 +68,18 @@ public class BFATransitions {
 		return transitions;
 	}
 
-	private static Char2ObjectMap<BinaryDecisionDiagram> characterPresence(Collection<CharacterTransition> characterTransitions, Collection<CharacterClassTransition> characterClassTransitions, AllVariables allVariables) {
+    /**
+     * Start off the {@link #characterPresences} with all the characters we already know about that were mentioned in the grammar.
+     */
+	private static Char2ObjectMap<BinaryDecisionDiagram> knownCharacterPresences(Collection<CharacterTransition> characterTransitions, Collection<CharacterClassTransition> characterClassTransitions, AllVariables allVariables) {
 		Char2ObjectMap<BinaryDecisionDiagram> characterPresences = new Char2ObjectArrayMap<>(characterTransitions.size());
 		for (CharacterTransition characterTransition : characterTransitions) {
-			characterPresences.put(characterTransition.character(), characterPresence(allVariables, characterTransition, characterClassTransitions));
+			characterPresences.put(characterTransition.character(), knownCharacterPresence(allVariables, characterTransition, characterClassTransitions));
 		}
 		return characterPresences;
 	}
 
-	private static BinaryDecisionDiagram characterPresence(AllVariables allVariables, CharacterTransition characterTransition, Collection<CharacterClassTransition> characterClassTransitions) {
+	private static BinaryDecisionDiagram knownCharacterPresence(AllVariables allVariables, CharacterTransition characterTransition, Collection<CharacterClassTransition> characterClassTransitions) {
 		BinaryDecisionDiagram presence = allVariables.specifyCharacterVariables(characterTransition);
 		return appendCharacterClasses(allVariables, characterClassTransitions, presence, characterTransition.character());
 	}
@@ -84,13 +93,30 @@ public class BFATransitions {
 		return presence;
 	}
 
+    /**
+     * Transition from the current frontier of possible states using the transitions that are possible using the given
+     * character to a new set of possible states.
+     *
+     * Let F = f1 or f2 or ... be the set of from states.
+     * Let C = c1 or c2 or ... be the set of possible transitions using the given character.
+     * Let A = (f1 and c1 and t1) or (f1 and c2 and t2) or ... be the transition table of all possible transitions.
+     * Let T be the set of possible to states given F, C and A.
+     * Let F' be the possible to states relabled as from states.
+     *
+     * Then T = exists T. (F and C and A) and F' = relabel T
+     */
 	public BinaryDecisionDiagram transition(BinaryDecisionDiagram frontier, char character) {
-		frontier = frontier.andTo(characterPresence(character));
+		frontier = frontier.andTo(unseenCharacterPresence(character));
 		frontier = frontier.relativeProductTo(transitions, existsFromStateAndCharacter);
 		return frontier.replaceTo(relabelToStateToFromState);
 	}
 
-	private BinaryDecisionDiagram characterPresence(char character) {
+    /**
+     * Any character that is not already in {@link #characterPresences} must only be able to contribute to a transition
+     * through the character classes that it may belong to. This is because if it were part of a direct transition it
+     * would already have been precomputed in {@link #knownCharacterPresences(Collection, Collection, AllVariables)}.
+     */
+	private BinaryDecisionDiagram unseenCharacterPresence(char character) {
 		BinaryDecisionDiagram characterPresence = characterPresences.get(character);
 		if (characterPresence == null) {
 			characterPresence = appendCharacterClasses(allVariables, characterClassTransitions, allVariables.nothing(), character);

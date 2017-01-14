@@ -60,10 +60,6 @@ public class VariableSummary {
 		return new VariablesSet(setVariables);
 	}
 
-	public VariablesSet variablesSetForToState(State state) {
-		return new VariablesSet(BitSet.valueOf(new long[]{projectToId(state)}));
-	}
-
 	public VariablesSet variablesSetForFromState(State state) {
 		return new VariablesSet(BitSet.valueOf(new long[]{projectFromId(state)}));
 	}

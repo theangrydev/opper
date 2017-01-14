@@ -65,10 +65,6 @@ public class BinaryDecisionDiagram {
 		return this;
 	}
 
-	public void printSet() {
-		bdd.printSet(id);
-	}
-
 	public BinaryDecisionDiagram and(BinaryDecisionDiagram binaryDecisionDiagram, BinaryDecisionDiagram buffer) {
 		buffer.discard();
 		buffer.id = bdd.ref(bdd.and(id, binaryDecisionDiagram.id));
@@ -94,13 +90,6 @@ public class BinaryDecisionDiagram {
 	public BinaryDecisionDiagram replaceTo(Permutation permutation) {
 		int oldId = id;
 		this.id = bdd.replace(id, permutation);
-		discard(oldId);
-		return this;
-	}
-
-	public BinaryDecisionDiagram existsTo(BinaryDecisionDiagram binaryDecisionDiagram) {
-		int oldId = id;
-		this.id = bdd.exists(id, binaryDecisionDiagram.id);
 		discard(oldId);
 		return this;
 	}

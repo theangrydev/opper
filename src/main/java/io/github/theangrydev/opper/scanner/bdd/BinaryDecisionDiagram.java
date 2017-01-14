@@ -43,10 +43,6 @@ public class BinaryDecisionDiagram {
 		return new BinaryDecisionDiagram(bdd, bdd.getZero());
 	}
 
-	public static BinaryDecisionDiagram newCube(BDD bdd, boolean[] setVariables) {
-		return new BinaryDecisionDiagram(bdd, bdd.cube(setVariables));
-	}
-
 	public int id() {
 		return id;
 	}

@@ -35,10 +35,6 @@ public class BinaryDecisionDiagramFactory {
 		return BinaryDecisionDiagram.newVariable(bdd);
 	}
 
-	public BinaryDecisionDiagram newCube(boolean[] setVariables) {
-		return BinaryDecisionDiagram.newCube(bdd, setVariables);
-	}
-
 	public Permutation createPermutation(Stream<BinaryDecisionDiagram> fromSetVariables, Stream<BinaryDecisionDiagram> toSetVariables) {
 		return bdd.createPermutation(variableIds(fromSetVariables), variableIds(toSetVariables));
 	}

@@ -38,6 +38,10 @@ public class BFATransitions {
      * if any exist for this character.
      */
 	private final Char2ObjectMap<BinaryDecisionDiagram> characterPresences;
+
+    /**
+     * This is a BDD cube that can be used to say "find
+     */
 	private final BinaryDecisionDiagram existsFromStateAndCharacter;
 	private final Permutation relabelToStateToFromState;
 	private final AllVariables allVariables;
@@ -97,13 +101,15 @@ public class BFATransitions {
      * Transition from the current frontier of possible states using the transitions that are possible using the given
      * character to a new set of possible states.
      *
-     * Let F = f1 or f2 or ... be the set of from states.
-     * Let C = c1 or c2 or ... be the set of possible transitions using the given character.
+     * Let F = f1 or f2 or ... be the current set of from states.
+     * Let C = c1 or c2 or ... be the curremt set of possible transitions using the given character.
      * Let A = (f1 and c1 and t1) or (f1 and c2 and t2) or ... be the transition table of all possible transitions.
+     * Let E = f1 and f2 and ... and c1 and c2 and ... be the conjunction of all possible from and transaction states.
      * Let T be the set of possible to states given F, C and A.
      * Let F' be the possible to states relabled as from states.
      *
-     * Then T = exists T. (F and C and A) and F' = relabel T
+     * Then T = exists E. (F and C and A), which is the set of possible to states.
+     * Then F' = relabel T, which is the set of possible to states relabled as from states.
      */
 	public BinaryDecisionDiagram transition(BinaryDecisionDiagram frontier, char character) {
 		frontier = frontier.andTo(unseenCharacterPresence(character));

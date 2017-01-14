@@ -30,133 +30,138 @@ import java.util.stream.Stream;
 
 public class AllVariables {
 
-	private final VariableSummary variableSummary;
-	private final VariableOrdering variableOrdering;
-	private final BinaryDecisionDiagramFactory binaryDecisionDiagramFactory;
-	private final List<BinaryDecisionDiagram> bddVariables;
-	private final List<BinaryDecisionDiagram> bddNotVariables;
+    private final VariableSummary variableSummary;
+    private final VariableOrdering variableOrdering;
+    private final BinaryDecisionDiagramFactory binaryDecisionDiagramFactory;
+    private final List<BinaryDecisionDiagram> bddVariables;
+    private final List<BinaryDecisionDiagram> bddNotVariables;
 
-	private AllVariables(VariableSummary variableSummary, VariableOrdering variableOrdering, BinaryDecisionDiagramFactory binaryDecisionDiagramFactory, List<BinaryDecisionDiagram> bddVariables, List<BinaryDecisionDiagram> bddNotVariables) {
-		this.variableSummary = variableSummary;
-		this.variableOrdering = variableOrdering;
-		this.binaryDecisionDiagramFactory = binaryDecisionDiagramFactory;
-		this.bddVariables = bddVariables;
-		this.bddNotVariables = bddNotVariables;
-	}
+    private AllVariables(VariableSummary variableSummary, VariableOrdering variableOrdering, BinaryDecisionDiagramFactory binaryDecisionDiagramFactory, List<BinaryDecisionDiagram> bddVariables, List<BinaryDecisionDiagram> bddNotVariables) {
+        this.variableSummary = variableSummary;
+        this.variableOrdering = variableOrdering;
+        this.binaryDecisionDiagramFactory = binaryDecisionDiagramFactory;
+        this.bddVariables = bddVariables;
+        this.bddNotVariables = bddNotVariables;
+    }
 
-	public static AllVariables allVariables(VariableSummary variableSummary, VariableOrdering variableOrdering) {
-		BinaryDecisionDiagramFactory binaryDecisionDiagramFactory = new BinaryDecisionDiagramFactory();
-		int numberOfVariables = variableOrdering.numberOfVariables();
-		List<BinaryDecisionDiagram> bddVariables = bddVariables(binaryDecisionDiagramFactory, numberOfVariables);
-		List<BinaryDecisionDiagram> bddNotVariables = bddNotVariables(numberOfVariables, bddVariables);
-		return new AllVariables(variableSummary, variableOrdering, binaryDecisionDiagramFactory, bddVariables, bddNotVariables);
-	}
+    public static AllVariables allVariables(VariableSummary variableSummary, VariableOrdering variableOrdering) {
+        BinaryDecisionDiagramFactory binaryDecisionDiagramFactory = new BinaryDecisionDiagramFactory();
+        int numberOfVariables = variableOrdering.numberOfVariables();
+        List<BinaryDecisionDiagram> bddVariables = bddVariables(binaryDecisionDiagramFactory, numberOfVariables);
+        List<BinaryDecisionDiagram> bddNotVariables = bddNotVariables(numberOfVariables, bddVariables);
+        return new AllVariables(variableSummary, variableOrdering, binaryDecisionDiagramFactory, bddVariables, bddNotVariables);
+    }
 
-	private static List<BinaryDecisionDiagram> bddNotVariables(int numberOfVariables, List<BinaryDecisionDiagram> bddVariables) {
-		List<BinaryDecisionDiagram> bddNotVariables = new ArrayList<>(numberOfVariables);
-		for (int i = 0; i < numberOfVariables; i++) {
-			bddNotVariables.add(bddVariables.get(i).not());
-		}
-		return bddNotVariables;
-	}
+    private static List<BinaryDecisionDiagram> bddNotVariables(int numberOfVariables, List<BinaryDecisionDiagram> bddVariables) {
+        List<BinaryDecisionDiagram> bddNotVariables = new ArrayList<>(numberOfVariables);
+        for (int i = 0; i < numberOfVariables; i++) {
+            bddNotVariables.add(bddVariables.get(i).not());
+        }
+        return bddNotVariables;
+    }
 
-	private static List<BinaryDecisionDiagram> bddVariables(BinaryDecisionDiagramFactory binaryDecisionDiagramFactory, int numberOfVariables) {
-		List<BinaryDecisionDiagram> bddVariables = new ArrayList<>(numberOfVariables);
-		for (int i = 0; i < numberOfVariables; i++) {
-			bddVariables.add(binaryDecisionDiagramFactory.newVariable());
-		}
-		return bddVariables;
-	}
+    private static List<BinaryDecisionDiagram> bddVariables(BinaryDecisionDiagramFactory binaryDecisionDiagramFactory, int numberOfVariables) {
+        List<BinaryDecisionDiagram> bddVariables = new ArrayList<>(numberOfVariables);
+        for (int i = 0; i < numberOfVariables; i++) {
+            bddVariables.add(binaryDecisionDiagramFactory.newVariable());
+        }
+        return bddVariables;
+    }
 
-	private BinaryDecisionDiagram variable(Variable variable) {
-		return variable(variable.order());
-	}
+    private BinaryDecisionDiagram variable(Variable variable) {
+        return variable(variable.order());
+    }
 
-	private BinaryDecisionDiagram variable(int variableIndex) {
-		return bddVariables.get(variableIndex);
-	}
+    private BinaryDecisionDiagram variable(int variableIndex) {
+        return bddVariables.get(variableIndex);
+    }
 
-	private BinaryDecisionDiagram notVariable(int variableIndex) {
-		return bddNotVariables.get(variableIndex);
-	}
+    private BinaryDecisionDiagram notVariable(int variableIndex) {
+        return bddNotVariables.get(variableIndex);
+    }
 
-	public BinaryDecisionDiagram anything() {
-		return binaryDecisionDiagramFactory.anything();
-	}
+    public BinaryDecisionDiagram anything() {
+        return binaryDecisionDiagramFactory.anything();
+    }
 
-	private BinaryDecisionDiagram specifyVariablePresence(List<Variable> variablesToSpecify, VariablesSet variablesSet) {
-		BinaryDecisionDiagram specifiedVariables = anything();
-		for (Variable specified : variablesToSpecify) {
-			BinaryDecisionDiagram specifiedVariable = specifyVariablePresence(specified, variablesSet);
-			specifiedVariables = specifiedVariables.andTo(specifiedVariable);
-		}
-		return specifiedVariables;
-	}
+    private BinaryDecisionDiagram specifyVariablePresence(List<Variable> variablesToSpecify, VariablesSet variablesSet) {
+        BinaryDecisionDiagram specifiedVariables = anything();
+        for (Variable specified : variablesToSpecify) {
+            BinaryDecisionDiagram specifiedVariable = specifyVariablePresence(specified, variablesSet);
+            specifiedVariables = specifiedVariables.andTo(specifiedVariable);
+        }
+        return specifiedVariables;
+    }
 
-	private BinaryDecisionDiagram specifyVariablePresence(Variable variable, VariablesSet variablesSet) {
-		if (variablesSet.contains(variable)) {
-			return variable(variable.order());
-		} else {
-			return notVariable(variable.order());
-		}
-	}
+    private BinaryDecisionDiagram specifyVariablePresence(Variable variable, VariablesSet variablesSet) {
+        if (variablesSet.contains(variable)) {
+            return variable(variable.order());
+        } else {
+            return notVariable(variable.order());
+        }
+    }
 
-	private BinaryDecisionDiagram exists(List<Variable> presentVariables) {
-		boolean[] variables = new boolean[variableOrdering.numberOfVariables()];
-		for (Variable presentVariable : presentVariables) {
-			variables[presentVariable.order()] = true;
-		}
-		return binaryDecisionDiagramFactory.newCube(variables);
-	}
+    /**
+     * Constructs a BDD that represents the conjunction of all the given variables.
+     * This can be used as the "exists" argument to existential "exists such that" quantifiers.
+     * For example, "exists E such that P" will return a set of the possible constraints involving only variables not in E that satisfy P.
+     */
+    private BinaryDecisionDiagram exists(List<Variable> presentVariables) {
+        BinaryDecisionDiagram specifiedVariables = anything();
+        for (Variable specified : presentVariables) {
+            specifiedVariables = specifiedVariables.andTo(variable(specified));
+        }
+        return specifiedVariables;
+    }
 
-	public BinaryDecisionDiagram existsFromStateAndCharacter() {
-		return exists(variableOrdering.fromStateOrCharacterVariables());
-	}
+    public BinaryDecisionDiagram existsFromStateAndCharacter() {
+        return exists(variableOrdering.fromStateOrCharacterVariables());
+    }
 
-	public BinaryDecisionDiagram nothing() {
-		return binaryDecisionDiagramFactory.nothing();
-	}
+    public BinaryDecisionDiagram nothing() {
+        return binaryDecisionDiagramFactory.nothing();
+    }
 
-	public BinaryDecisionDiagram specifyAllVariables(VariablesSet variablesSet) {
-		return specifyVariablePresence(variableOrdering.allVariables(), variablesSet);
-	}
+    public BinaryDecisionDiagram specifyAllVariables(VariablesSet variablesSet) {
+        return specifyVariablePresence(variableOrdering.allVariables(), variablesSet);
+    }
 
-	public BinaryDecisionDiagram specifyCharacterVariables(Transition transition) {
-		return specifyVariablePresence(variableOrdering.characterVariables(), variableSummary.variablesSetForTransition(transition));
-	}
+    public BinaryDecisionDiagram specifyCharacterVariables(Transition transition) {
+        return specifyVariablePresence(variableOrdering.characterVariables(), variableSummary.variablesSetForTransition(transition));
+    }
 
-	public BinaryDecisionDiagram specifyFromVariables(State fromState) {
-		return specifyVariablePresence(variableOrdering.fromStateVariables(), variableSummary.variablesSetForFromState(fromState));
-	}
+    public BinaryDecisionDiagram specifyFromVariables(State fromState) {
+        return specifyVariablePresence(variableOrdering.fromStateVariables(), variableSummary.variablesSetForFromState(fromState));
+    }
 
-	public BinaryDecisionDiagram specifyFromVariables(List<State> fromStates) {
-		BinaryDecisionDiagram fromVariables = nothing();
-		for (State fromState : fromStates) {
-			fromVariables = fromVariables.orTo(specifyFromVariables(fromState));
-		}
-		return fromVariables;
-	}
+    public BinaryDecisionDiagram specifyFromVariables(List<State> fromStates) {
+        BinaryDecisionDiagram fromVariables = nothing();
+        for (State fromState : fromStates) {
+            fromVariables = fromVariables.orTo(specifyFromVariables(fromState));
+        }
+        return fromVariables;
+    }
 
-	public Permutation relabelToStateToFromState() {
-		Stream<BinaryDecisionDiagram> toVariables = variableOrdering.toStateVariablesInOriginalOrder().map(this::variable);
-		Stream<BinaryDecisionDiagram> fromVariables = variableOrdering.fromStateVariablesInOriginalOrder().map(this::variable);
-		return binaryDecisionDiagramFactory.createPermutation(toVariables, fromVariables);
-	}
+    public Permutation relabelToStateToFromState() {
+        Stream<BinaryDecisionDiagram> toVariables = variableOrdering.toStateVariablesInOriginalOrder().map(this::variable);
+        Stream<BinaryDecisionDiagram> fromVariables = variableOrdering.fromStateVariablesInOriginalOrder().map(this::variable);
+        return binaryDecisionDiagramFactory.createPermutation(toVariables, fromVariables);
+    }
 
-	public int fromStateId(int[] fromStateAssignment) {
-		int fromStateId = 0;
-		for (int i = fromStateAssignment.length - 1; i >= 0; i--) {
-			if (fromStateAssignment[i] != 1) {
-				continue;
-			}
-			int variableId = variableOrdering.variableId(i);
-			int bitPosition = variableSummary.fromStateBitPositionForVariableId(variableId);
-			fromStateId |= 1 << bitPosition;
-		}
-		return fromStateId;
-	}
+    public int fromStateId(int[] fromStateAssignment) {
+        int fromStateId = 0;
+        for (int i = fromStateAssignment.length - 1; i >= 0; i--) {
+            if (fromStateAssignment[i] != 1) {
+                continue;
+            }
+            int variableId = variableOrdering.variableId(i);
+            int bitPosition = variableSummary.fromStateBitPositionForVariableId(variableId);
+            fromStateId |= 1 << bitPosition;
+        }
+        return fromStateId;
+    }
 
-	public int[] assignmentBuffer() {
-		return new int[variableOrdering.numberOfVariables()];
-	}
+    public int[] assignmentBuffer() {
+        return new int[variableOrdering.numberOfVariables()];
+    }
 }

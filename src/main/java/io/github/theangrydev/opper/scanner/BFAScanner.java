@@ -29,13 +29,35 @@ import static io.github.theangrydev.opper.scanner.ScannedSymbol.scannedSymbol;
 
 public class BFAScanner implements Scanner {
 
-    private static final char READER_END_OF_INPUT_MARKER = '\uFFFF'; // this is the result of (char) -1
+    /**
+     * The {@link Reader} will return -1 when the end of the input is reached. This is the result of (char) -1.
+     * Although \uFFFF is a valid character, we are assuming it never appears in scanned text.
+     * If it did, the scanning would end as if the end of the stream was reached.
+     */
+    private static final char READER_END_OF_INPUT_MARKER = '\uFFFF';
 
     private final Reader charactersToParse;
     private final BFA bfa;
 
+    /**
+     * This keeps track of the start and end of the current {@link Symbol} being processed, in order to produce a {@link Location}.
+     */
     private PositionTracker positionTracker = new PositionTracker();
+
+    /**
+     * The character that is currently being inspected.
+     *
+     * This starts off as the first character from the reader, so that the first call to {@link #hasNextSymbol} is accurate.
+     *
+     * A non zero frontier means there are more characters to parse in the current {@link Symbol}, so scan the next character.
+     * A zero frontier means there are no more characters to parse in the current {@link Symbol}, so we do not scan another
+     * character and leave the character ready for the next call to {@link #nextSymbol()}.
+     */
     private char character;
+
+    /**
+     * The characters that make up the {@link Symbol} that is currently being parsed.
+     */
     private StringBuilder symbolCharacters;
 
     private BFAScanner(BFA bfa, Reader charactersToParse, char firstCharacter) {

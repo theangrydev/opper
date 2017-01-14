@@ -56,31 +56,21 @@ public class VariableOrderingComputer {
         IntSet remainingVariableIds = variableSummary.allVariableIds();
         List<Variable> variablesWithOrder = new ArrayList<>(bitsPerRow);
         List<TransitionTable> frontier = singletonList(transitionTable);
-        for (int height = 0; height < bitsPerRow; height++) {
-            int countPerSplit = countPerSplit(bitsPerRow, height);
-            int nextVariable = determineNext(frontier, remainingVariableIds, countPerSplit);
+        for (int bitNumber = 0; bitNumber < bitsPerRow; bitNumber++) {
+            int frontierSize = frontier.stream().mapToInt(TransitionTable::size).sum();
+            int nextVariable = determineNext(frontier, remainingVariableIds, frontierSize);
             remainingVariableIds.remove(nextVariable);
-            variablesWithOrder.add(new Variable(height, nextVariable));
+            variablesWithOrder.add(new Variable(bitNumber, nextVariable));
             frontier = nextFrontier(frontier, nextVariable);
         }
         return new VariableOrdering(variableSummary, variablesWithOrder);
     }
 
-    private static int countPerSplit(int bitsPerRow, int height) {
-        return 1 << (bitsPerRow - height - 1);
-    }
-
-    private static List<TransitionTable> nextFrontier(List<TransitionTable> frontier, int nextVariable) {
-        Stream<TransitionTable> rowsWithVariable = frontier.stream().map(node -> node.rowsWithVariable(nextVariable));
-        Stream<TransitionTable> rowsWithoutVariable = frontier.stream().map(node -> node.rowsWithoutVariable(nextVariable));
-        return concat(rowsWithVariable, rowsWithoutVariable).filter(not(TransitionTable::isEmpty)).collect(toList());
-    }
-
-    private static int determineNext(List<TransitionTable> frontier, IntSet remainingVariableIds, int countPerSplit) {
+    private static int determineNext(List<TransitionTable> frontier, IntSet remainingVariableIds, int transitionTableSize) {
         double minEntropy = Double.MAX_VALUE;
         int minVariable = remainingVariableIds.iterator().nextInt();
         for (int variable : remainingVariableIds) {
-            double entropy = frontierEntropy(frontier, variable, countPerSplit);
+            double entropy = frontierEntropy(frontier, variable, transitionTableSize);
             if (entropy < minEntropy) {
                 minEntropy = entropy;
                 minVariable = variable;
@@ -89,23 +79,37 @@ public class VariableOrderingComputer {
         return minVariable;
     }
 
-    private static double frontierEntropy(List<TransitionTable> frontier, int variable, int countPerSplit) {
-        return frontier.stream().mapToDouble(node -> nodeEntropy(node, variable, countPerSplit)).sum();
+    /**
+     * Each remainder in the frontier will have its own entropy change in relation to splitting on the given variable.
+     * The weighted sum of these entropies, in relation to the relative size of the remainder compared to the original
+     * transition table size, is taken as an overall entropy measure that variable choice attempts to minimise.
+     */
+    private static double frontierEntropy(List<TransitionTable> frontier, int variable, int transitionTableSize) {
+        return frontier.stream().mapToDouble(node -> weightedNodeEntropy(node, variable, transitionTableSize)).sum();
     }
 
-    private static double nodeEntropy(TransitionTable node, int variable, int countPerSplit) {
+    private static double weightedNodeEntropy(TransitionTable node, int variable, int transitionTableSize) {
         int rowsWithVariable = node.numberOfRowsWithVariable(variable);
-        int rowsWithoutVariable = node.size() - rowsWithVariable;
-        return entropy(rowsWithVariable, countPerSplit) + entropy(rowsWithoutVariable, countPerSplit);
+        double nodeProportion = (double) node.size() / transitionTableSize;
+        return nodeProportion * entropy(rowsWithVariable, node.size());
     }
 
-    private static double entropy(int positiveExamples, int countPerSplit) {
-        if (positiveExamples == 0) {
+    private static double entropy(int positiveExamples, int totalExamples) {
+        if (positiveExamples == 0 || positiveExamples == totalExamples) {
             return 0.0d;
         }
-        int negativeExamples = countPerSplit - positiveExamples;
-        double positiveProportion = (double) positiveExamples / countPerSplit;
-        double negativeProportion = (double) negativeExamples / countPerSplit;
+        int negativeExamples = totalExamples - positiveExamples;
+        double positiveProportion = (double) positiveExamples / totalExamples;
+        double negativeProportion = (double) negativeExamples / totalExamples;
         return -(positiveProportion * log2(positiveProportion) + negativeProportion * log2(negativeProportion));
+    }
+
+    /**
+     * Once the variable to split on has been decided, split the frontier by partitioning by that variable.
+     */
+    private static List<TransitionTable> nextFrontier(List<TransitionTable> frontier, int nextVariable) {
+        Stream<TransitionTable> rowsWithVariable = frontier.stream().map(node -> node.rowsWithVariable(nextVariable));
+        Stream<TransitionTable> rowsWithoutVariable = frontier.stream().map(node -> node.rowsWithoutVariable(nextVariable));
+        return concat(rowsWithVariable, rowsWithoutVariable).filter(not(TransitionTable::isEmpty)).collect(toList());
     }
 }

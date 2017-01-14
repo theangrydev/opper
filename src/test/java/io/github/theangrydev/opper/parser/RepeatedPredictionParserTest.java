@@ -29,7 +29,7 @@ import org.junit.Test;
 public class RepeatedPredictionParserTest implements WithAssertions {
 
     @Test
-    public void shouldRecogniseALeftRecursiveGrammar() throws Exception {
+    public void shouldReuseLeoItemInstancesWhenPossibleByUsingTheSharedEarlyItemInterface() throws Exception {
         Grammar grammar = new GrammarBuilder()
                 .withAcceptanceSymbol("ACCEPT")
                 .withStartSymbol("START")

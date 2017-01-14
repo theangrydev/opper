@@ -27,39 +27,39 @@ import java.util.Optional;
 
 public class TransitionsEarlySet implements Iterable<EarlyItem> {
 
-	private static final List<EarlyItem> NO_TRANSITIONS = Collections.emptyList();
-	private static final Optional<LeoItem> NO_LEO_ITEM = Optional.empty();
+    private static final List<EarlyItem> NO_TRANSITIONS = Collections.emptyList();
+    private static final Optional<LeoItem> NO_LEO_ITEM = Optional.empty();
 
-	private Optional<LeoItem> leoItem = NO_LEO_ITEM;
-	private List<EarlyItem> earlyItems = NO_TRANSITIONS;
+    private Optional<LeoItem> leoItem = NO_LEO_ITEM;
+    private List<EarlyItem> earlyItems = NO_TRANSITIONS;
 
-	public void addLeoItem(LeoItem leoItem) {
-		earlyItems = Collections.singletonList(leoItem);
-		this.leoItem = Optional.of(leoItem);
-	}
+    public void addLeoItem(LeoItem leoItem) {
+        earlyItems = Collections.singletonList(leoItem);
+        this.leoItem = Optional.of(leoItem);
+    }
 
-	public void addEarlyItem(EarlyItem earlyItem) {
-		if (earlyItems == NO_TRANSITIONS) {
-			earlyItems = new ObjectArrayList<>();
-		}
-		earlyItems.add(earlyItem);
-	}
+    public void addEarlyItem(EarlyItem earlyItem) {
+        if (earlyItems == NO_TRANSITIONS) {
+            earlyItems = new ObjectArrayList<>();
+        }
+        earlyItems.add(earlyItem);
+    }
 
-	@Override
-	public Iterator<EarlyItem> iterator() {
-		return earlyItems.iterator();
-	}
+    @Override
+    public Iterator<EarlyItem> iterator() {
+        return earlyItems.iterator();
+    }
 
-	public Optional<LeoItem> leoItem() {
-		return leoItem;
-	}
+    public Optional<LeoItem> leoItem() {
+        return leoItem;
+    }
 
-	@Override
-	public String toString() {
-		return earlyItems.toString();
-	}
+    @Override
+    public String toString() {
+        return earlyItems.toString();
+    }
 
-	public boolean hasLeoItem() {
-		return leoItem().isPresent();
-	}
+    public boolean hasLeoItem() {
+        return leoItem().isPresent();
+    }
 }

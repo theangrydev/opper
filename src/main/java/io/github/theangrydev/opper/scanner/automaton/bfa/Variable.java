@@ -19,24 +19,24 @@
 package io.github.theangrydev.opper.scanner.automaton.bfa;
 
 public class Variable {
-	private final int order;
-	private final int id;
+    private final int order;
+    private final int id;
 
-	public Variable(int order, int id) {
-		this.order = order;
-		this.id = id;
-	}
+    public Variable(int order, int id) {
+        this.order = order;
+        this.id = id;
+    }
 
-	public int order() {
-		return order;
-	}
+    public int order() {
+        return order;
+    }
 
-	public int id() {
-		return id;
-	}
+    public int id() {
+        return id;
+    }
 
-	@Override
-	public String toString() {
-		return "(" + order + "," + id + ")";
-	}
+    @Override
+    public String toString() {
+        return "(" + order + "," + id + ")";
+    }
 }

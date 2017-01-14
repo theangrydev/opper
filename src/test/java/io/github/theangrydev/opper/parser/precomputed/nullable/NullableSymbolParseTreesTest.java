@@ -28,74 +28,74 @@ import java.util.Optional;
 
 public class NullableSymbolParseTreesTest implements WithAssertions {
 
-	@Test
-	public void ambiguousNullParsesResultInAnException() {
-		Grammar grammar = new GrammarBuilder()
-			.withAcceptanceSymbol("ACCEPT")
-			.withStartSymbol("TREE")
-			.withEmptySymbol("NONE")
-			.withRule("A", "B")
-			.withRule("A", "C")
-			.withRule("B", "NONE")
-			.withRule("C", "NONE")
-			.build();
+    @Test
+    public void ambiguousNullParsesResultInAnException() {
+        Grammar grammar = new GrammarBuilder()
+                .withAcceptanceSymbol("ACCEPT")
+                .withStartSymbol("TREE")
+                .withEmptySymbol("NONE")
+                .withRule("A", "B")
+                .withRule("A", "C")
+                .withRule("B", "NONE")
+                .withRule("C", "NONE")
+                .build();
 
-		NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar));
+        NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar));
 
-		assertThatThrownBy(computer::computeNullableSymbols)
-			.isInstanceOf(IllegalStateException.class)
-			.hasMessageContaining("A -> B[B -> NONE[]")
-			.hasMessageContaining("A -> C[C -> NONE[]");
-	}
+        assertThatThrownBy(computer::computeNullableSymbols)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("A -> B[B -> NONE[]")
+                .hasMessageContaining("A -> C[C -> NONE[]");
+    }
 
-	@Test
-	public void parseTreeOneLevelDeepIsASingleNode() {
-		Grammar grammar = new GrammarBuilder()
-			.withAcceptanceSymbol("ACCEPT")
-			.withStartSymbol("A")
-			.withEmptySymbol("NONE")
-			.withRule("A", "NONE")
-			.build();
+    @Test
+    public void parseTreeOneLevelDeepIsASingleNode() {
+        Grammar grammar = new GrammarBuilder()
+                .withAcceptanceSymbol("ACCEPT")
+                .withStartSymbol("A")
+                .withEmptySymbol("NONE")
+                .withRule("A", "NONE")
+                .build();
 
-		NullableSymbolParseTrees nullableSymbolParseTrees = new NullableSymbolParseTrees(grammar, new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar)));
+        NullableSymbolParseTrees nullableSymbolParseTrees = new NullableSymbolParseTrees(grammar, new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar)));
 
-		Optional<ParseTree> parseTree = nullableSymbolParseTrees.nullableSymbolParseTree(grammar.symbolByName("A"));
+        Optional<ParseTree> parseTree = nullableSymbolParseTrees.nullableSymbolParseTree(grammar.symbolByName("A"));
 
-		assertThat(parseTree.get()).hasToString("A -> NONE[]");
-	}
+        assertThat(parseTree.get()).hasToString("A -> NONE[]");
+    }
 
-	@Test
-	public void parseTreeManyLevelsDeepHasNodeForEachRule() {
-		Grammar grammar = new GrammarBuilder()
-			.withAcceptanceSymbol("ACCEPT")
-			.withStartSymbol("A")
-			.withEmptySymbol("NONE")
-			.withRule("A", "B")
-			.withRule("B", "NONE")
-			.build();
+    @Test
+    public void parseTreeManyLevelsDeepHasNodeForEachRule() {
+        Grammar grammar = new GrammarBuilder()
+                .withAcceptanceSymbol("ACCEPT")
+                .withStartSymbol("A")
+                .withEmptySymbol("NONE")
+                .withRule("A", "B")
+                .withRule("B", "NONE")
+                .build();
 
-		NullableSymbolParseTrees nullableSymbolParseTrees = new NullableSymbolParseTrees(grammar, new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar)));
+        NullableSymbolParseTrees nullableSymbolParseTrees = new NullableSymbolParseTrees(grammar, new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar)));
 
-		Optional<ParseTree> parseTree = nullableSymbolParseTrees.nullableSymbolParseTree(grammar.symbolByName("A"));
+        Optional<ParseTree> parseTree = nullableSymbolParseTrees.nullableSymbolParseTree(grammar.symbolByName("A"));
 
-		assertThat(parseTree.get()).hasToString("A -> B[B -> NONE[]]");
-	}
+        assertThat(parseTree.get()).hasToString("A -> B[B -> NONE[]]");
+    }
 
-	@Test
-	public void parseTreeHasNodeForEachNullableChild() {
-		Grammar grammar = new GrammarBuilder()
-			.withAcceptanceSymbol("ACCEPT")
-			.withStartSymbol("A")
-			.withEmptySymbol("NONE")
-			.withRule("A", "B", "C")
-			.withRule("B", "NONE")
-			.withRule("C", "NONE")
-			.build();
+    @Test
+    public void parseTreeHasNodeForEachNullableChild() {
+        Grammar grammar = new GrammarBuilder()
+                .withAcceptanceSymbol("ACCEPT")
+                .withStartSymbol("A")
+                .withEmptySymbol("NONE")
+                .withRule("A", "B", "C")
+                .withRule("B", "NONE")
+                .withRule("C", "NONE")
+                .build();
 
-		NullableSymbolParseTrees nullableSymbolParseTrees = new NullableSymbolParseTrees(grammar, new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar)));
+        NullableSymbolParseTrees nullableSymbolParseTrees = new NullableSymbolParseTrees(grammar, new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar)));
 
-		Optional<ParseTree> parseTree = nullableSymbolParseTrees.nullableSymbolParseTree(grammar.symbolByName("A"));
+        Optional<ParseTree> parseTree = nullableSymbolParseTrees.nullableSymbolParseTree(grammar.symbolByName("A"));
 
-		assertThat(parseTree.get()).hasToString("A -> B C[B -> NONE[], C -> NONE[]]");
-	}
+        assertThat(parseTree.get()).hasToString("A -> B C[B -> NONE[], C -> NONE[]]");
+    }
 }

@@ -21,6 +21,7 @@ package io.github.theangrydev.opper.scanner;
 import java.io.IOException;
 
 public interface Scanner {
-	ScannedSymbol nextSymbol() throws IOException;
-	boolean hasNextSymbol();
+    ScannedSymbol nextSymbol() throws IOException;
+
+    boolean hasNextSymbol();
 }

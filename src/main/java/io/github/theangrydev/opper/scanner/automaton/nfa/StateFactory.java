@@ -25,32 +25,32 @@ import java.util.List;
 
 public class StateFactory {
 
-	private List<State> states;
-	private int idSequence;
+    private List<State> states;
+    private int idSequence;
 
-	public StateFactory() {
-		states = new ArrayList<>();
-	}
+    public StateFactory() {
+        states = new ArrayList<>();
+    }
 
-	public State anonymousState() {
-		return stateCreatedBy(null);
-	}
+    public State anonymousState() {
+        return stateCreatedBy(null);
+    }
 
-	public State acceptingState() {
-		return stateCreatedBy(null, true);
-	}
+    public State acceptingState() {
+        return stateCreatedBy(null, true);
+    }
 
-	public State stateCreatedBy(Symbol createdBy) {
-		return stateCreatedBy(createdBy, false);
-	}
+    public State stateCreatedBy(Symbol createdBy) {
+        return stateCreatedBy(createdBy, false);
+    }
 
-	private State stateCreatedBy(Symbol createdBy, boolean isAccepting) {
-		State state = new State(createdBy, idSequence++, isAccepting);
-		states.add(state);
-		return state;
-	}
+    private State stateCreatedBy(Symbol createdBy, boolean isAccepting) {
+        State state = new State(createdBy, idSequence++, isAccepting);
+        states.add(state);
+        return state;
+    }
 
-	public List<State> states() {
-		return states;
-	}
+    public List<State> states() {
+        return states;
+    }
 }

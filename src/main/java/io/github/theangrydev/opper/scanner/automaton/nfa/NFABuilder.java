@@ -24,19 +24,19 @@ import java.util.List;
 
 public class NFABuilder {
 
-	public static NFA convertToNFA(List<SymbolDefinition> symbolDefinitions) {
-		StateFactory stateFactory = new StateFactory();
-		TransitionFactory transitionFactory = new TransitionFactory();
-		State initial = stateFactory.anonymousState();
-		State accepting = stateFactory.acceptingState();
-		for (SymbolDefinition symbolDefinition : symbolDefinitions) {
-			SymbolOwnedStateGenerator generator = symbolDefinition.stateGenerator(stateFactory, transitionFactory);
-			State from = generator.newState();
-			State to = generator.newState();
-			initial.addNullTransition(from);
-			symbolDefinition.populate(generator, from, to);
-			to.addNullTransition(accepting);
-		}
-		return new NFA(initial, stateFactory.states(), transitionFactory.characterClassTransitions(), transitionFactory.characterTransitions());
-	}
+    public static NFA convertToNFA(List<SymbolDefinition> symbolDefinitions) {
+        StateFactory stateFactory = new StateFactory();
+        TransitionFactory transitionFactory = new TransitionFactory();
+        State initial = stateFactory.anonymousState();
+        State accepting = stateFactory.acceptingState();
+        for (SymbolDefinition symbolDefinition : symbolDefinitions) {
+            SymbolOwnedStateGenerator generator = symbolDefinition.stateGenerator(stateFactory, transitionFactory);
+            State from = generator.newState();
+            State to = generator.newState();
+            initial.addNullTransition(from);
+            symbolDefinition.populate(generator, from, to);
+            to.addNullTransition(accepting);
+        }
+        return new NFA(initial, stateFactory.states(), transitionFactory.characterClassTransitions(), transitionFactory.characterTransitions());
+    }
 }

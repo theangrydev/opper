@@ -33,54 +33,54 @@ import java.util.List;
 @RunWith(TableRunner.class)
 public class ComputedRulePredictionTest implements WithAssertions {
 
-	@Table({
-		@Row({"LIST",
-			"LIST -> . THING",
-			"LIST -> . LIST , THING",
-			"THING -> . TREE",
-			"THING -> . NAME",
-			"TREE -> . ( LIST )",
-			"NAME -> . ant",
-			"NAME -> . bat",
-			"NAME -> . cow"
-		}),
-		@Row({"THING",
-			"THING -> . TREE",
-			"THING -> . NAME",
-			"TREE -> . ( LIST )",
-			"NAME -> . ant",
-			"NAME -> . bat",
-			"NAME -> . cow"}),
-		@Row({"NAME",
-			"NAME -> . ant",
-			"NAME -> . bat",
-			"NAME -> . cow"}),
-		@Row({"TREE",
-			"TREE -> . ( LIST )"
-		}),
-		@Row({"ant"}),
-		@Row({"bat"}),
-		@Row({"cow"})
-	})
-	@Test
-	public void symbolsPredictRules(String symbol, String... predictedRules) {
-		Grammar grammar = new GrammarBuilder()
-			.withAcceptanceSymbol("ACCEPT")
-			.withStartSymbol("TREE")
-			.withRule("TREE", "(", "LIST", ")")
-			.withRule("LIST", "THING")
-			.withRule("LIST", "LIST", ",", "THING")
-			.withRule("THING", "TREE")
-			.withRule("THING", "NAME")
-			.withRule("NAME", "ant")
-			.withRule("NAME", "bat")
-			.withRule("NAME", "cow")
-			.build();
+    @Table({
+            @Row({"LIST",
+                    "LIST -> . THING",
+                    "LIST -> . LIST , THING",
+                    "THING -> . TREE",
+                    "THING -> . NAME",
+                    "TREE -> . ( LIST )",
+                    "NAME -> . ant",
+                    "NAME -> . bat",
+                    "NAME -> . cow"
+            }),
+            @Row({"THING",
+                    "THING -> . TREE",
+                    "THING -> . NAME",
+                    "TREE -> . ( LIST )",
+                    "NAME -> . ant",
+                    "NAME -> . bat",
+                    "NAME -> . cow"}),
+            @Row({"NAME",
+                    "NAME -> . ant",
+                    "NAME -> . bat",
+                    "NAME -> . cow"}),
+            @Row({"TREE",
+                    "TREE -> . ( LIST )"
+            }),
+            @Row({"ant"}),
+            @Row({"bat"}),
+            @Row({"cow"})
+    })
+    @Test
+    public void symbolsPredictRules(String symbol, String... predictedRules) {
+        Grammar grammar = new GrammarBuilder()
+                .withAcceptanceSymbol("ACCEPT")
+                .withStartSymbol("TREE")
+                .withRule("TREE", "(", "LIST", ")")
+                .withRule("LIST", "THING")
+                .withRule("LIST", "LIST", ",", "THING")
+                .withRule("THING", "TREE")
+                .withRule("THING", "NAME")
+                .withRule("NAME", "ant")
+                .withRule("NAME", "bat")
+                .withRule("NAME", "cow")
+                .build();
 
-		ComputedRulePrediction prediction = new ComputedRulePrediction(grammar);
+        ComputedRulePrediction prediction = new ComputedRulePrediction(grammar);
 
-		List<DottedRule> predictions = prediction.rulesThatCanBeTriggeredBy(grammar.symbolByName(symbol));
+        List<DottedRule> predictions = prediction.rulesThatCanBeTriggeredBy(grammar.symbolByName(symbol));
 
-		assertThat(predictions).extracting(String::valueOf).containsOnly(predictedRules);
-	}
+        assertThat(predictions).extracting(String::valueOf).containsOnly(predictedRules);
+    }
 }

@@ -33,31 +33,31 @@ import static io.github.theangrydev.opper.grammar.Rule.triggeredBy;
 
 public class DerivationConsequences {
 
-	private final Function<Rule, Symbol> consequence;
-	private final Grammar grammar;
+    private final Function<Rule, Symbol> consequence;
+    private final Grammar grammar;
 
-	public DerivationConsequences(Grammar grammar, Function<Rule, Symbol> consequence) {
-		this.consequence = consequence;
-		this.grammar = grammar;
-	}
+    public DerivationConsequences(Grammar grammar, Function<Rule, Symbol> consequence) {
+        this.consequence = consequence;
+        this.grammar = grammar;
+    }
 
-	public Set<Symbol> of(Symbol symbol) {
-		List<Symbol> confirmedConsequences = new ObjectArrayList<>();
-		confirmedConsequences.add(symbol);
+    public Set<Symbol> of(Symbol symbol) {
+        List<Symbol> confirmedConsequences = new ObjectArrayList<>();
+        confirmedConsequences.add(symbol);
 
-		Set<Symbol> uniqueConsequences = new ObjectArraySet<>();
-		uniqueConsequences.add(symbol);
+        Set<Symbol> uniqueConsequences = new ObjectArraySet<>();
+        uniqueConsequences.add(symbol);
 
-		confirmedConsequences.forEach(confirmedConsequence -> rulesTriggeredBy(confirmedConsequence).map(consequence).forEach(consequence -> {
-			boolean wasNew = uniqueConsequences.add(consequence);
-			if (wasNew) {
-				confirmedConsequences.add(consequence);
-			}
-		}));
-		return uniqueConsequences;
-	}
+        confirmedConsequences.forEach(confirmedConsequence -> rulesTriggeredBy(confirmedConsequence).map(consequence).forEach(consequence -> {
+            boolean wasNew = uniqueConsequences.add(consequence);
+            if (wasNew) {
+                confirmedConsequences.add(consequence);
+            }
+        }));
+        return uniqueConsequences;
+    }
 
-	private Stream<Rule> rulesTriggeredBy(Symbol symbol) {
-		return grammar.rules().stream().filter(triggeredBy(symbol));
-	}
+    private Stream<Rule> rulesTriggeredBy(Symbol symbol) {
+        return grammar.rules().stream().filter(triggeredBy(symbol));
+    }
 }

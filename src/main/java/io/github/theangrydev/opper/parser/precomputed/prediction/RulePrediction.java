@@ -24,6 +24,7 @@ import io.github.theangrydev.opper.parser.early.DottedRule;
 import java.util.List;
 
 public interface RulePrediction {
-	List<DottedRule> rulesThatCanBeTriggeredBy(Symbol startSymbol);
-	DottedRule initial();
+    List<DottedRule> rulesThatCanBeTriggeredBy(Symbol startSymbol);
+
+    DottedRule initial();
 }

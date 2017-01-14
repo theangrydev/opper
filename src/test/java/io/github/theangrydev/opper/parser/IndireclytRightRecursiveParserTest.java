@@ -31,19 +31,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class IndireclytRightRecursiveParserTest {
 
-	@Test
-	public void shouldRecogniseAnIndirectlyRightRecursiveGrammar() throws IOException {
-		Grammar grammar = new GrammarBuilder()
-			.withAcceptanceSymbol("ACCEPT")
-			.withStartSymbol("START")
-			.withRule("START", "REPEATED", "INDIRECT")
-			.withRule("START", "REPEATED")
-			.withRule("INDIRECT", "MIDDLE", "START")
-			.build();
-		Scanner scanner = FixedScanner.scanner(grammar, "REPEATED", "MIDDLE", "REPEATED", "MIDDLE", "REPEATED");
+    @Test
+    public void shouldRecogniseAnIndirectlyRightRecursiveGrammar() throws IOException {
+        Grammar grammar = new GrammarBuilder()
+                .withAcceptanceSymbol("ACCEPT")
+                .withStartSymbol("START")
+                .withRule("START", "REPEATED", "INDIRECT")
+                .withRule("START", "REPEATED")
+                .withRule("INDIRECT", "MIDDLE", "START")
+                .build();
+        Scanner scanner = FixedScanner.scanner(grammar, "REPEATED", "MIDDLE", "REPEATED", "MIDDLE", "REPEATED");
 
-		Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
+        Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
 
-		assertThat(parser.parse()).isPresent();
-	}
+        assertThat(parser.parse()).isPresent();
+    }
 }

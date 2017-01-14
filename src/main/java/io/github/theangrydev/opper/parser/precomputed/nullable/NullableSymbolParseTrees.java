@@ -29,19 +29,19 @@ import java.util.Optional;
 
 public class NullableSymbolParseTrees {
 
-	private final ObjectList<Optional<ParseTree>> nullableSymbols;
+    private final ObjectList<Optional<ParseTree>> nullableSymbols;
 
-	public NullableSymbolParseTrees(Grammar grammar, NullableSymbolComputer nullableSymbolComputer) {
-		int symbols = grammar.symbols().size();
-		this.nullableSymbols = new ObjectArrayList<>(symbols);
-		nullableSymbols.size(symbols);
-		Map<Symbol, ParseTree> computedNullableSymbols = nullableSymbolComputer.computeNullableSymbols();
-		for (Symbol symbol : grammar.symbols()) {
-			nullableSymbols.set(symbol.id(), Optional.ofNullable(computedNullableSymbols.get(symbol)));
-		}
-	}
+    public NullableSymbolParseTrees(Grammar grammar, NullableSymbolComputer nullableSymbolComputer) {
+        int symbols = grammar.symbols().size();
+        this.nullableSymbols = new ObjectArrayList<>(symbols);
+        nullableSymbols.size(symbols);
+        Map<Symbol, ParseTree> computedNullableSymbols = nullableSymbolComputer.computeNullableSymbols();
+        for (Symbol symbol : grammar.symbols()) {
+            nullableSymbols.set(symbol.id(), Optional.ofNullable(computedNullableSymbols.get(symbol)));
+        }
+    }
 
-	public Optional<ParseTree> nullableSymbolParseTree(Symbol symbol) {
-		return nullableSymbols.get(symbol.id());
-	}
+    public Optional<ParseTree> nullableSymbolParseTree(Symbol symbol) {
+        return nullableSymbols.get(symbol.id());
+    }
 }

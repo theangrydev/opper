@@ -24,18 +24,18 @@ import io.github.theangrydev.opper.parser.precomputed.DerivationConsequences;
 
 public class ComputedRightRecursion implements RightRecursion {
 
-	private final DerivationConsequences derivationSuffixes;
+    private final DerivationConsequences derivationSuffixes;
 
-	public ComputedRightRecursion(Grammar grammar) {
-		this.derivationSuffixes = new DerivationConsequences(grammar, Rule::derivationSuffix);
-	}
+    public ComputedRightRecursion(Grammar grammar) {
+        this.derivationSuffixes = new DerivationConsequences(grammar, Rule::derivationSuffix);
+    }
 
-	@Override
-	public boolean isRightRecursive(Rule rule) {
-		return rule.isRightRecursive() || isIndirectlyRightRecursive(rule);
-	}
+    @Override
+    public boolean isRightRecursive(Rule rule) {
+        return rule.isRightRecursive() || isIndirectlyRightRecursive(rule);
+    }
 
-	private boolean isIndirectlyRightRecursive(Rule rule) {
-		return derivationSuffixes.of(rule.derivationSuffix()).contains(rule.trigger());
-	}
+    private boolean isIndirectlyRightRecursive(Rule rule) {
+        return derivationSuffixes.of(rule.derivationSuffix()).contains(rule.trigger());
+    }
 }

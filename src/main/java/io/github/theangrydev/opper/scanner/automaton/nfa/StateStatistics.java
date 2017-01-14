@@ -27,48 +27,48 @@ import java.util.stream.Collectors;
 
 public class StateStatistics {
 
-	private Multiset<Transition> transitionFrequencies;
-	private Multiset<State> stateFrequencies;
+    private Multiset<Transition> transitionFrequencies;
+    private Multiset<State> stateFrequencies;
 
-	public StateStatistics() {
-		this.transitionFrequencies = HashMultiset.create();
-		this.stateFrequencies = HashMultiset.create();
-	}
+    public StateStatistics() {
+        this.transitionFrequencies = HashMultiset.create();
+        this.stateFrequencies = HashMultiset.create();
+    }
 
-	public void record(State state) {
-		state.recordStatistics(this);
-	}
+    public void record(State state) {
+        state.recordStatistics(this);
+    }
 
-	public ImmutableMultiset<Transition> transitionFrequencies() {
-		return Multisets.copyHighestCountFirst(transitionFrequencies);
-	}
+    public ImmutableMultiset<Transition> transitionFrequencies() {
+        return Multisets.copyHighestCountFirst(transitionFrequencies);
+    }
 
-	public ImmutableMultiset<State> stateFrequencies() {
-		return Multisets.copyHighestCountFirst(stateFrequencies);
-	}
+    public ImmutableMultiset<State> stateFrequencies() {
+        return Multisets.copyHighestCountFirst(stateFrequencies);
+    }
 
-	public void recordCharacter(Transition transition, int times) {
-		transitionFrequencies.add(transition, times);
-	}
+    public void recordCharacter(Transition transition, int times) {
+        transitionFrequencies.add(transition, times);
+    }
 
-	public void recordState(State state) {
-		recordState(state, 1);
-	}
+    public void recordState(State state) {
+        recordState(state, 1);
+    }
 
-	public void recordState(State state, int times) {
-		stateFrequencies.add(state, times);
-	}
+    public void recordState(State state, int times) {
+        stateFrequencies.add(state, times);
+    }
 
-	@Override
-	public String toString() {
-		return "StateStatistics{" +
-			"transitionFrequencies=" + print(transitionFrequencies) +
-			", stateFrequencies=" + print(stateFrequencies) +
-			'}';
-	}
+    @Override
+    public String toString() {
+        return "StateStatistics{" +
+                "transitionFrequencies=" + print(transitionFrequencies) +
+                ", stateFrequencies=" + print(stateFrequencies) +
+                '}';
+    }
 
-	private String print(Multiset<?> frequencies) {
-		ImmutableMultiset<?> highestFirst = Multisets.copyHighestCountFirst(frequencies);
-		return highestFirst.elementSet().stream().map(element -> element + ":" + highestFirst.count(element)).collect(Collectors.joining("\n", "\n", "\n"));
-	}
+    private String print(Multiset<?> frequencies) {
+        ImmutableMultiset<?> highestFirst = Multisets.copyHighestCountFirst(frequencies);
+        return highestFirst.elementSet().stream().map(element -> element + ":" + highestFirst.count(element)).collect(Collectors.joining("\n", "\n", "\n"));
+    }
 }

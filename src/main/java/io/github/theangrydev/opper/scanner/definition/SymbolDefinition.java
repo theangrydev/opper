@@ -25,23 +25,23 @@ import io.github.theangrydev.opper.scanner.automaton.nfa.SymbolOwnedStateGenerat
 import io.github.theangrydev.opper.scanner.automaton.nfa.TransitionFactory;
 
 public class SymbolDefinition {
-	private final Symbol symbol;
-	private final Expression expression;
+    private final Symbol symbol;
+    private final Expression expression;
 
-	private SymbolDefinition(Symbol symbol, Expression expression) {
-		this.symbol = symbol;
-		this.expression = expression;
-	}
+    private SymbolDefinition(Symbol symbol, Expression expression) {
+        this.symbol = symbol;
+        this.expression = expression;
+    }
 
-	public static SymbolDefinition definition(Symbol symbol, Expression expression) {
-		return new SymbolDefinition(symbol, expression);
-	}
+    public static SymbolDefinition definition(Symbol symbol, Expression expression) {
+        return new SymbolDefinition(symbol, expression);
+    }
 
-	public void populate(SymbolOwnedStateGenerator generator, State from, State to) {
-		expression.populate(generator, from, to);
-	}
+    public void populate(SymbolOwnedStateGenerator generator, State from, State to) {
+        expression.populate(generator, from, to);
+    }
 
-	public SymbolOwnedStateGenerator stateGenerator(StateFactory stateFactory, TransitionFactory transitionFactory) {
-		return new SymbolOwnedStateGenerator(symbol, stateFactory, transitionFactory);
-	}
+    public SymbolOwnedStateGenerator stateGenerator(StateFactory stateFactory, TransitionFactory transitionFactory) {
+        return new SymbolOwnedStateGenerator(symbol, stateFactory, transitionFactory);
+    }
 }

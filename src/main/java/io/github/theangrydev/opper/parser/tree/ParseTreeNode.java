@@ -27,57 +27,57 @@ import java.util.List;
 import static io.github.theangrydev.opper.parser.tree.ParseTreeLeaf.leaf;
 
 public class ParseTreeNode extends ParseTree {
-	private List<ParseTree> children;
+    private List<ParseTree> children;
 
-	private ParseTreeNode(Rule rule, List<ParseTree> children) {
-		super(rule);
-		this.children = children;
-	}
+    private ParseTreeNode(Rule rule, List<ParseTree> children) {
+        super(rule);
+        this.children = children;
+    }
 
-	public static ParseTreeNode node(Rule rule) {
-		return new ParseTreeNode(rule, new ArrayList<>(rule.derivationLength()));
-	}
+    public static ParseTreeNode node(Rule rule) {
+        return new ParseTreeNode(rule, new ArrayList<>(rule.derivationLength()));
+    }
 
-	public ParseTreeNode copy() {
-		return new ParseTreeNode(rule(), new ArrayList<>(children));
-	}
+    public ParseTreeNode copy() {
+        return new ParseTreeNode(rule(), new ArrayList<>(children));
+    }
 
-	public void withContent(String content, Location location) {
-		children.add(leaf(rule(), content, location));
-	}
+    public void withContent(String content, Location location) {
+        children.add(leaf(rule(), content, location));
+    }
 
-	public void withChild(ParseTree child) {
-		children.add(child);
-	}
+    public void withChild(ParseTree child) {
+        children.add(child);
+    }
 
-	@Override
-	public String content() {
-		return "";
-	}
+    @Override
+    public String content() {
+        return "";
+    }
 
-	@Override
-	public List<ParseTree> children() {
-		return children;
-	}
+    @Override
+    public List<ParseTree> children() {
+        return children;
+    }
 
-	@Override
-	public Location location() {
-		if (children.isEmpty()) {
-			return Location.location(0, 0, 0, 0);
-		}
-		return Location.between(firstChild().location(), lastChild().location());
-	}
+    @Override
+    public Location location() {
+        if (children.isEmpty()) {
+            return Location.location(0, 0, 0, 0);
+        }
+        return Location.between(firstChild().location(), lastChild().location());
+    }
 
-	@Override
-	public String toString() {
-		return rule().toString() + children.toString();
-	}
+    @Override
+    public String toString() {
+        return rule().toString() + children.toString();
+    }
 
-	public ParseTree firstChild() {
-		return children().get(0);
-	}
+    public ParseTree firstChild() {
+        return children().get(0);
+    }
 
-	public ParseTree lastChild() {
-		return children().get(children().size() - 1);
-	}
+    public ParseTree lastChild() {
+        return children().get(children().size() - 1);
+    }
 }

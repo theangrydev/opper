@@ -41,26 +41,26 @@ import static java.util.Collections.nCopies;
 @RunWith(TableRunner.class)
 public class UnmarkedMiddleRecursionParserTest implements WithAssertions {
 
-	@Table({
-		@Row({"1", "false"}),
-		@Row({"2", "true"}),
-		@Row({"3", "false"}),
-		@Row({"4", "true"}),
-		@Row({"5", "false"}),
-		@Row({"6", "true"})
-	})
-	@Test
-	public void shouldRecogniseAGrammarWithAnUnmarkedMiddleRecursion(String repetitions, String shouldParse) throws IOException {
-		Grammar grammar = new GrammarBuilder()
-			.withAcceptanceSymbol("ACCEPT")
-			.withStartSymbol("START")
-			.withRule("START", "REPEATED", "START", "REPEATED")
-			.withRule("START", "REPEATED", "REPEATED")
-			.build();
-		Scanner scanner = scanner(nCopies(parseInt(repetitions), scannedSymbol(grammar.symbolByName("REPEATED"), "", location(1, 1, 1, 1))));
+    @Table({
+            @Row({"1", "false"}),
+            @Row({"2", "true"}),
+            @Row({"3", "false"}),
+            @Row({"4", "true"}),
+            @Row({"5", "false"}),
+            @Row({"6", "true"})
+    })
+    @Test
+    public void shouldRecogniseAGrammarWithAnUnmarkedMiddleRecursion(String repetitions, String shouldParse) throws IOException {
+        Grammar grammar = new GrammarBuilder()
+                .withAcceptanceSymbol("ACCEPT")
+                .withStartSymbol("START")
+                .withRule("START", "REPEATED", "START", "REPEATED")
+                .withRule("START", "REPEATED", "REPEATED")
+                .build();
+        Scanner scanner = scanner(nCopies(parseInt(repetitions), scannedSymbol(grammar.symbolByName("REPEATED"), "", location(1, 1, 1, 1))));
 
-		Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
+        Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
 
-		assertThat(parser.parse().isPresent()).describedAs(repetitions + " should be " + shouldParse).isEqualTo(valueOf(shouldParse));
-	}
+        assertThat(parser.parse().isPresent()).describedAs(repetitions + " should be " + shouldParse).isEqualTo(valueOf(shouldParse));
+    }
 }

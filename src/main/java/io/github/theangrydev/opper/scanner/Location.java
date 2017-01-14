@@ -20,75 +20,75 @@ package io.github.theangrydev.opper.scanner;
 
 public class Location {
 
-	private final int startLine;
-	private final int startCharacter;
-	private final int endLine;
-	private final int endCharacter;
+    private final int startLine;
+    private final int startCharacter;
+    private final int endLine;
+    private final int endCharacter;
 
-	private Location(int startLine, int startCharacter, int endLine, int endCharacter) {
-		this.startLine = startLine;
-		this.startCharacter = startCharacter;
-		this.endLine = endLine;
-		this.endCharacter = endCharacter;
-	}
+    private Location(int startLine, int startCharacter, int endLine, int endCharacter) {
+        this.startLine = startLine;
+        this.startCharacter = startCharacter;
+        this.endLine = endLine;
+        this.endCharacter = endCharacter;
+    }
 
-	public static Location location(int startLine, int startCharacter, int endLine, int endCharacter) {
-		return new Location(startLine, startCharacter, endLine, endCharacter);
-	}
+    public static Location location(int startLine, int startCharacter, int endLine, int endCharacter) {
+        return new Location(startLine, startCharacter, endLine, endCharacter);
+    }
 
-	public Location end() {
-		return location(endLine, endCharacter, endLine, endCharacter);
-	}
+    public Location end() {
+        return location(endLine, endCharacter, endLine, endCharacter);
+    }
 
-	public static Location between(Location start, Location end) {
-		return location(start.startLine, start.startCharacter, end.endLine, end.endCharacter);
-	}
+    public static Location between(Location start, Location end) {
+        return location(start.startLine, start.startCharacter, end.endLine, end.endCharacter);
+    }
 
-	public int startLine() {
-		return startLine;
-	}
+    public int startLine() {
+        return startLine;
+    }
 
-	public int startCharacter() {
-		return startCharacter;
-	}
+    public int startCharacter() {
+        return startCharacter;
+    }
 
-	public int endLine() {
-		return endLine;
-	}
+    public int endLine() {
+        return endLine;
+    }
 
-	public int endCharacter() {
-		return endCharacter;
-	}
+    public int endCharacter() {
+        return endCharacter;
+    }
 
-	@Override
-	public boolean equals(Object other) {
-		if (this == other) {
-			return true;
-		}
-		if (other == null || getClass() != other.getClass()) {
-			return false;
-		}
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
 
-		Location location = (Location) other;
-		return startLine == location.startLine && startCharacter == location.startCharacter && endLine == location.endLine && endCharacter == location.endCharacter;
-	}
+        Location location = (Location) other;
+        return startLine == location.startLine && startCharacter == location.startCharacter && endLine == location.endLine && endCharacter == location.endCharacter;
+    }
 
-	@Override
-	public int hashCode() {
-		int result = startLine;
-		result = 31 * result + startCharacter;
-		result = 31 * result + endLine;
-		result = 31 * result + endCharacter;
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        int result = startLine;
+        result = 31 * result + startCharacter;
+        result = 31 * result + endLine;
+        result = 31 * result + endCharacter;
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		return "Location{" +
-			"startLine=" + startLine +
-			", startCharacter=" + startCharacter +
-			", endLine=" + endLine +
-			", endCharacter=" + endCharacter +
-			'}';
-	}
+    @Override
+    public String toString() {
+        return "Location{" +
+                "startLine=" + startLine +
+                ", startCharacter=" + startCharacter +
+                ", endLine=" + endLine +
+                ", endCharacter=" + endCharacter +
+                '}';
+    }
 }

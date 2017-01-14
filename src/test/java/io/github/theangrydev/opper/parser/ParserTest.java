@@ -19,9 +19,9 @@
 package io.github.theangrydev.opper.parser;
 
 import io.github.theangrydev.opper.common.DoNothingLogger;
-import io.github.theangrydev.opper.scanner.FixedScanner;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
+import io.github.theangrydev.opper.scanner.FixedScanner;
 import io.github.theangrydev.opper.scanner.Scanner;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
@@ -30,18 +30,18 @@ import java.io.IOException;
 
 public class ParserTest implements WithAssertions {
 
-	@Test
-	public void shouldRecogniseASimpleGrammar() throws IOException {
-		Grammar grammar = new GrammarBuilder()
-			.withAcceptanceSymbol("ACCEPT")
-			.withStartSymbol("START")
-			.withRule("START", "MIDDLE", "FIRST")
-			.withRule("FIRST", "SECOND", "DUMMY")
-			.build();
-		Scanner scanner = FixedScanner.scanner(grammar, "MIDDLE", "SECOND", "DUMMY");
+    @Test
+    public void shouldRecogniseASimpleGrammar() throws IOException {
+        Grammar grammar = new GrammarBuilder()
+                .withAcceptanceSymbol("ACCEPT")
+                .withStartSymbol("START")
+                .withRule("START", "MIDDLE", "FIRST")
+                .withRule("FIRST", "SECOND", "DUMMY")
+                .build();
+        Scanner scanner = FixedScanner.scanner(grammar, "MIDDLE", "SECOND", "DUMMY");
 
-		Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
+        Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
 
-		assertThat(parser.parse()).isPresent();
-	}
+        assertThat(parser.parse()).isPresent();
+    }
 }

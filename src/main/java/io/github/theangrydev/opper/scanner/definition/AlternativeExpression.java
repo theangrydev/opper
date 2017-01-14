@@ -26,31 +26,31 @@ import java.util.List;
 
 public class AlternativeExpression implements Expression {
 
-	private final List<Expression> alternatives;
+    private final List<Expression> alternatives;
 
-	private AlternativeExpression(List<Expression> alternatives) {
-		this.alternatives = alternatives;
-	}
+    private AlternativeExpression(List<Expression> alternatives) {
+        this.alternatives = alternatives;
+    }
 
-	public static AlternativeExpression either(Expression... alternatives) {
-		return new AlternativeExpression(Arrays.asList(alternatives));
-	}
+    public static AlternativeExpression either(Expression... alternatives) {
+        return new AlternativeExpression(Arrays.asList(alternatives));
+    }
 
-	@Override
-	public void populate(SymbolOwnedStateGenerator generator, State from, State to) {
-		for (Expression alternative : alternatives) {
-			State alternativeFrom = generator.newState();
-			from.addNullTransition(alternativeFrom);
+    @Override
+    public void populate(SymbolOwnedStateGenerator generator, State from, State to) {
+        for (Expression alternative : alternatives) {
+            State alternativeFrom = generator.newState();
+            from.addNullTransition(alternativeFrom);
 
-			State alternativeTo = generator.newState();
-			alternativeTo.addNullTransition(to);
+            State alternativeTo = generator.newState();
+            alternativeTo.addNullTransition(to);
 
-			alternative.populate(generator, alternativeFrom, alternativeTo);
-		}
-	}
+            alternative.populate(generator, alternativeFrom, alternativeTo);
+        }
+    }
 
-	@Override
-	public String toString() {
-		return alternatives.toString();
-	}
+    @Override
+    public String toString() {
+        return alternatives.toString();
+    }
 }

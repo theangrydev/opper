@@ -25,29 +25,29 @@ import java.util.stream.Stream;
 
 public class BinaryDecisionDiagramFactory {
 
-	private final BDD bdd;
+    private final BDD bdd;
 
-	public BinaryDecisionDiagramFactory() {
-		this.bdd = new BDD(1000,100);
-	}
+    public BinaryDecisionDiagramFactory() {
+        this.bdd = new BDD(1000, 100);
+    }
 
-	public BinaryDecisionDiagram newVariable() {
-		return BinaryDecisionDiagram.newVariable(bdd);
-	}
+    public BinaryDecisionDiagram newVariable() {
+        return BinaryDecisionDiagram.newVariable(bdd);
+    }
 
-	public Permutation createPermutation(Stream<BinaryDecisionDiagram> fromSetVariables, Stream<BinaryDecisionDiagram> toSetVariables) {
-		return bdd.createPermutation(variableIds(fromSetVariables), variableIds(toSetVariables));
-	}
+    public Permutation createPermutation(Stream<BinaryDecisionDiagram> fromSetVariables, Stream<BinaryDecisionDiagram> toSetVariables) {
+        return bdd.createPermutation(variableIds(fromSetVariables), variableIds(toSetVariables));
+    }
 
-	private int[] variableIds(Stream<BinaryDecisionDiagram> variables) {
-		return variables.mapToInt(BinaryDecisionDiagram::id).toArray();
-	}
+    private int[] variableIds(Stream<BinaryDecisionDiagram> variables) {
+        return variables.mapToInt(BinaryDecisionDiagram::id).toArray();
+    }
 
-	public BinaryDecisionDiagram anything() {
-		return BinaryDecisionDiagram.anything(bdd);
-	}
+    public BinaryDecisionDiagram anything() {
+        return BinaryDecisionDiagram.anything(bdd);
+    }
 
-	public BinaryDecisionDiagram nothing() {
-		return BinaryDecisionDiagram.nothing(bdd);
-	}
+    public BinaryDecisionDiagram nothing() {
+        return BinaryDecisionDiagram.nothing(bdd);
+    }
 }

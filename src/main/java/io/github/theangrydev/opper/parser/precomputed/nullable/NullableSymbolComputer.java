@@ -30,19 +30,19 @@ import static java.util.stream.Collectors.toMap;
 
 public class NullableSymbolComputer {
 
-	private final Grammar grammar;
-	private final NullableSymbolParseTreeComputer nullableSymbolParseTreeComputer;
+    private final Grammar grammar;
+    private final NullableSymbolParseTreeComputer nullableSymbolParseTreeComputer;
 
-	public NullableSymbolComputer(Grammar grammar, NullableSymbolParseTreeComputer nullableSymbolParseTreeComputer) {
-		this.grammar = grammar;
-		this.nullableSymbolParseTreeComputer = nullableSymbolParseTreeComputer;
-	}
+    public NullableSymbolComputer(Grammar grammar, NullableSymbolParseTreeComputer nullableSymbolParseTreeComputer) {
+        this.grammar = grammar;
+        this.nullableSymbolParseTreeComputer = nullableSymbolParseTreeComputer;
+    }
 
-	public Map<Symbol, ParseTree> computeNullableSymbols() {
-		return grammar.symbols().stream()
-			.map(nullableSymbolParseTreeComputer::nullParseTree)
-			.filter(Optional::isPresent)
-			.map(Optional::get)
-			.collect(toMap(ParseTree::trigger, identity()));
-	}
+    public Map<Symbol, ParseTree> computeNullableSymbols() {
+        return grammar.symbols().stream()
+                .map(nullableSymbolParseTreeComputer::nullParseTree)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(toMap(ParseTree::trigger, identity()));
+    }
 }

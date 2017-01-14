@@ -30,18 +30,18 @@ import java.util.List;
 
 public class BFAScannerFactory implements ScannerFactory {
 
-	private final BFA bfa;
+    private final BFA bfa;
 
-	public BFAScannerFactory(List<SymbolDefinition> symbolDefinitions) {
-		NFA nfa = NFABuilder.convertToNFA(symbolDefinitions);
-		nfa.removeEpsilionTransitions();
-		nfa.removeUnreachableStates();
-		nfa.relabelAccordingToFrequencies();
-		bfa = BFABuilder.convertToBFA(nfa);
-	}
+    public BFAScannerFactory(List<SymbolDefinition> symbolDefinitions) {
+        NFA nfa = NFABuilder.convertToNFA(symbolDefinitions);
+        nfa.removeEpsilionTransitions();
+        nfa.removeUnreachableStates();
+        nfa.relabelAccordingToFrequencies();
+        bfa = BFABuilder.convertToBFA(nfa);
+    }
 
-	@Override
-	public Scanner scanner(Reader charactersToParse) throws IOException {
-		return BFAScanner.createBFAScanner(bfa, charactersToParse);
-	}
+    @Override
+    public Scanner scanner(Reader charactersToParse) throws IOException {
+        return BFAScanner.createBFAScanner(bfa, charactersToParse);
+    }
 }

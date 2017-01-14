@@ -23,81 +23,81 @@ import jdd.bdd.Permutation;
 
 public class BinaryDecisionDiagram {
 
-	private final BDD bdd;
-	private int id;
+    private final BDD bdd;
+    private int id;
 
-	private BinaryDecisionDiagram(BDD bdd, int id) {
-		this.bdd = bdd;
-		this.id = bdd.ref(id);
-	}
+    private BinaryDecisionDiagram(BDD bdd, int id) {
+        this.bdd = bdd;
+        this.id = bdd.ref(id);
+    }
 
-	public static BinaryDecisionDiagram newVariable(BDD bdd) {
-		return new BinaryDecisionDiagram(bdd, bdd.createVar());
-	}
+    public static BinaryDecisionDiagram newVariable(BDD bdd) {
+        return new BinaryDecisionDiagram(bdd, bdd.createVar());
+    }
 
-	public static BinaryDecisionDiagram anything(BDD bdd) {
-		return new BinaryDecisionDiagram(bdd, bdd.getOne());
-	}
+    public static BinaryDecisionDiagram anything(BDD bdd) {
+        return new BinaryDecisionDiagram(bdd, bdd.getOne());
+    }
 
-	public static BinaryDecisionDiagram nothing(BDD bdd) {
-		return new BinaryDecisionDiagram(bdd, bdd.getZero());
-	}
+    public static BinaryDecisionDiagram nothing(BDD bdd) {
+        return new BinaryDecisionDiagram(bdd, bdd.getZero());
+    }
 
-	public int id() {
-		return id;
-	}
+    public int id() {
+        return id;
+    }
 
-	public BinaryDecisionDiagram not() {
-		return new BinaryDecisionDiagram(bdd, bdd.not(id));
-	}
+    public BinaryDecisionDiagram not() {
+        return new BinaryDecisionDiagram(bdd, bdd.not(id));
+    }
 
-	public BinaryDecisionDiagram andTo(BinaryDecisionDiagram binaryDecisionDiagram) {
-		this.id = bdd.andTo(id, binaryDecisionDiagram.id);
-		return this;
-	}
+    public BinaryDecisionDiagram andTo(BinaryDecisionDiagram binaryDecisionDiagram) {
+        this.id = bdd.andTo(id, binaryDecisionDiagram.id);
+        return this;
+    }
 
-	public BinaryDecisionDiagram orTo(BinaryDecisionDiagram binaryDecisionDiagram) {
-		this.id = bdd.orTo(id, binaryDecisionDiagram.id);
-		return this;
-	}
+    public BinaryDecisionDiagram orTo(BinaryDecisionDiagram binaryDecisionDiagram) {
+        this.id = bdd.orTo(id, binaryDecisionDiagram.id);
+        return this;
+    }
 
-	public BinaryDecisionDiagram and(BinaryDecisionDiagram binaryDecisionDiagram, BinaryDecisionDiagram buffer) {
-		buffer.discard();
-		buffer.id = bdd.ref(bdd.and(id, binaryDecisionDiagram.id));
-		return buffer;
-	}
+    public BinaryDecisionDiagram and(BinaryDecisionDiagram binaryDecisionDiagram, BinaryDecisionDiagram buffer) {
+        buffer.discard();
+        buffer.id = bdd.ref(bdd.and(id, binaryDecisionDiagram.id));
+        return buffer;
+    }
 
-	public boolean isZero() {
-		return id == bdd.getZero();
-	}
+    public boolean isZero() {
+        return id == bdd.getZero();
+    }
 
-	public int[] oneSatisfyingAssignment(int[] buffer) {
-		return bdd.oneSat(id, buffer);
-	}
+    public int[] oneSatisfyingAssignment(int[] buffer) {
+        return bdd.oneSat(id, buffer);
+    }
 
-	public void discard() {
-		discard(id);
-	}
+    public void discard() {
+        discard(id);
+    }
 
-	private void discard(int id) {
-		bdd.deref(id);
-	}
+    private void discard(int id) {
+        bdd.deref(id);
+    }
 
-	public BinaryDecisionDiagram replaceTo(Permutation permutation) {
-		int oldId = id;
-		this.id = bdd.replace(id, permutation);
-		discard(oldId);
-		return this;
-	}
+    public BinaryDecisionDiagram replaceTo(Permutation permutation) {
+        int oldId = id;
+        this.id = bdd.replace(id, permutation);
+        discard(oldId);
+        return this;
+    }
 
-	public BinaryDecisionDiagram relativeProductTo(BinaryDecisionDiagram transitions, BinaryDecisionDiagram existsFromStateAndCharacter) {
-		int oldId = id;
-		this.id = bdd.relProd(id, transitions.id, existsFromStateAndCharacter.id);
-		discard(oldId);
-		return this;
-	}
+    public BinaryDecisionDiagram relativeProductTo(BinaryDecisionDiagram transitions, BinaryDecisionDiagram existsFromStateAndCharacter) {
+        int oldId = id;
+        this.id = bdd.relProd(id, transitions.id, existsFromStateAndCharacter.id);
+        discard(oldId);
+        return this;
+    }
 
-	public BinaryDecisionDiagram copy() {
-		return new BinaryDecisionDiagram(bdd, bdd.ref(id));
-	}
+    public BinaryDecisionDiagram copy() {
+        return new BinaryDecisionDiagram(bdd, bdd.ref(id));
+    }
 }

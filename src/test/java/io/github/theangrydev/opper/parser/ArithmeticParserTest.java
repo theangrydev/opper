@@ -19,9 +19,9 @@
 package io.github.theangrydev.opper.parser;
 
 import io.github.theangrydev.opper.common.DoNothingLogger;
-import io.github.theangrydev.opper.scanner.FixedScanner;
 import io.github.theangrydev.opper.grammar.Grammar;
 import io.github.theangrydev.opper.grammar.GrammarBuilder;
+import io.github.theangrydev.opper.scanner.FixedScanner;
 import io.github.theangrydev.opper.scanner.Scanner;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
@@ -35,29 +35,30 @@ import java.io.IOException;
  * <M> ::= <M> "*" <T> | <T>
  * <T> ::= "1" | "2" | "3" | "4"
  * </pre>
+ *
  * @see <a href="https://en.wikipedia.org/w/index.php?title=Earley_recogniser&oldid=667926718#Example">Early recogniser example</a>
  */
 public class ArithmeticParserTest implements WithAssertions {
 
-	@Test
-	public void shouldRecogniseALeftRecursiveGrammar() throws IOException {
-		Grammar grammar = new GrammarBuilder()
-			.withAcceptanceSymbol("P")
-			.withStartSymbol("S")
-			.withRule("S", "S", "+", "M")
-			.withRule("S", "M")
-			.withRule("M", "M", "*", "T")
-			.withRule("M", "T")
-			.withRule("T", "1")
-			.withRule("T", "2")
-			.withRule("T", "3")
-			.withRule("T", "4")
-			.build();
+    @Test
+    public void shouldRecogniseALeftRecursiveGrammar() throws IOException {
+        Grammar grammar = new GrammarBuilder()
+                .withAcceptanceSymbol("P")
+                .withStartSymbol("S")
+                .withRule("S", "S", "+", "M")
+                .withRule("S", "M")
+                .withRule("M", "M", "*", "T")
+                .withRule("M", "T")
+                .withRule("T", "1")
+                .withRule("T", "2")
+                .withRule("T", "3")
+                .withRule("T", "4")
+                .build();
 
-		Scanner scanner = FixedScanner.scanner(grammar, "2", "+", "3", "+", "2", "+", "3", "*", "4");
+        Scanner scanner = FixedScanner.scanner(grammar, "2", "+", "3", "+", "2", "+", "3", "*", "4");
 
-		Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser( scanner);
+        Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
 
-		assertThat(parser.parse()).isPresent();
-	}
+        assertThat(parser.parse()).isPresent();
+    }
 }

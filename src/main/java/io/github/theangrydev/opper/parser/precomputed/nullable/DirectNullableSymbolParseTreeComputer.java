@@ -37,40 +37,40 @@ import static java.util.stream.Collectors.toList;
 
 public class DirectNullableSymbolParseTreeComputer implements NullableSymbolParseTreeComputer {
 
-	private final Grammar grammar;
-	private final NullableSymbolParseTreeComputer computer;
-	private final Map<Symbol, List<Rule>> rulesWithTrigger;
+    private final Grammar grammar;
+    private final NullableSymbolParseTreeComputer computer;
+    private final Map<Symbol, List<Rule>> rulesWithTrigger;
 
-	public DirectNullableSymbolParseTreeComputer(Grammar grammar, NullableSymbolParseTreeComputer computer) {
-		this.grammar = grammar;
-		this.computer = computer;
-		this.rulesWithTrigger = grammar.rules().stream().collect(groupingBy(Rule::trigger));
-	}
+    public DirectNullableSymbolParseTreeComputer(Grammar grammar, NullableSymbolParseTreeComputer computer) {
+        this.grammar = grammar;
+        this.computer = computer;
+        this.rulesWithTrigger = grammar.rules().stream().collect(groupingBy(Rule::trigger));
+    }
 
-	@Override
-	public Optional<ParseTree> nullParseTree(Symbol symbol) {
-		List<ParseTree> nullParseTrees = rulesWithTrigger.getOrDefault(symbol, emptyList()).stream().map(this::nullParseTree).filter(Optional::isPresent).map(Optional::get).collect(toList());
-		Preconditions.checkState(nullParseTrees.size() <= 1, "Found more than one null parse tree for symbol '%s': '%s'", symbol, nullParseTrees);
-		if (nullParseTrees.isEmpty()) {
-			return Optional.empty();
-		}
-		return Optional.of(nullParseTrees.get(0));
-	}
+    @Override
+    public Optional<ParseTree> nullParseTree(Symbol symbol) {
+        List<ParseTree> nullParseTrees = rulesWithTrigger.getOrDefault(symbol, emptyList()).stream().map(this::nullParseTree).filter(Optional::isPresent).map(Optional::get).collect(toList());
+        Preconditions.checkState(nullParseTrees.size() <= 1, "Found more than one null parse tree for symbol '%s': '%s'", symbol, nullParseTrees);
+        if (nullParseTrees.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(nullParseTrees.get(0));
+    }
 
-	private Optional<ParseTree> nullParseTree(Rule rule) {
-		if (derivationIsDirectlyEmpty(rule)) {
-			return Optional.of(ParseTreeNode.node(rule));
-		}
-		List<Optional<ParseTree>> derivation = rule.derivation().stream().map(computer::nullParseTree).collect(toList());
-		if (derivation.stream().anyMatch(not(Optional::isPresent))) {
-			return Optional.empty();
-		}
-		ParseTreeNode node = ParseTreeNode.node(rule);
-		derivation.stream().map(Optional::get).forEach(node::withChild);
-		return Optional.of(node);
-	}
+    private Optional<ParseTree> nullParseTree(Rule rule) {
+        if (derivationIsDirectlyEmpty(rule)) {
+            return Optional.of(ParseTreeNode.node(rule));
+        }
+        List<Optional<ParseTree>> derivation = rule.derivation().stream().map(computer::nullParseTree).collect(toList());
+        if (derivation.stream().anyMatch(not(Optional::isPresent))) {
+            return Optional.empty();
+        }
+        ParseTreeNode node = ParseTreeNode.node(rule);
+        derivation.stream().map(Optional::get).forEach(node::withChild);
+        return Optional.of(node);
+    }
 
-	private boolean derivationIsDirectlyEmpty(Rule rule) {
-		return rule.derivation().stream().allMatch(isEqual(grammar.emptySymbol()));
-	}
+    private boolean derivationIsDirectlyEmpty(Rule rule) {
+        return rule.derivation().stream().allMatch(isEqual(grammar.emptySymbol()));
+    }
 }

@@ -23,58 +23,58 @@ import java.util.function.Predicate;
 
 public class Rule {
 
-	private final int id;
-	private final Symbol trigger;
-	private final SymbolSequence derivation;
+    private final int id;
+    private final Symbol trigger;
+    private final SymbolSequence derivation;
 
-	public Rule(int id, Symbol trigger, SymbolSequence derivation) {
-		this.id = id;
-		this.trigger = trigger;
-		this.derivation = derivation;
-	}
+    public Rule(int id, Symbol trigger, SymbolSequence derivation) {
+        this.id = id;
+        this.trigger = trigger;
+        this.derivation = derivation;
+    }
 
-	public static Predicate<Rule> triggeredBy(Symbol symbol) {
-		return rule -> symbol == rule.trigger();
-	}
+    public static Predicate<Rule> triggeredBy(Symbol symbol) {
+        return rule -> symbol == rule.trigger();
+    }
 
-	public int derivationLength() {
-		return derivation.length();
-	}
+    public int derivationLength() {
+        return derivation.length();
+    }
 
-	public int derivationSuffixDotPosition() {
-		return derivation.length() - 1;
-	}
+    public int derivationSuffixDotPosition() {
+        return derivation.length() - 1;
+    }
 
-	public Symbol derivationSuffix() {
-		return derivation(derivationSuffixDotPosition());
-	}
+    public Symbol derivationSuffix() {
+        return derivation(derivationSuffixDotPosition());
+    }
 
-	public boolean isRightRecursive() {
-		return derivationSuffix() == trigger();
-	}
+    public boolean isRightRecursive() {
+        return derivationSuffix() == trigger();
+    }
 
-	public Symbol derivation(int dotPosition) {
-		return derivation.symbolAt(dotPosition);
-	}
+    public Symbol derivation(int dotPosition) {
+        return derivation.symbolAt(dotPosition);
+    }
 
-	public List<Symbol> derivation() {
-		return derivation.symbols();
-	}
+    public List<Symbol> derivation() {
+        return derivation.symbols();
+    }
 
-	public Symbol derivationPrefix() {
-		return derivation(0);
-	}
+    public Symbol derivationPrefix() {
+        return derivation(0);
+    }
 
-	public Symbol trigger() {
-		return trigger;
-	}
+    public Symbol trigger() {
+        return trigger;
+    }
 
-	public int id() {
-		return id;
-	}
+    public int id() {
+        return id;
+    }
 
-	@Override
-	public String toString() {
-		return trigger + " -> " + derivation;
-	}
+    @Override
+    public String toString() {
+        return trigger + " -> " + derivation;
+    }
 }

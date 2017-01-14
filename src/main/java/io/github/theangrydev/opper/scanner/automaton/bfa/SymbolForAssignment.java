@@ -25,20 +25,20 @@ import java.util.List;
 
 public class SymbolForAssignment {
 
-	private final List<Symbol> symbolsByStateId;
-	private final AllVariables allVariables;
+    private final List<Symbol> symbolsByStateId;
+    private final AllVariables allVariables;
 
-	private SymbolForAssignment(AllVariables allVariables, List<Symbol> symbolsByStateId) {
-		this.allVariables = allVariables;
-		this.symbolsByStateId = symbolsByStateId;
-	}
+    private SymbolForAssignment(AllVariables allVariables, List<Symbol> symbolsByStateId) {
+        this.allVariables = allVariables;
+        this.symbolsByStateId = symbolsByStateId;
+    }
 
-	public static SymbolForAssignment make(NFA nfa, AllVariables allVariables) {
-		return new SymbolForAssignment(allVariables, nfa.symbolsByStateId());
-	}
+    public static SymbolForAssignment make(NFA nfa, AllVariables allVariables) {
+        return new SymbolForAssignment(allVariables, nfa.symbolsByStateId());
+    }
 
-	public Symbol symbolForFromState(int[] fromStateAssignment) {
-		return symbolsByStateId.get(allVariables.fromStateId(fromStateAssignment));
-	}
+    public Symbol symbolForFromState(int[] fromStateAssignment) {
+        return symbolsByStateId.get(allVariables.fromStateId(fromStateAssignment));
+    }
 
 }

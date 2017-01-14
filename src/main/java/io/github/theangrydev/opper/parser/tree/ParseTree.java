@@ -25,21 +25,23 @@ import io.github.theangrydev.opper.scanner.Location;
 import java.util.List;
 
 public abstract class ParseTree {
-	private final Rule rule;
+    private final Rule rule;
 
-	public ParseTree(Rule rule) {
-		this.rule = rule;
-	}
+    public ParseTree(Rule rule) {
+        this.rule = rule;
+    }
 
-	public Rule rule() {
-		return rule;
-	}
+    public Rule rule() {
+        return rule;
+    }
 
-	public abstract String content();
-	public abstract List<ParseTree> children();
-	public abstract Location location();
+    public abstract String content();
 
-	public Symbol trigger() {
-		return rule().trigger();
-	}
+    public abstract List<ParseTree> children();
+
+    public abstract Location location();
+
+    public Symbol trigger() {
+        return rule().trigger();
+    }
 }

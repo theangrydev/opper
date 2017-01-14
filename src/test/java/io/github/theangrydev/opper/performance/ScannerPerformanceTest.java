@@ -42,68 +42,68 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class ScannerPerformanceTest implements WithAssertions {
 
-	private static final int NUMBER_OF_CHARACTERS = 100000;
+    private static final int NUMBER_OF_CHARACTERS = 100000;
 
-	@Test
-	public void shouldScanASimpleExpression() throws IOException {
-		SymbolFactory symbolFactory = new SymbolFactory();
-		List<SymbolDefinition> symbolDefinitions = new ArrayList<>();
-		Expression uppercase = either(character('A'), character('B'), character('C'), character('D'), character('E'), character('F'), character('G'), character('H'), character('I'), character('J'), character('K'), character('L'), character('M'), character('N'), character('O'), character('P'), character('Q'), character('R'), character('S'), character('T'), character('U'), character('V'), character('W'), character('X'), character('Y'), character('Z'));
-		Expression digit = either(character('0'), character('1'), character('2'), character('3'), character('4'), character('5'), character('6'), character('7'), character('8'), character('9'));
-		Expression lowercase = either(character('a'), character('b'), character('c'), character('d'), character('e'), character('f'), character('g'), character('h'), character('i'), character('j'), character('k'), character('l'), character('m'), character('n'), character('o'), character('p'), character('q'), character('r'), character('s'), character('t'), character('u'), character('v'), character('w'), character('x'), character('y'), character('z'));
-		Expression integer = concatenate(digit, repeat(digit));
+    @Test
+    public void shouldScanASimpleExpression() throws IOException {
+        SymbolFactory symbolFactory = new SymbolFactory();
+        List<SymbolDefinition> symbolDefinitions = new ArrayList<>();
+        Expression uppercase = either(character('A'), character('B'), character('C'), character('D'), character('E'), character('F'), character('G'), character('H'), character('I'), character('J'), character('K'), character('L'), character('M'), character('N'), character('O'), character('P'), character('Q'), character('R'), character('S'), character('T'), character('U'), character('V'), character('W'), character('X'), character('Y'), character('Z'));
+        Expression digit = either(character('0'), character('1'), character('2'), character('3'), character('4'), character('5'), character('6'), character('7'), character('8'), character('9'));
+        Expression lowercase = either(character('a'), character('b'), character('c'), character('d'), character('e'), character('f'), character('g'), character('h'), character('i'), character('j'), character('k'), character('l'), character('m'), character('n'), character('o'), character('p'), character('q'), character('r'), character('s'), character('t'), character('u'), character('v'), character('w'), character('x'), character('y'), character('z'));
+        Expression integer = concatenate(digit, repeat(digit));
 
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("&&"), concatenate(character('&'), character('&'))));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("||"), concatenate(character('|'), character('|'))));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("if"), concatenate(character('i'), character('f'))));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("else"), concatenate(concatenate(concatenate(character('e'), character('l')), character('s')), character('e'))));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("code"), concatenate(concatenate(concatenate(character('c'), character('o')), character('d')), character('e'))));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("api"), concatenate(concatenate(character('a'), character('p')), character('i'))));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("*"), character('*')));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("+"), character('+')));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("-"), character('-')));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("/"), character('/')));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol(";"), character(';')));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol(","), character(',')));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("("), character('(')));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol(")"), character(')')));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("=="), concatenate(character('='), character('='))));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("<"), character('<')));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol(">"), character('>')));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("<="), concatenate(character('<'), character('='))));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol(">="), concatenate(character('>'), character('='))));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("!="), concatenate(character('!'), character('='))));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol(":"), character('!')));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("="), character('=')));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("."), character('.')));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("Identifier"), concatenate(uppercase, repeat(either(lowercase, uppercase, digit)))));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("Integer"), integer));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("Real"), concatenate(concatenate(integer, character('.')), integer)));
-		symbolDefinitions.add(definition(symbolFactory.createSymbol("Whitespace"), either(character(' '), character('\n'), character('\t'))));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("&&"), concatenate(character('&'), character('&'))));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("||"), concatenate(character('|'), character('|'))));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("if"), concatenate(character('i'), character('f'))));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("else"), concatenate(concatenate(concatenate(character('e'), character('l')), character('s')), character('e'))));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("code"), concatenate(concatenate(concatenate(character('c'), character('o')), character('d')), character('e'))));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("api"), concatenate(concatenate(character('a'), character('p')), character('i'))));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("*"), character('*')));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("+"), character('+')));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("-"), character('-')));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("/"), character('/')));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol(";"), character(';')));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol(","), character(',')));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("("), character('(')));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol(")"), character(')')));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("=="), concatenate(character('='), character('='))));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("<"), character('<')));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol(">"), character('>')));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("<="), concatenate(character('<'), character('='))));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol(">="), concatenate(character('>'), character('='))));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("!="), concatenate(character('!'), character('='))));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol(":"), character('!')));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("="), character('=')));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("."), character('.')));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("Identifier"), concatenate(uppercase, repeat(either(lowercase, uppercase, digit)))));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("Integer"), integer));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("Real"), concatenate(concatenate(integer, character('.')), integer)));
+        symbolDefinitions.add(definition(symbolFactory.createSymbol("Whitespace"), either(character(' '), character('\n'), character('\t'))));
 
-		Scanner scanner = new BFAScannerFactory(symbolDefinitions).scanner(characters(NUMBER_OF_CHARACTERS));
-		scanAllSymbols(scanner);
+        Scanner scanner = new BFAScannerFactory(symbolDefinitions).scanner(characters(NUMBER_OF_CHARACTERS));
+        scanAllSymbols(scanner);
 
-		scanner = new BFAScannerFactory(symbolDefinitions).scanner(characters(NUMBER_OF_CHARACTERS));
-		Stopwatch stopwatch = Stopwatch.createStarted();
+        scanner = new BFAScannerFactory(symbolDefinitions).scanner(characters(NUMBER_OF_CHARACTERS));
+        Stopwatch stopwatch = Stopwatch.createStarted();
 
-		scanAllSymbols(scanner);
+        scanAllSymbols(scanner);
 
-		long elapsed = stopwatch.elapsed(MILLISECONDS);
-		System.out.println("Took " + elapsed + "ms");
+        long elapsed = stopwatch.elapsed(MILLISECONDS);
+        System.out.println("Took " + elapsed + "ms");
 
-		assertThat(elapsed).describedAs("Time taken should be less than 100ms").isLessThan(100);
-	}
+        assertThat(elapsed).describedAs("Time taken should be less than 100ms").isLessThan(100);
+    }
 
-	private CharArrayReader characters(int numberOfCharacters) {
-		char[] chars = new char[numberOfCharacters];
-		Arrays.fill(chars, '&');
-		return new CharArrayReader(chars);
-	}
+    private CharArrayReader characters(int numberOfCharacters) {
+        char[] chars = new char[numberOfCharacters];
+        Arrays.fill(chars, '&');
+        return new CharArrayReader(chars);
+    }
 
-	private void scanAllSymbols(Scanner scanner) throws IOException {
-		while (scanner.hasNextSymbol()) {
-			scanner.nextSymbol();
-		}
-	}
+    private void scanAllSymbols(Scanner scanner) throws IOException {
+        while (scanner.hasNextSymbol()) {
+            scanner.nextSymbol();
+        }
+    }
 }

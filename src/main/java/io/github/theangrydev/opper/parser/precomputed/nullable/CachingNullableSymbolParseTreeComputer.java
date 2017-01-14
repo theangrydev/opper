@@ -29,73 +29,73 @@ import java.util.Optional;
 
 public class CachingNullableSymbolParseTreeComputer implements NullableSymbolParseTreeComputer {
 
-	private final ObjectList<NullableRuleCheck> nullableRuleChecks;
-	private final NullableSymbolParseTreeComputer computer;
+    private final ObjectList<NullableRuleCheck> nullableRuleChecks;
+    private final NullableSymbolParseTreeComputer computer;
 
-	public CachingNullableSymbolParseTreeComputer(Grammar grammar) {
-		this.computer = new DirectNullableSymbolParseTreeComputer(grammar, this);
-		List<Symbol> symbols = grammar.symbols();
-		this.nullableRuleChecks = new ObjectArrayList<>(symbols.size());
-		nullableRuleChecks.size(symbols.size());
-		for (Symbol symbol : grammar.symbols()) {
-			nullableRuleChecks.set(symbol.id(), NullableRuleCheck.nullCheck(symbol));
-		}
-	}
+    public CachingNullableSymbolParseTreeComputer(Grammar grammar) {
+        this.computer = new DirectNullableSymbolParseTreeComputer(grammar, this);
+        List<Symbol> symbols = grammar.symbols();
+        this.nullableRuleChecks = new ObjectArrayList<>(symbols.size());
+        nullableRuleChecks.size(symbols.size());
+        for (Symbol symbol : grammar.symbols()) {
+            nullableRuleChecks.set(symbol.id(), NullableRuleCheck.nullCheck(symbol));
+        }
+    }
 
-	@Override
-	public Optional<ParseTree> nullParseTree(Symbol symbol) {
-		NullableRuleCheck nullableRuleCheck = nullableRuleChecks.get(symbol.id());
-		if (nullableRuleCheck.hasBeenChecked()) {
-			return nullableRuleCheck.nullParseTree();
-		}
-		if (nullableRuleCheck.isChecking()) {
-			// this situation implies a recursive rule, which would have an infinite parse tree, so we do not consider the symbol to be nullable
-			return Optional.empty();
-		}
-		nullableRuleCheck.startChecking();
-		Optional<ParseTree> nullParseTree = computer.nullParseTree(symbol);
-		nullableRuleCheck.recordNullParseTree(nullParseTree);
-		return nullParseTree;
-	}
+    @Override
+    public Optional<ParseTree> nullParseTree(Symbol symbol) {
+        NullableRuleCheck nullableRuleCheck = nullableRuleChecks.get(symbol.id());
+        if (nullableRuleCheck.hasBeenChecked()) {
+            return nullableRuleCheck.nullParseTree();
+        }
+        if (nullableRuleCheck.isChecking()) {
+            // this situation implies a recursive rule, which would have an infinite parse tree, so we do not consider the symbol to be nullable
+            return Optional.empty();
+        }
+        nullableRuleCheck.startChecking();
+        Optional<ParseTree> nullParseTree = computer.nullParseTree(symbol);
+        nullableRuleCheck.recordNullParseTree(nullParseTree);
+        return nullParseTree;
+    }
 
-	private static class NullableRuleCheck {
-		private boolean isChecking;
-		private boolean hasBeenChecked;
-		private Optional<ParseTree> nullParseTree;
-		private final Symbol symbol;
+    private static class NullableRuleCheck {
+        private boolean isChecking;
+        private boolean hasBeenChecked;
+        private Optional<ParseTree> nullParseTree;
+        private final Symbol symbol;
 
-		private NullableRuleCheck(Symbol symbol) {
-			this.symbol = symbol;
-		}
+        private NullableRuleCheck(Symbol symbol) {
+            this.symbol = symbol;
+        }
 
-		public static NullableRuleCheck nullCheck(Symbol rule) {
-			return new NullableRuleCheck(rule);
-		}
+        public static NullableRuleCheck nullCheck(Symbol rule) {
+            return new NullableRuleCheck(rule);
+        }
 
-		public boolean hasBeenChecked() {
-			return hasBeenChecked;
-		}
+        public boolean hasBeenChecked() {
+            return hasBeenChecked;
+        }
 
-		public Optional<ParseTree> nullParseTree() {
-			return nullParseTree;
-		}
+        public Optional<ParseTree> nullParseTree() {
+            return nullParseTree;
+        }
 
-		public Symbol symbol() {
-			return symbol;
-		}
+        public Symbol symbol() {
+            return symbol;
+        }
 
-		public void recordNullParseTree(Optional<ParseTree> isNullable) {
-			this.nullParseTree = isNullable;
-			hasBeenChecked = true;
-			isChecking = false;
-		}
+        public void recordNullParseTree(Optional<ParseTree> isNullable) {
+            this.nullParseTree = isNullable;
+            hasBeenChecked = true;
+            isChecking = false;
+        }
 
-		public void startChecking() {
-			isChecking = true;
-		}
+        public void startChecking() {
+            isChecking = true;
+        }
 
-		public boolean isChecking() {
-			return isChecking;
-		}
-	}
+        public boolean isChecking() {
+            return isChecking;
+        }
+    }
 }

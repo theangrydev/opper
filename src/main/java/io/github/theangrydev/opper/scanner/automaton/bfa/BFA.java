@@ -23,25 +23,25 @@ import io.github.theangrydev.opper.scanner.bdd.BinaryDecisionDiagram;
 
 public class BFA {
 
-	private final BFATransitions bfaTransitions;
-	private final BFAAcceptance bfaAcceptance;
-	private final BinaryDecisionDiagram initialState;
+    private final BFATransitions bfaTransitions;
+    private final BFAAcceptance bfaAcceptance;
+    private final BinaryDecisionDiagram initialState;
 
-	public BFA(BFATransitions bfaTransitions, BFAAcceptance bfaAcceptance, BinaryDecisionDiagram initialState) {
-		this.bfaTransitions = bfaTransitions;
-		this.bfaAcceptance = bfaAcceptance;
-		this.initialState = initialState;
-	}
+    public BFA(BFATransitions bfaTransitions, BFAAcceptance bfaAcceptance, BinaryDecisionDiagram initialState) {
+        this.bfaTransitions = bfaTransitions;
+        this.bfaAcceptance = bfaAcceptance;
+        this.initialState = initialState;
+    }
 
-	public BinaryDecisionDiagram initialState() {
-		return initialState.copy();
-	}
+    public BinaryDecisionDiagram initialState() {
+        return initialState.copy();
+    }
 
-	public Symbol acceptingSymbol(BinaryDecisionDiagram frontier) {
-		return bfaAcceptance.acceptingSymbol(frontier);
-	}
+    public Symbol acceptingSymbol(BinaryDecisionDiagram frontier) {
+        return bfaAcceptance.acceptingSymbol(frontier);
+    }
 
-	public BinaryDecisionDiagram transition(BinaryDecisionDiagram frontier, char character) {
-		return bfaTransitions.transition(frontier, character);
-	}
+    public BinaryDecisionDiagram transition(BinaryDecisionDiagram frontier, char character) {
+        return bfaTransitions.transition(frontier, character);
+    }
 }

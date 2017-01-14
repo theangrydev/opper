@@ -29,28 +29,28 @@ import static org.mockito.Mockito.mock;
 
 public class EarlySetTest implements WithAssertions {
 
-	@Test
-	public void shouldBeAbleToIterateItemsThatWereAddedDuringTheSameIteration() {
-		TraditionalEarlyItem oldItem = createEarlyItem();
-		TraditionalEarlyItem newItem = createEarlyItem();
+    @Test
+    public void shouldBeAbleToIterateItemsThatWereAddedDuringTheSameIteration() {
+        TraditionalEarlyItem oldItem = createEarlyItem();
+        TraditionalEarlyItem newItem = createEarlyItem();
 
-		EarlySet earlySet = new EarlySet(new GrammarBuilder().build());
-		earlySet.add(oldItem);
+        EarlySet earlySet = new EarlySet(new GrammarBuilder().build());
+        earlySet.add(oldItem);
 
-		List<EarlyItem> itemsSeen = new ArrayList<>();
-		boolean addedNewItem = false;
-		for (EarlyItem earlyItem : earlySet) {
-			if (!addedNewItem) {
-				earlySet.add(newItem);
-				addedNewItem = true;
-			}
-			itemsSeen.add(earlyItem);
-		}
+        List<EarlyItem> itemsSeen = new ArrayList<>();
+        boolean addedNewItem = false;
+        for (EarlyItem earlyItem : earlySet) {
+            if (!addedNewItem) {
+                earlySet.add(newItem);
+                addedNewItem = true;
+            }
+            itemsSeen.add(earlyItem);
+        }
 
-		assertThat(itemsSeen).containsExactly(oldItem, newItem);
-	}
+        assertThat(itemsSeen).containsExactly(oldItem, newItem);
+    }
 
-	private TraditionalEarlyItem createEarlyItem() {
-		return mock(TraditionalEarlyItem.class);
-	}
+    private TraditionalEarlyItem createEarlyItem() {
+        return mock(TraditionalEarlyItem.class);
+    }
 }

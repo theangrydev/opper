@@ -34,18 +34,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class DirectlyRightRecursiveParserTest {
 
-	@Test
-	public void shouldRecogniseADirectlyRightRecursiveGrammar() throws IOException {
-		Grammar grammar = new GrammarBuilder()
-			.withAcceptanceSymbol("ACCEPT")
-			.withStartSymbol("START")
-			.withRule("START", "REPEATED", "START")
-			.withRule("START", "REPEATED")
-			.build();
-		Scanner scanner = scanner(nCopies(10, scannedSymbol(grammar.symbolByName("REPEATED"), "", location(1, 1, 1, 1))));
+    @Test
+    public void shouldRecogniseADirectlyRightRecursiveGrammar() throws IOException {
+        Grammar grammar = new GrammarBuilder()
+                .withAcceptanceSymbol("ACCEPT")
+                .withStartSymbol("START")
+                .withRule("START", "REPEATED", "START")
+                .withRule("START", "REPEATED")
+                .build();
+        Scanner scanner = scanner(nCopies(10, scannedSymbol(grammar.symbolByName("REPEATED"), "", location(1, 1, 1, 1))));
 
-		Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
+        Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
 
-		assertThat(parser.parse()).isPresent();
-	}
+        assertThat(parser.parse()).isPresent();
+    }
 }

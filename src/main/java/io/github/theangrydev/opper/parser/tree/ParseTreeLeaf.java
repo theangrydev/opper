@@ -25,36 +25,36 @@ import java.util.Collections;
 import java.util.List;
 
 public class ParseTreeLeaf extends ParseTree {
-	private final Location location;
-	private final String content;
+    private final Location location;
+    private final String content;
 
-	private ParseTreeLeaf(Rule rule, String content, Location location) {
-		super(rule);
-		this.content = content;
-		this.location = location;
-	}
+    private ParseTreeLeaf(Rule rule, String content, Location location) {
+        super(rule);
+        this.content = content;
+        this.location = location;
+    }
 
-	public static ParseTreeLeaf leaf(Rule rule, String content, Location location) {
-		return new ParseTreeLeaf(rule, content, location);
-	}
+    public static ParseTreeLeaf leaf(Rule rule, String content, Location location) {
+        return new ParseTreeLeaf(rule, content, location);
+    }
 
-	@Override
-	public String content() {
-		return content;
-	}
+    @Override
+    public String content() {
+        return content;
+    }
 
-	@Override
-	public List<ParseTree> children() {
-		return Collections.emptyList();
-	}
+    @Override
+    public List<ParseTree> children() {
+        return Collections.emptyList();
+    }
 
-	@Override
-	public Location location() {
-		return location;
-	}
+    @Override
+    public Location location() {
+        return location;
+    }
 
-	@Override
-	public String toString() {
-		return rule().toString() + content;
-	}
+    @Override
+    public String toString() {
+        return rule().toString() + content;
+    }
 }

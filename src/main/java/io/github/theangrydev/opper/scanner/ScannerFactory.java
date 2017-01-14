@@ -22,5 +22,5 @@ import java.io.IOException;
 import java.io.Reader;
 
 public interface ScannerFactory {
-	Scanner scanner(Reader charactersToParse) throws IOException;
+    Scanner scanner(Reader charactersToParse) throws IOException;
 }

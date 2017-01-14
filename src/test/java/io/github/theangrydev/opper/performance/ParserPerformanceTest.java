@@ -40,54 +40,54 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Category(PerformanceTests.class)
 public class ParserPerformanceTest {
 
-	@Test
-	public void shouldRecogniseADirectlyRightRecursiveGrammarInGoodTime() throws IOException {
-		Grammar grammar = new GrammarBuilder()
-			.withAcceptanceSymbol("ACCEPT")
-			.withStartSymbol("START")
-			.withRule("START", "REPEATED", "START")
-			.withRule("START", "REPEATED")
-			.build();
-		Scanner scanner = scanner(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "", location(1, 1, 1, 1))));
+    @Test
+    public void shouldRecogniseADirectlyRightRecursiveGrammarInGoodTime() throws IOException {
+        Grammar grammar = new GrammarBuilder()
+                .withAcceptanceSymbol("ACCEPT")
+                .withStartSymbol("START")
+                .withRule("START", "REPEATED", "START")
+                .withRule("START", "REPEATED")
+                .build();
+        Scanner scanner = scanner(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "", location(1, 1, 1, 1))));
 
-		Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
+        Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
 
-		Stopwatch stopwatch = Stopwatch.createStarted();
-		parser.parse();
-		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
-	}
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        parser.parse();
+        assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
+    }
 
-	@Test
-	public void shouldRecogniseALeftRecursiveGrammarInGoodTime() throws IOException {
-		Grammar grammar = new GrammarBuilder()
-			.withAcceptanceSymbol("ACCEPT")
-			.withStartSymbol("START")
-			.withRule("START", "START", "REPEATED")
-			.withRule("START", "REPEATED")
-			.build();
-		Scanner scanner = scanner(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "", location(1, 1, 1, 1))));
+    @Test
+    public void shouldRecogniseALeftRecursiveGrammarInGoodTime() throws IOException {
+        Grammar grammar = new GrammarBuilder()
+                .withAcceptanceSymbol("ACCEPT")
+                .withStartSymbol("START")
+                .withRule("START", "START", "REPEATED")
+                .withRule("START", "REPEATED")
+                .build();
+        Scanner scanner = scanner(nCopies(10000, scannedSymbol(grammar.symbolByName("REPEATED"), "", location(1, 1, 1, 1))));
 
-		Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
+        Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
 
-		Stopwatch stopwatch = Stopwatch.createStarted();
-		parser.parse();
-		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
-	}
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        parser.parse();
+        assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
+    }
 
-	@Test
-	public void shouldRecogniseAGrammarWithAnUnmarkedMiddleRecursionInGoodTime() throws IOException {
-		Grammar grammar = new GrammarBuilder()
-			.withAcceptanceSymbol("ACCEPT")
-			.withStartSymbol("START")
-			.withRule("START", "REPEATED", "START", "REPEATED")
-			.withRule("START", "REPEATED", "REPEATED")
-			.build();
-		Scanner scanner = scanner(nCopies(100, scannedSymbol(grammar.symbolByName("REPEATED"), "", location(1, 1, 1, 1))));
+    @Test
+    public void shouldRecogniseAGrammarWithAnUnmarkedMiddleRecursionInGoodTime() throws IOException {
+        Grammar grammar = new GrammarBuilder()
+                .withAcceptanceSymbol("ACCEPT")
+                .withStartSymbol("START")
+                .withRule("START", "REPEATED", "START", "REPEATED")
+                .withRule("START", "REPEATED", "REPEATED")
+                .build();
+        Scanner scanner = scanner(nCopies(100, scannedSymbol(grammar.symbolByName("REPEATED"), "", location(1, 1, 1, 1))));
 
-		Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
+        Parser parser = new EarlyParserFactory(new DoNothingLogger(), grammar).parser(scanner);
 
-		Stopwatch stopwatch = Stopwatch.createStarted();
-		parser.parse();
-		assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
-	}
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        parser.parse();
+        assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
+    }
 }

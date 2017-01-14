@@ -46,9 +46,9 @@ public class BFAScanner implements Scanner {
 
     /**
      * The character that is currently being inspected.
-     *
+     * <p>
      * This starts off as the first character from the reader, so that the first call to {@link #hasNextSymbol} is accurate.
-     *
+     * <p>
      * A non zero frontier means there are more characters to parse in the current {@link Symbol}, so scan the next character.
      * A zero frontier means there are no more characters to parse in the current {@link Symbol}, so we do not scan another
      * character and leave the character ready for the next call to {@link #nextSymbol()}.

@@ -28,9 +28,9 @@ import static io.github.theangrydev.opper.scanner.definition.RepeatExpression.re
 
 public class ExpressionsCanBeConstructedTest implements WithAssertions {
 
-	@Test
-	public void shouldHaveAGoodStringRepresentation() {
-		Expression expression = repeat(either(character('a'), character('b'), concatenate(character('c'), character('d'))));
-		assertThat(expression).hasToString("[a, b, cd]*");
-	}
+    @Test
+    public void shouldHaveAGoodStringRepresentation() {
+        Expression expression = repeat(either(character('a'), character('b'), concatenate(character('c'), character('d'))));
+        assertThat(expression).hasToString("[a, b, cd]*");
+    }
 }

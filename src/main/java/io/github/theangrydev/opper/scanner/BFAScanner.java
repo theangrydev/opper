@@ -85,10 +85,11 @@ public class BFAScanner implements Scanner {
         while (!nextFrontier.isZero()) {
             positionTracker.consider(character);
             symbolCharacters.append(character);
-            frontier.discard();
-            character = (char) charactersToParse.read();
 
+            frontier.discard();
             frontier = nextFrontier.copy();
+
+            character = (char) charactersToParse.read();
             nextFrontier = bfa.transition(nextFrontier, character);
         }
 

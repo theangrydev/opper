@@ -37,8 +37,8 @@ public class IndireclytRightRecursiveParserTest {
                 .withAcceptanceSymbol("ACCEPT")
                 .withStartSymbol("START")
                 .withRule("START", "REPEATED", "INDIRECT")
-                .withRule("START", "REPEATED")
                 .withRule("INDIRECT", "MIDDLE", "START")
+                .withRule("START", "REPEATED")
                 .build();
         Scanner scanner = FixedScanner.scanner(grammar, "REPEATED", "MIDDLE", "REPEATED", "MIDDLE", "REPEATED");
 

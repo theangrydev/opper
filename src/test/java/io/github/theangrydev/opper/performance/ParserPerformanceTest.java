@@ -41,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ParserPerformanceTest {
 
     @Test
-    public void shouldRecogniseADirectlyRightRecursiveGrammarInGoodTime() throws IOException {
+    public void shouldRecogniseARightRecursiveGrammarInGoodTime() throws IOException {
         Grammar grammar = new GrammarBuilder()
                 .withAcceptanceSymbol("ACCEPT")
                 .withStartSymbol("START")
@@ -54,7 +54,10 @@ public class ParserPerformanceTest {
 
         Stopwatch stopwatch = Stopwatch.createStarted();
         parser.parse();
-        assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
+        long elapsed = stopwatch.elapsed(MILLISECONDS);
+        System.out.println("Right Recursive Grammar took " + elapsed + " ms");
+
+        assertThat(elapsed).describedAs("Time taken should be less than 100ms").isLessThan(100);
     }
 
     @Test
@@ -71,9 +74,15 @@ public class ParserPerformanceTest {
 
         Stopwatch stopwatch = Stopwatch.createStarted();
         parser.parse();
-        assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
+        long elapsed = stopwatch.elapsed(MILLISECONDS);
+        System.out.println("Left Recursive Grammar took " + elapsed + " ms");
+
+        assertThat(elapsed).describedAs("Time taken should be less than 100ms").isLessThan(100);
     }
 
+    /**
+     * This is NOT expected to scale linearly. It would be better to perhaps reject these from the grammar.
+     */
     @Test
     public void shouldRecogniseAGrammarWithAnUnmarkedMiddleRecursionInGoodTime() throws IOException {
         Grammar grammar = new GrammarBuilder()

@@ -38,7 +38,7 @@ public class NullableSymbolComputerTest implements WithAssertions {
                 .withRule("D", "SOME")
                 .build();
 
-        NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar));
+        NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new NullableSymbolParseTreeComputer(grammar));
 
         assertThat(computer.computeNullableSymbols().keySet()).containsOnlyElementsOf(grammar.symbolsByName("A'", "C"));
     }
@@ -53,7 +53,7 @@ public class NullableSymbolComputerTest implements WithAssertions {
                 .withRule("LIST", "NONE")
                 .build();
 
-        NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar));
+        NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new NullableSymbolParseTreeComputer(grammar));
 
         assertThat(computer.computeNullableSymbols().keySet()).containsOnlyElementsOf(grammar.symbolsByName("ACCEPT", "LIST"));
     }
@@ -68,7 +68,7 @@ public class NullableSymbolComputerTest implements WithAssertions {
                 .withRule("LIST", "NONE")
                 .build();
 
-        NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar));
+        NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new NullableSymbolParseTreeComputer(grammar));
 
         assertThat(computer.computeNullableSymbols().keySet()).containsOnlyElementsOf(grammar.symbolsByName("ACCEPT", "LIST"));
     }

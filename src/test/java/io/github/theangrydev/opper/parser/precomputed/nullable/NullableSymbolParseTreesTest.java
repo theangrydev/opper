@@ -40,7 +40,7 @@ public class NullableSymbolParseTreesTest implements WithAssertions {
                 .withRule("C", "NONE")
                 .build();
 
-        NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar));
+        NullableSymbolComputer computer = new NullableSymbolComputer(grammar, new NullableSymbolParseTreeComputer(grammar));
 
         assertThatThrownBy(computer::computeNullableSymbols)
                 .isInstanceOf(IllegalStateException.class)
@@ -57,7 +57,7 @@ public class NullableSymbolParseTreesTest implements WithAssertions {
                 .withRule("A", "NONE")
                 .build();
 
-        NullableSymbolParseTrees nullableSymbolParseTrees = new NullableSymbolParseTrees(grammar, new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar)));
+        NullableSymbolParseTrees nullableSymbolParseTrees = new NullableSymbolParseTrees(grammar, new NullableSymbolComputer(grammar, new NullableSymbolParseTreeComputer(grammar)));
 
         Optional<ParseTree> parseTree = nullableSymbolParseTrees.nullableSymbolParseTree(grammar.symbolByName("A"));
 
@@ -74,7 +74,7 @@ public class NullableSymbolParseTreesTest implements WithAssertions {
                 .withRule("B", "NONE")
                 .build();
 
-        NullableSymbolParseTrees nullableSymbolParseTrees = new NullableSymbolParseTrees(grammar, new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar)));
+        NullableSymbolParseTrees nullableSymbolParseTrees = new NullableSymbolParseTrees(grammar, new NullableSymbolComputer(grammar, new NullableSymbolParseTreeComputer(grammar)));
 
         Optional<ParseTree> parseTree = nullableSymbolParseTrees.nullableSymbolParseTree(grammar.symbolByName("A"));
 
@@ -92,7 +92,7 @@ public class NullableSymbolParseTreesTest implements WithAssertions {
                 .withRule("C", "NONE")
                 .build();
 
-        NullableSymbolParseTrees nullableSymbolParseTrees = new NullableSymbolParseTrees(grammar, new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar)));
+        NullableSymbolParseTrees nullableSymbolParseTrees = new NullableSymbolParseTrees(grammar, new NullableSymbolComputer(grammar, new NullableSymbolParseTreeComputer(grammar)));
 
         Optional<ParseTree> parseTree = nullableSymbolParseTrees.nullableSymbolParseTree(grammar.symbolByName("A"));
 

@@ -20,7 +20,7 @@ package io.github.theangrydev.opper.parser;
 
 import io.github.theangrydev.opper.common.Logger;
 import io.github.theangrydev.opper.grammar.Grammar;
-import io.github.theangrydev.opper.parser.precomputed.nullable.CachingNullableSymbolParseTreeComputer;
+import io.github.theangrydev.opper.parser.precomputed.nullable.NullableSymbolParseTreeComputer;
 import io.github.theangrydev.opper.parser.precomputed.nullable.NullableSymbolComputer;
 import io.github.theangrydev.opper.parser.precomputed.nullable.NullableSymbolParseTrees;
 import io.github.theangrydev.opper.parser.precomputed.prediction.ComputedRulePrediction;
@@ -42,7 +42,7 @@ public class EarlyParserFactory implements ParserFactory {
         this.grammar = grammar;
         this.rightRecursion = new PrecomputedRightRecursion(grammar, new ComputedRightRecursion(grammar));
         this.rulePrediction = new PrecomputedRulePrediction(grammar, new ComputedRulePrediction(grammar));
-        this.nullableSymbolParseTrees = new NullableSymbolParseTrees(grammar, new NullableSymbolComputer(grammar, new CachingNullableSymbolParseTreeComputer(grammar)));
+        this.nullableSymbolParseTrees = new NullableSymbolParseTrees(grammar, new NullableSymbolComputer(grammar, new NullableSymbolParseTreeComputer(grammar)));
     }
 
     @Override

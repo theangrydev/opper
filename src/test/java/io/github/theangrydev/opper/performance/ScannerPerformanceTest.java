@@ -27,9 +27,10 @@ import io.github.theangrydev.opper.scanner.definition.SymbolDefinition;
 import org.assertj.core.api.WithAssertions;
 import org.junit.Test;
 
+import java.io.CharArrayReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static io.github.theangrydev.opper.scanner.definition.AlternativeExpression.either;
@@ -94,8 +95,10 @@ public class ScannerPerformanceTest implements WithAssertions {
 		assertThat(elapsed).describedAs("Time taken should be less than 100ms").isLessThan(100);
 	}
 
-	private Reader characters(int numberOfCharacters) {
-		return new RepeatedCharacterReader(numberOfCharacters, '&');
+	private CharArrayReader characters(int numberOfCharacters) {
+		char[] chars = new char[numberOfCharacters];
+		Arrays.fill(chars, '&');
+		return new CharArrayReader(chars);
 	}
 
 	private void scanAllSymbols(Scanner scanner) throws IOException {
@@ -103,31 +106,4 @@ public class ScannerPerformanceTest implements WithAssertions {
 			scanner.nextSymbol();
 		}
 	}
-
-    private static class RepeatedCharacterReader extends Reader {
-        private final int numberOfCharacters;
-        private final char aChar;
-
-        private int read;
-
-        public RepeatedCharacterReader(int numberOfCharacters, char aChar) {
-            this.numberOfCharacters = numberOfCharacters;
-            this.aChar = aChar;
-        }
-
-        @Override
-        public int read(char[] cbuf, int off, int len) throws IOException {
-            if (read >= numberOfCharacters) {
-                return -1;
-            }
-            cbuf[0] = aChar;
-            read += len;
-            return len;
-        }
-
-        @Override
-        public void close() throws IOException {
-
-        }
-    }
 }

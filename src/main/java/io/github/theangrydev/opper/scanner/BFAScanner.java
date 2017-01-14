@@ -79,19 +79,18 @@ public class BFAScanner implements Scanner {
         symbolCharacters.setLength(0);
 
         BinaryDecisionDiagram nextFrontier = bfa.initialState();
-        BinaryDecisionDiagram frontier;
+        BinaryDecisionDiagram frontier = nextFrontier.copy();
+        nextFrontier = bfa.transition(nextFrontier, character);
 
-        do {
+        while (!nextFrontier.isZero()) {
+            positionTracker.consider(character);
+            symbolCharacters.append(character);
+            frontier.discard();
+            character = (char) charactersToParse.read();
+
             frontier = nextFrontier.copy();
             nextFrontier = bfa.transition(nextFrontier, character);
-
-            if (!nextFrontier.isZero()) {
-                positionTracker.consider(character);
-                symbolCharacters.append(character);
-                frontier.discard();
-                character = (char) charactersToParse.read();
-            }
-        } while (!nextFrontier.isZero());
+        }
 
         if (symbolCharacters.length() == 0) {
             throw new UnsupportedOperationException("TODO: handle character sequences that are not scannable");

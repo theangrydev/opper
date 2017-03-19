@@ -52,10 +52,6 @@
 
 	<repositories>
 		<repository>
-			<id>project</id>
-			<url>file://${project.basedir}/repo</url>
-		</repository>
-		<repository>
 			<id>repo.bodar.com</id>
 			<url>http://repo.bodar.com</url>
 		</repository>
@@ -110,7 +106,7 @@
 		<junit.version>4.12</junit.version>
 		<guava.version>18.0</guava.version>
 		<fastutil.version>7.0.7</fastutil.version>
-		<jdd.version>105</jdd.version>
+		<jdd.version>108</jdd.version>
 	</properties>
 
 	<build>
@@ -369,7 +365,7 @@
 
 		<!-- JDD -->
 		<dependency>
-			<groupId>jdd</groupId>
+			<groupId>org.bitbucket.vahidi</groupId>
 			<artifactId>jdd</artifactId>
 			<version>${jdd.version}</version>
 		</dependency>

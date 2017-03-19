@@ -121,10 +121,11 @@
 					<configuration>
 						<source>${java.language.level}</source>
 						<target>${java.language.level}</target>
-						<compilerArguments>
-							<Werror />
-							<Xlint />
-						</compilerArguments>
+						<showWarnings>true</showWarnings>
+						<compilerArgs>
+							<arg>-Werror</arg>
+							<arg>-Xlint:all</arg>
+						</compilerArgs>
 					</configuration>
 				</plugin>
 

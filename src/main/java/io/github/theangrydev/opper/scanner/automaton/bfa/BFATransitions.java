@@ -34,7 +34,7 @@ public class BFATransitions {
 
     /**
      * This map gives the BDD for each character that represents all the possible ways that this character can
-     * contribute to a transition, in terms of the direct character transition and all the indirrect character classes,
+     * contribute to a transition, in terms of the direct character transition and all the indirect character classes,
      * if any exist for this character.
      */
     private final Char2ObjectMap<BinaryDecisionDiagram> characterPresences;

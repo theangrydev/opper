@@ -28,8 +28,9 @@ import java.util.Map;
 
 public class TransitionFactory {
 
-    private Char2ObjectMap<CharacterTransition> characterTransitionsByCharacter;
-    private Map<CharacterClass, CharacterClassTransition> characterClassTransitionByCharacterClass;
+    private final Char2ObjectMap<CharacterTransition> characterTransitionsByCharacter;
+    private final Map<CharacterClass, CharacterClassTransition> characterClassTransitionByCharacterClass;
+
     private int idSequence;
 
     public TransitionFactory() {
@@ -38,21 +39,11 @@ public class TransitionFactory {
     }
 
     public Transition characterTransition(char character) {
-        CharacterTransition transition = characterTransitionsByCharacter.get(character);
-        if (transition == null) {
-            transition = new CharacterTransition(idSequence++, character);
-            characterTransitionsByCharacter.put(character, transition);
-        }
-        return transition;
+        return characterTransitionsByCharacter.computeIfAbsentPartial(character, this::newCharacterTransition);
     }
 
     public Transition characterClassTransition(CharacterClass characterClass) {
-        CharacterClassTransition transition = characterClassTransitionByCharacterClass.get(characterClass);
-        if (transition == null) {
-            transition = new CharacterClassTransition(idSequence++, characterClass);
-            characterClassTransitionByCharacterClass.put(characterClass, transition);
-        }
-        return transition;
+        return characterClassTransitionByCharacterClass.computeIfAbsent(characterClass, this::newCharacterClassTransition);
     }
 
     public Collection<CharacterClassTransition> characterClassTransitions() {
@@ -61,5 +52,13 @@ public class TransitionFactory {
 
     public Collection<CharacterTransition> characterTransitions() {
         return characterTransitionsByCharacter.values();
+    }
+
+    private CharacterClassTransition newCharacterClassTransition(CharacterClass characterClass) {
+        return new CharacterClassTransition(idSequence++, characterClass);
+    }
+
+    private CharacterTransition newCharacterTransition(char character) {
+        return new CharacterTransition(idSequence++, character);
     }
 }

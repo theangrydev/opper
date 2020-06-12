@@ -57,11 +57,7 @@ public class State implements Identifiable {
     }
 
     public void visitTransitions(TransitionVisitor transitionVisitor) {
-        transitions.entrySet().forEach(entry -> {
-            Transition transition = entry.getKey();
-            List<State> states = entry.getValue();
-            states.forEach(state -> transitionVisitor.visit(this, transition, state));
-        });
+        transitions.forEach((transition, states) -> states.forEach(state -> transitionVisitor.visit(this, transition, state)));
     }
 
     public void addNullTransition(State state) {
@@ -69,12 +65,7 @@ public class State implements Identifiable {
     }
 
     public void addTransition(Transition via, State to) {
-        List<State> transitions = this.transitions.get(via);
-        if (transitions == null) {
-            transitions = new ArrayList<>();
-            this.transitions.put(via, transitions);
-        }
-        transitions.add(to);
+        transitions.computeIfAbsent(via, k -> new ArrayList<>()).add(to);
     }
 
     public boolean wasReached() {
@@ -82,9 +73,7 @@ public class State implements Identifiable {
     }
 
     public void recordStatistics(StateStatistics stateStatistics) {
-        transitions.entrySet().forEach(entry -> {
-            Transition transition = entry.getKey();
-            List<State> states = entry.getValue();
+        transitions.forEach((transition, states) -> {
             int times = states.size();
             stateStatistics.recordCharacter(transition, times);
             stateStatistics.recordState(this, times);

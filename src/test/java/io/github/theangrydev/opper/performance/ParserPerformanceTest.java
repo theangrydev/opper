@@ -97,6 +97,9 @@ public class ParserPerformanceTest {
 
         Stopwatch stopwatch = Stopwatch.createStarted();
         parser.parse();
-        assertThat(stopwatch.elapsed(MILLISECONDS)).describedAs("Time taken should be less than 100ms").isLessThan(100);
+        long elapsed = stopwatch.elapsed(MILLISECONDS);
+        System.out.println("Unmarked Middle Recursive Grammar took " + elapsed + " ms");
+
+        assertThat(elapsed).describedAs("Time taken should be less than 100ms").isLessThan(100);
     }
 }

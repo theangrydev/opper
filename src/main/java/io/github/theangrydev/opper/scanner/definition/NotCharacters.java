@@ -26,7 +26,7 @@ public class NotCharacters implements CharacterClass {
         this.notCharacters = notCharacters;
     }
 
-    public static NotCharacters notCharacaters(String notCharacters) {
+    public static NotCharacters notCharacters(String notCharacters) {
         return new NotCharacters(notCharacters);
     }
 

@@ -36,7 +36,7 @@ import static io.github.theangrydev.opper.scanner.definition.AnyCharacter.anyCha
 import static io.github.theangrydev.opper.scanner.definition.CharacterClassExpression.characterClass;
 import static io.github.theangrydev.opper.scanner.definition.CharacterExpression.character;
 import static io.github.theangrydev.opper.scanner.definition.ConcatenateExpression.concatenate;
-import static io.github.theangrydev.opper.scanner.definition.NotCharacters.notCharacaters;
+import static io.github.theangrydev.opper.scanner.definition.NotCharacters.notCharacters;
 import static io.github.theangrydev.opper.scanner.definition.RepeatExpression.repeat;
 import static io.github.theangrydev.opper.scanner.definition.SymbolDefinition.definition;
 import static java.util.Arrays.asList;
@@ -105,7 +105,7 @@ public class ScannerTest implements WithAssertions {
     @Test
     public void shouldHandleNotCharacters() throws IOException {
         Symbol a = new Symbol(1, "a");
-        SymbolDefinition aDefinition = definition(a, characterClass(notCharacaters("abcd")));
+        SymbolDefinition aDefinition = definition(a, characterClass(notCharacters("abcd")));
 
         Symbol b = new Symbol(2, "b");
         SymbolDefinition bDefinition = definition(b, either(character('a'), character('b'), character('c'), character('d')));

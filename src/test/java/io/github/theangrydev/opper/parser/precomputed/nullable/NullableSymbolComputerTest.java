@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 Liam Williams <liam.williams@zoho.com>.
+ * Copyright 2015-2020 Liam Williams <liam.williams@zoho.com>.
  *
  * This file is part of opper.
  *
@@ -43,7 +43,7 @@ public class NullableSymbolComputerTest implements WithAssertions {
 
         NullableSymbolComputer computer = nullableSymbolComputer(grammar, nullableSymbolParseTreeComputer(grammar));
 
-        assertThat(computer.computeNullableSymbols().keySet()).containsOnlyElementsOf(grammar.symbolsByName("A'", "C"));
+        assertThat(computer.computeNullableSymbols().keySet()).containsOnlyOnceElementsOf(grammar.symbolsByName("A'", "C"));
     }
 
     @Test
@@ -58,7 +58,7 @@ public class NullableSymbolComputerTest implements WithAssertions {
 
         NullableSymbolComputer computer = nullableSymbolComputer(grammar, nullableSymbolParseTreeComputer(grammar));
 
-        assertThat(computer.computeNullableSymbols().keySet()).containsOnlyElementsOf(grammar.symbolsByName("ACCEPT", "LIST"));
+        assertThat(computer.computeNullableSymbols().keySet()).containsOnlyOnceElementsOf(grammar.symbolsByName("ACCEPT", "LIST"));
     }
 
     @Test
@@ -73,6 +73,6 @@ public class NullableSymbolComputerTest implements WithAssertions {
 
         NullableSymbolComputer computer = nullableSymbolComputer(grammar, nullableSymbolParseTreeComputer(grammar));
 
-        assertThat(computer.computeNullableSymbols().keySet()).containsOnlyElementsOf(grammar.symbolsByName("ACCEPT", "LIST"));
+        assertThat(computer.computeNullableSymbols().keySet()).containsOnlyOnceElementsOf(grammar.symbolsByName("ACCEPT", "LIST"));
     }
 }

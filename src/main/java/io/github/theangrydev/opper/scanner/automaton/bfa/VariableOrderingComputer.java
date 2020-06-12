@@ -56,9 +56,9 @@ public class VariableOrderingComputer {
         IntSet remainingVariableIds = variableSummary.allVariableIds();
         List<Variable> variablesWithOrder = new ArrayList<>(bitsPerRow);
         List<TransitionTable> frontier = singletonList(transitionTable);
+        int transitionTableSize = transitionTable.size();
         for (int bitNumber = 0; bitNumber < bitsPerRow; bitNumber++) {
-            int frontierSize = frontier.stream().mapToInt(TransitionTable::size).sum();
-            int nextVariable = determineNext(frontier, remainingVariableIds, frontierSize);
+            int nextVariable = determineNext(frontier, remainingVariableIds, transitionTableSize);
             remainingVariableIds.remove(nextVariable);
             variablesWithOrder.add(new Variable(bitNumber, nextVariable));
             frontier = nextFrontier(frontier, nextVariable);

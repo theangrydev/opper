@@ -92,7 +92,7 @@
 		<maven.build.helper.plugin.version>3.1.0</maven.build.helper.plugin.version>
 		<maven.project.info.reports.plugin.version>3.1.0</maven.project.info.reports.plugin.version>
 		<maven.enforcer.plugin.version>1.4.1</maven.enforcer.plugin.version>
-		<maven.license.plugin.version>2.11</maven.license.plugin.version>
+		<maven.license.plugin.version>3.0</maven.license.plugin.version>
 		<maven.javadoc.plugin.version>3.2.0</maven.javadoc.plugin.version>
 		<maven.source.plugin.version>3.2.1</maven.source.plugin.version>
 		<assertj.assertions.generator.plugin.version>2.2.0</assertj.assertions.generator.plugin.version>
@@ -319,7 +319,7 @@
 			<plugin>
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
-				<version>3.0</version>
+				<version>${maven.license.plugin.version}</version>
 				<configuration>
 					<properties>
 						<copyright.owner>Liam Williams</copyright.owner>

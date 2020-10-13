@@ -103,7 +103,7 @@
 		<assertj.core.version>3.16.1</assertj.core.version>
 		<mockito.version>3.3.3</mockito.version>
 		<yatspec.version>1.14</yatspec.version>
-		<junit.version>4.13</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<guava.version>29.0-jre</guava.version>
 		<fastutil.version>8.3.1</fastutil.version>
 		<jdd.version>111</jdd.version>
